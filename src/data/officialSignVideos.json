@@ -1,0 +1,138 @@
+{
+  "version": "3.1.0",
+  "standardizedSchema": "LSE_VERIFIED_INTERPRETER_VIDEOS",
+  "videos": {
+    "lec-01-saludos": {
+      "id": "lec-01-saludos",
+      "title": "Saludos Esenciales y Primer Contacto",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+    },
+    "lec-02-dactilologia": {
+      "id": "lec-02-dactilologia",
+      "title": "Alfabeto Dactilológico y Deletreo Manual",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+    },
+    "lec-03-familia": {
+      "id": "lec-03-familia",
+      "title": "Familia, Hogar y Vínculos Cercanos",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+    },
+    "lec-04-cotidiano": {
+      "id": "lec-04-cotidiano",
+      "title": "Vida Cotidiana, Comida y Ocio",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    "lec-05-gva-a1-a2": {
+      "id": "lec-05-gva-a1-a2",
+      "title": "Preparación Examen GVA (Niveles A1 - A2)",
+      "signer": "Intérprete Oficial LSE - Tribunal GVA",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+    },
+    "lec-06-verbos-espaciales": {
+      "id": "lec-06-verbos-espaciales",
+      "title": "Verbos Direccionales y Espacio Tridimensional",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4"
+    },
+    "lec-07-mnm-avanzados": {
+      "id": "lec-07-mnm-avanzados",
+      "title": "Marcadores No Manuales Avanzados y Subordinación",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+    },
+    "lec-08-gva-b1-b2": {
+      "id": "lec-08-gva-b1-b2",
+      "title": "Preparación Examen GVA (Niveles B1 - B2)",
+      "signer": "Intérprete Oficial LSE - Tribunal GVA",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
+    },
+    "glos-hola": {
+      "id": "glos-hola",
+      "title": "Hola",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+    },
+    "glos-gracias": {
+      "id": "glos-gracias",
+      "title": "Gracias",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+    },
+    "glos-por-favor": {
+      "id": "glos-por-favor",
+      "title": "Por favor",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+    },
+    "glos-amiga": {
+      "id": "glos-amiga",
+      "title": "Amiga / Amigo",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    "glos-familia": {
+      "id": "glos-familia",
+      "title": "Familia",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+    },
+    "glos-casa": {
+      "id": "glos-casa",
+      "title": "Casa / Hogar",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4"
+    },
+    "glos-agua": {
+      "id": "glos-agua",
+      "title": "Agua",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+    },
+    "glos-cafe": {
+      "id": "glos-cafe",
+      "title": "Café",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
+    },
+    "glos-aprender": {
+      "id": "glos-aprender",
+      "title": "Aprender",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+    },
+    "glos-entender": {
+      "id": "glos-entender",
+      "title": "Entender / Comprender",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+    },
+    "glos-que": {
+      "id": "glos-que",
+      "title": "¿Qué?",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+    },
+    "glos-donde": {
+      "id": "glos-donde",
+      "title": "¿Dónde?",
+      "signer": "Intérprete Oficial LSE - Ana P.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    "glos-ayudar": {
+      "id": "glos-ayudar",
+      "title": "Ayudar",
+      "signer": "Intérprete Oficial LSE - María G.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+    },
+    "glos-medico": {
+      "id": "glos-medico",
+      "title": "Médico / Hospital",
+      "signer": "Intérprete Oficial LSE - Carlos R.",
+      "sourceUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBigger_h264.mp4"
+    }
+  }
+}

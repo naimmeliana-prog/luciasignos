@@ -1,7 +1,5 @@
 export type SkillLevel = 'inicial' | 'intermedio' | 'avanzado' | 'gva_oficial';
 
-export type VisualMode = 'illustrations' | 'realistic';
-
 export type FacialExpressionType =
   | 'neutral_atento'
   | 'cejas_elevadas_pregunta'
@@ -250,6 +248,5 @@ export interface StudentProgressState {
   unlockedBadgeIds: string[];
   glossaryMasteredIds: string[];
   fingerspelling: FingerspellingStats;
-  visualMode: VisualMode;
   gvaExamScores: Record<string, number>;
 }

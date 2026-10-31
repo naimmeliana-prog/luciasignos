@@ -1,42 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Play, Pause, RotateCcw, FlipHorizontal, Camera } from 'lucide-react';
+import { Play, Pause, RotateCcw, FlipHorizontal, Camera, Sparkles } from 'lucide-react';
 import { Lesson } from '../types/learning';
 
 interface RealisticSignPlayerProps {
   lesson: Lesson;
 }
 
-const SPECIFIC_SIGN_PHOTOS: Record<string, string> = {
-  'lec-01-saludos': 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80', // saludo / cordial
-  'lec-02-dactilologia': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80', // manos / dactilología
-  'lec-03-familia': 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80', // familia
-  'lec-04-cotidiano': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80', // cotidiano / agua
-  'lec-05-gva-a1-a2': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80', // examen / estudio
-  'lec-06-verbos-espaciales': 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80', // espacio / direccional
-  'lec-07-mnm-avanzados': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80', // expresión facial
-  'lec-08-gva-b1-b2': 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80', // avanzado GVA
-  // Glossary entries
-  'glos-hola': 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-  'glos-gracias': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-  'glos-por-favor': 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80',
-  'glos-amiga': 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80',
-  'glos-familia': 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80',
-  'glos-casa': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-  'glos-agua': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-  'glos-cafe': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-  'glos-aprender': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
-  'glos-entender': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
-  'glos-que': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80',
-  'glos-donde': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80',
-  'glos-ayudar': 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80',
-  'glos-medico': 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80'
-};
-
-const DEFAULT_REALISTIC_PHOTOS = [
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80'
+const REALISTIC_SIGNER_PHOTOS = [
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=85',
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85',
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=85',
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85',
+  'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1200&q=85',
+  'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=85'
 ];
 
 export const RealisticSignPlayer: React.FC<RealisticSignPlayerProps> = ({ lesson }) => {
@@ -45,41 +21,60 @@ export const RealisticSignPlayer: React.FC<RealisticSignPlayerProps> = ({ lesson
   const [mirrorMode, setMirrorMode] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
 
-  const keyframes = lesson.keyframes || [];
-  const totalSteps = Math.max(1, keyframes.length);
+  const keyframes = lesson.keyframes && lesson.keyframes.length > 0 ? lesson.keyframes : [
+    { phaseLabel: 'Fase 1: Preparación y postura inicial' },
+    { phaseLabel: 'Fase 2: Ejecución y proyección del signo' }
+  ];
+
+  const totalSteps = keyframes.length;
 
   useEffect(() => {
     if (!isPlaying || totalSteps <= 1) return;
-    const intervalMs = Math.max(1400, 2800 / playbackSpeed);
+    const intervalMs = Math.max(1800, 3500 / playbackSpeed);
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % totalSteps);
     }, intervalMs);
     return () => clearInterval(timer);
   }, [isPlaying, totalSteps, playbackSpeed]);
 
-  const specificUrl = SPECIFIC_SIGN_PHOTOS[lesson.id] || lesson.realisticPhotoUrl || DEFAULT_REALISTIC_PHOTOS[currentIdx % DEFAULT_REALISTIC_PHOTOS.length];
-  const activePhase = keyframes[currentIdx]?.phaseLabel || `Demostración en vivo de ${lesson.title}`;
+  const activePhoto = REALISTIC_SIGNER_PHOTOS[(lesson.id.charCodeAt(0) + currentIdx) % REALISTIC_SIGNER_PHOTOS.length];
+  const phaseLabel = keyframes[currentIdx]?.phaseLabel || `Demostración real de ${lesson.title}`;
 
   return (
-    <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-sm">
+    <div className="bg-slate-900 rounded-xl overflow-hidden border border-teal-500/30 shadow-md">
       <div className="relative aspect-video w-full bg-slate-950 overflow-hidden">
         <img
-          src={specificUrl}
+          src={activePhoto}
           alt={lesson.title}
           className={`w-full h-full object-cover transition-all duration-700 ${
             mirrorMode ? 'scale-x-[-1]' : 'scale-100'
           }`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-slate-950/50 pointer-events-none" />
 
         <div className="absolute top-3 left-4 right-4 flex items-center justify-between pointer-events-none">
-          <div className="bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700/80 text-xs text-teal-300 font-mono flex items-center gap-2">
+          <div className="bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-teal-500/50 text-xs text-teal-300 font-mono flex items-center gap-2">
             <Camera className="w-3.5 h-3.5 text-teal-400" />
-            <span>FOTOGRAFÍA REAL DE REFERENCIA (LSE)</span>
+            <span>FOTOGRAFÍA REAL DE INTÉRPRETE LSE</span>
           </div>
-          <div className="bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700/80 text-xs text-slate-200 font-mono">
-            {activePhase}
+          <div className="bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700/80 text-xs text-teal-200 font-mono">
+            {phaseLabel}
           </div>
+        </div>
+
+        {/* Phase progress indicators */}
+        <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
+          {keyframes.map((kf, idx) => (
+            <button
+              key={kf.phaseLabel}
+              type="button"
+              onClick={() => setCurrentIdx(idx)}
+              className={`flex-1 h-1.5 rounded-full transition-colors cursor-pointer ${
+                idx === currentIdx ? 'bg-teal-400' : 'bg-white/30 hover:bg-white/50'
+              }`}
+              title={kf.phaseLabel}
+            />
+          ))}
         </div>
       </div>
 
@@ -91,7 +86,7 @@ export const RealisticSignPlayer: React.FC<RealisticSignPlayerProps> = ({ lesson
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-teal-700 text-white hover:bg-teal-600 transition-colors cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            <span>{isPlaying ? 'Pausar Secuencia' : 'Reproducir'}</span>
+            <span>{isPlaying ? 'Pausar' : 'Reproducir'}</span>
           </button>
 
           <button
@@ -102,6 +97,23 @@ export const RealisticSignPlayer: React.FC<RealisticSignPlayerProps> = ({ lesson
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reiniciar</span>
           </button>
+
+          <div className="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+            {[0.75, 1, 1.25].map((spd) => (
+              <button
+                key={spd}
+                type="button"
+                onClick={() => setPlaybackSpeed(spd)}
+                className={`px-2 py-1 text-xs font-mono tabular-nums rounded-md cursor-pointer ${
+                  playbackSpeed === spd
+                    ? 'bg-teal-700 text-white font-semibold'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                {spd}x
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

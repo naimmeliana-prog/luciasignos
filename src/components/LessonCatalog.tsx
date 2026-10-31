@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import {
   CheckCircle2,
-  Camera,
   Download,
   Bookmark,
-  ChevronRight,
-  Award,
   BookOpen,
   FileCheck,
-  Eye,
   Layers
 } from 'lucide-react';
 import { LESSONS_CURRICULUM, GVA_EXAM_BANK, LINGUISTIC_MODULES } from '../data/curriculum';
@@ -16,11 +12,9 @@ import {
   Lesson,
   SkillLevel,
   StudentProgressState,
-  StudentUser,
-  VisualMode
+  StudentUser
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
-import { RealisticSignPlayer } from './RealisticSignPlayer';
 import { GrammarModuleView } from './GrammarModuleView';
 import { downloadSingleLessonSheet } from '../services/offlineGenerator';
 
@@ -30,7 +24,6 @@ interface LessonCatalogProps {
   onCompleteLesson: (lessonId: string, quizScore: number, durationMinutes: number) => void;
   onSaveNote: (lessonId: string, note: string, bookmarked?: boolean) => void;
   onOpenFacialPractice: (expressionChallengeId?: string) => void;
-  onToggleVisualMode: (mode: VisualMode) => void;
   onRecordGvaScore: (examId: string, score: number) => void;
 }
 
@@ -39,8 +32,6 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
   currentUser,
   onCompleteLesson,
   onSaveNote,
-  onOpenFacialPractice,
-  onToggleVisualMode,
   onRecordGvaScore
 }) => {
   const [levelFilter, setLevelFilter] = useState<'todos' | SkillLevel>('todos');
@@ -51,7 +42,6 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
   const [noteDraft, setNoteDraft] = useState<string>(
     progress.lessons[LESSONS_CURRICULUM[0].id]?.notes || ''
   );
-  const [noteSavedToast, setNoteSavedToast] = useState<boolean>(false);
 
   // GVA Exam practice state
   const [gvaAnswers, setGvaAnswers] = useState<Record<string, number>>({});
@@ -70,7 +60,6 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
     setQuizAnswers({});
     setQuizSubmitted(false);
     setNoteDraft(progress.lessons[lesson.id]?.notes || '');
-    setNoteSavedToast(false);
   };
 
   const handleQuizSubmit = () => {
@@ -90,8 +79,6 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
 
   const handleSavePersonalNote = () => {
     onSaveNote(activeLesson.id, noteDraft);
-    setNoteSavedToast(true);
-    setTimeout(() => setNoteSavedToast(false), 2500);
   };
 
   const handleToggleBookmark = () => {
@@ -117,43 +104,14 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
         <div className="lg:col-span-7 flex flex-col justify-between space-y-5">
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-xs font-mono text-sky-700">
-                LUCIA-SIGNOS · CURSO OFICIAL LSE Y EXÁMENES GVA
-              </div>
-              {/* Visual Mode Selector Toggle (Illustrations vs Photos) */}
-              <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
-                <span className="text-[11px] font-semibold text-slate-600 px-2">Visual:</span>
-                <button
-                  type="button"
-                  onClick={() => onToggleVisualMode('illustrations')}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
-                    progress.visualMode === 'illustrations'
-                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Ilustraciones
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onToggleVisualMode('realistic')}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
-                    progress.visualMode === 'realistic'
-                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Fotos Reales
-                </button>
-              </div>
+            <div className="text-xs font-mono text-sky-700">
+              LUCIA-SIGNOS · CURSO OFICIAL LSE Y EXÁMENES GVA
             </div>
-
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 font-display leading-tight">
               Aprende Lengua de Signos Española (LSE) y prepara los exámenes oficiales.
             </h1>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
-              Lecciones en vídeo, simulacros de examen de la Generalitat Valenciana (A1-B2), gramática y sintaxis LSE, glosario interactivo y reconocimiento facial.
+              Lecciones en vídeo interactivo, simulacros de examen de la Generalitat Valenciana (A1-B2), gramática y sintaxis LSE, glosario interactivo y reconocimiento facial.
             </p>
           </div>
 
@@ -208,46 +166,27 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
           </div>
         </div>
 
-        {/* Visual Editorial Illustration / Photo Preview Card */}
+        {/* Visual Editorial Preview Card */}
         <div className="lg:col-span-5 rounded-xl bg-slate-900 text-white p-6 flex flex-col justify-between border border-slate-800 overflow-hidden relative">
-          {progress.visualMode === 'realistic' ? (
-            <div className="absolute inset-0">
-              <img
-                src={activeLesson.realisticPhotoUrl || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80'}
-                alt="Fotografía real de lengua de signos"
-                className="w-full h-full object-cover opacity-45"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
-            </div>
-          ) : null}
-
           <div className="relative z-10 flex items-center justify-between text-xs font-mono text-slate-300">
-            <span>MÉTODO VISUAL DE LUCIA-SIGNOS</span>
+            <span>MÉTODO INTERACTIVO LUCIA-SIGNOS</span>
             <span>GVA OFICIAL · LSE</span>
           </div>
 
           <div className="relative z-10 my-4 flex items-center justify-center">
-            {progress.visualMode === 'illustrations' ? (
-              <svg
-                viewBox="0 0 320 140"
-                className="w-full max-w-xs h-32"
-                role="img"
-                aria-label="Ilustración anatómica"
-              >
-                <rect x="10" y="10" width="300" height="120" rx="10" fill="#1e293b" />
-                <circle cx="100" cy="70" r="30" fill="rgba(56, 189, 248, 0.18)" />
-                <path d="M 85 70 Q 100 45 115 70 Q 100 95 85 70 Z" fill="#fde4cf" stroke="#38bdf8" strokeWidth="2" />
-                <path d="M 140 70 Q 190 45 240 70" fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeDasharray="6 4" />
-                <circle cx="220" cy="70" r="30" fill="rgba(45, 212, 191, 0.18)" />
-                <path d="M 205 70 Q 220 45 235 70 Q 220 95 205 70 Z" fill="#f7d3b5" stroke="#2dd4bf" strokeWidth="2" />
-              </svg>
-            ) : (
-              <div className="text-center py-6">
-                <span className="inline-block px-3 py-1 bg-sky-900/80 text-sky-200 rounded-md text-xs font-mono">
-                  Modo Fotografía Real Activo
-                </span>
-              </div>
-            )}
+            <svg
+              viewBox="0 0 320 140"
+              className="w-full max-w-xs h-32"
+              role="img"
+              aria-label="Animación interactiva de lengua de signos"
+            >
+              <rect x="10" y="10" width="300" height="120" rx="10" fill="#1e293b" />
+              <circle cx="100" cy="70" r="30" fill="rgba(56, 189, 248, 0.18)" />
+              <path d="M 85 70 Q 100 45 115 70 Q 100 95 85 70 Z" fill="#fde4cf" stroke="#38bdf8" strokeWidth="2" />
+              <path d="M 140 70 Q 190 45 240 70" fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeDasharray="6 4" />
+              <circle cx="220" cy="70" r="30" fill="rgba(45, 212, 191, 0.18)" />
+              <path d="M 205 70 Q 220 45 235 70 Q 220 95 205 70 Z" fill="#f7d3b5" stroke="#2dd4bf" strokeWidth="2" />
+            </svg>
           </div>
 
           <div className="relative z-10 text-xs text-slate-300 flex items-center justify-between pt-3 border-t border-slate-800">
@@ -426,12 +365,8 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
                   </div>
                 </div>
 
-                {/* Visual Mode Animated Signer */}
-                {progress.visualMode === 'realistic' ? (
-                  <RealisticSignPlayer lesson={activeLesson} />
-                ) : (
-                  <SignVideoPlayer lesson={activeLesson} />
-                )}
+                {/* Sign Animation Player */}
+                <SignVideoPlayer lesson={activeLesson} />
 
                 {/* Biomechanical Breakdown */}
                 <div className="pt-2">

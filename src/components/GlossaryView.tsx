@@ -6,16 +6,13 @@ import {
   GlossaryEntry,
   Lesson,
   SkillLevel,
-  StudentProgressState,
-  VisualMode
+  StudentProgressState
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
-import { RealisticSignPlayer } from './RealisticSignPlayer';
 
 interface GlossaryViewProps {
   progress: StudentProgressState;
   onToggleMastered: (termId: string, termName: string) => void;
-  visualMode: VisualMode;
 }
 
 const CATEGORIES: ('Todas' | GlossaryCategory)[] = [
@@ -41,8 +38,7 @@ const ALPHA_GROUPS = [
 
 export const GlossaryView: React.FC<GlossaryViewProps> = ({
   progress,
-  onToggleMastered,
-  visualMode
+  onToggleMastered
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] =
@@ -146,7 +142,7 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
             Glosario Interactivo de Lengua de Signos
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Busca cualquier término, explora su descripción biomecánica detallada y observa la demostración visual (con opción de ilustraciones anatómicas o fotografías reales).
+            Busca cualquier término, explora su descripción biomecánica detallada y observa la demostración visual interactiva.
           </p>
         </div>
 
@@ -339,16 +335,12 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
             {activeEntry.description}
           </p>
 
-          {/* Visual Mode: Animated Signer */}
+          {/* Sign Animation Player */}
           <div>
             <div className="text-xs font-semibold text-slate-800 mb-2">
-              Demostración Visual Animada ({visualMode === 'realistic' ? 'Modo Realista Animado' : 'Modo Ilustración'})
+              Demostración Visual Interactiva
             </div>
-            {visualMode === 'realistic' ? (
-              <RealisticSignPlayer lesson={playerLessonAdapter} />
-            ) : (
-              <SignVideoPlayer lesson={playerLessonAdapter} />
-            )}
+            <SignVideoPlayer lesson={playerLessonAdapter} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">

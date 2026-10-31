@@ -22,8 +22,7 @@ import {
   AchievementToast,
   ReminderSettings,
   StudentProgressState,
-  StudentUser,
-  VisualMode
+  StudentUser
 } from './types/learning';
 
 const GUEST_STORAGE_ID = 'guest-local';
@@ -147,15 +146,6 @@ export default function App() {
     }
   };
 
-  const handleToggleVisualMode = (mode: VisualMode) => {
-    const updated: StudentProgressState = {
-      ...progress,
-      visualMode: mode
-    };
-    setProgress(updated);
-    saveStudentProgress(updated);
-  };
-
   const handleRecordOfflineDownload = (guideId: string) => {
     const setIds = new Set(progress.DownloadedGuideIds);
     setIds.add(guideId);
@@ -184,8 +174,6 @@ export default function App() {
         currentUser={currentUser}
         xpPoints={progress.xpPoints}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        visualMode={progress.visualMode || 'illustrations'}
-        onToggleVisualMode={handleToggleVisualMode}
       />
 
       {/* Celebratory Achievement Notification Banner */}
@@ -258,7 +246,6 @@ export default function App() {
             onCompleteLesson={handleCompleteLesson}
             onSaveNote={handleSaveNote}
             onOpenFacialPractice={() => setActiveSection('practica_facial')}
-            onToggleVisualMode={handleToggleVisualMode}
             onRecordGvaScore={(examId, score) => {
               const updated: StudentProgressState = {
                 ...progress,
@@ -277,7 +264,6 @@ export default function App() {
           <GlossaryView
             progress={progress}
             onToggleMastered={handleToggleGlossaryMastered}
-            visualMode={progress.visualMode || 'illustrations'}
           />
         )}
 

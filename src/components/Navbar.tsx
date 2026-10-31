@@ -1,5 +1,5 @@
 import React from 'react';
-import { StudentUser, VisualMode } from '../types/learning';
+import { StudentUser } from '../types/learning';
 
 export type AppSection =
   | 'lecciones'
@@ -14,8 +14,6 @@ interface NavbarProps {
   currentUser: StudentUser | null;
   xpPoints: number;
   onOpenAuthModal: () => void;
-  visualMode: VisualMode;
-  onToggleVisualMode: (mode: VisualMode) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -23,9 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectSection,
   currentUser,
   xpPoints,
-  onOpenAuthModal,
-  visualMode,
-  onToggleVisualMode
+  onOpenAuthModal
 }) => {
   const navItems: { id: AppSection; label: string }[] = [
     { id: 'lecciones', label: 'Lecciones y Exámenes GVA' },
@@ -71,33 +67,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Zone 3: Global Visual Mode Toggle & Auth Action */}
+        {/* Zone 3: Auth Action */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
-            <button
-              type="button"
-              onClick={() => onToggleVisualMode('illustrations')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
-                visualMode === 'illustrations'
-                  ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Ilustraciones
-            </button>
-            <button
-              type="button"
-              onClick={() => onToggleVisualMode('realistic')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
-                visualMode === 'realistic'
-                  ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Fotos Reales Animadas
-            </button>
-          </div>
-
           <button
             type="button"
             onClick={onOpenAuthModal}
@@ -110,48 +81,25 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile horizontal navigation bar & Visual mode switcher */}
-      <div className="md:hidden flex items-center justify-between gap-4 overflow-x-auto px-6 py-2.5 border-t border-slate-100 bg-slate-50/80">
-        <div className="flex items-center gap-4 shrink-0">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onSelectSection(item.id)}
-                className={`text-xs font-medium whitespace-nowrap shrink-0 py-1 border-b-2 ${
-                  isActive
-                    ? 'border-sky-600 text-slate-900 font-semibold'
-                    : 'border-transparent text-slate-600'
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex items-center bg-slate-200 p-0.5 rounded-md shrink-0">
-          <button
-            type="button"
-            onClick={() => onToggleVisualMode('illustrations')}
-            className={`px-2 py-1 text-[11px] font-medium rounded ${
-              visualMode === 'illustrations' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Ilustr.
-          </button>
-          <button
-            type="button"
-            onClick={() => onToggleVisualMode('realistic')}
-            className={`px-2 py-1 text-[11px] font-medium rounded ${
-              visualMode === 'realistic' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Real
-          </button>
-        </div>
+      {/* Mobile horizontal navigation bar */}
+      <div className="md:hidden flex items-center gap-4 overflow-x-auto px-6 py-2.5 border-t border-slate-100 bg-slate-50/80">
+        {navItems.map((item) => {
+          const isActive = activeSection === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelectSection(item.id)}
+              className={`text-xs font-medium whitespace-nowrap shrink-0 py-1 border-b-2 ${
+                isActive
+                  ? 'border-sky-600 text-slate-900 font-semibold'
+                  : 'border-transparent text-slate-600'
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </div>
     </header>
   );
