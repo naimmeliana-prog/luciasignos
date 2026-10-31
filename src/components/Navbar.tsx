@@ -1,12 +1,18 @@
 import React from 'react';
 import { StudentUser } from '../types/learning';
 
-export type AppSection = 'lecciones' | 'practica_facial' | 'progreso' | 'material_offline' | 'recordatorios';
+export type AppSection =
+  | 'lecciones'
+  | 'glosario'
+  | 'deletreo'
+  | 'practica_facial'
+  | 'progreso';
 
 interface NavbarProps {
   activeSection: AppSection;
   onSelectSection: (section: AppSection) => void;
   currentUser: StudentUser | null;
+  xpPoints: number;
   onOpenAuthModal: () => void;
 }
 
@@ -14,14 +20,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeSection,
   onSelectSection,
   currentUser,
+  xpPoints,
   onOpenAuthModal
 }) => {
   const navItems: { id: AppSection; label: string }[] = [
     { id: 'lecciones', label: 'Lecciones' },
+    { id: 'glosario', label: 'Glosario' },
+    { id: 'deletreo', label: 'Deletreo' },
     { id: 'practica_facial', label: 'Práctica Facial' },
-    { id: 'progreso', label: 'Mi Progreso' },
-    { id: 'material_offline', label: 'Material Offline' },
-    { id: 'recordatorios', label: 'Recordatorios' }
+    { id: 'progreso', label: 'Progreso y Logros' }
   ];
 
   return (
@@ -37,7 +44,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: 5 concise single-line text navigation links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600" aria-label="Navegación principal">
+        <nav
+          className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600"
+          aria-label="Navegación principal"
+        >
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -62,9 +72,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="px-4 py-2 text-xs font-semibold text-white bg-sky-700 rounded-lg hover:bg-sky-800 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+            className="px-4 py-2 text-xs font-semibold text-white bg-sky-700 rounded-lg hover:bg-sky-800 transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 font-mono tabular-nums"
           >
-            {currentUser ? `Cuenta · ${currentUser.name.split(' ')[0]}` : 'Acceso Estudiante'}
+            {currentUser
+              ? `${currentUser.name.split(' ')[0]} · ${xpPoints} XP`
+              : 'Acceso Estudiante'}
           </button>
         </div>
       </div>

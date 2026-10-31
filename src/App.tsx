@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Bell, X } from 'lucide-react';
+import { Bell, Trophy, X } from 'lucide-react';
 import { Navbar, AppSection } from './components/Navbar';
 import { LessonCatalog } from './components/LessonCatalog';
+import { GlossaryView } from './components/GlossaryView';
+import { FingerspellingPractice } from './components/FingerspellingPractice';
 import { FacialPracticeStudio } from './components/FacialPracticeStudio';
 import { ProgressDashboard } from './components/ProgressDashboard';
-import { OfflineMaterials } from './components/OfflineMaterials';
-import { NotificationCenter } from './components/NotificationCenter';
 import { AuthModal } from './components/AuthModal';
 import {
   ensureDemoStudentAccount,
@@ -15,11 +15,14 @@ import {
 import {
   loadStudentProgress,
   recordFacialChallengeSuccess,
+  recordFingerspellingExercise,
+  recordGlossaryTermMastered,
   recordLessonCompletion,
   saveLessonNote,
   saveStudentProgress
 } from './services/progressService';
 import {
+  AchievementToast,
   ReminderSettings,
   StudentProgressState,
   StudentUser
@@ -35,8 +38,18 @@ export default function App() {
   );
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [motivationBanner, setMotivationBanner] = useState<string | null>(null);
+  const [achievementToast, setAchievementToast] =
+    useState<AchievementToast | null>(null);
 
-  // Initialize default student account if none is logged in so the user's friend can start immediately
+  const showAchievement = (toast?: AchievementToast) => {
+    if (!toast) return;
+    setAchievementToast(toast);
+    setTimeout(() => {
+      setAchievementToast((prev) => (prev?.id === toast.id ? null : prev));
+    }, 5000);
+  };
+
+  // Initialize default student account if none is logged in
   useEffect(() => {
     let mounted = true;
     const init = async () => {
@@ -56,14 +69,13 @@ export default function App() {
     };
   }, []);
 
-  // Switch progress record when user changes
   const handleAuthChange = (user: StudentUser | null) => {
     setCurrentUser(user);
     const targetId = user?.id || 'stu-clara-demo';
     setProgress(loadStudentProgress(targetId));
   };
 
-  // Check daily reminder schedule every 60 seconds
+  // Check daily reminder schedule
   useEffect(() => {
     const checkSchedule = () => {
       if (!progress.reminder.enabled) return;
@@ -102,13 +114,14 @@ export default function App() {
     quizScore: number,
     durationMinutes: number
   ) => {
-    const updated = recordLessonCompletion(
+    const { nextState, toast } = recordLessonCompletion(
       progress,
       lessonId,
       quizScore,
       durationMinutes
     );
-    setProgress(updated);
+    setProgress(nextState);
+    showAchievement(toast);
   };
 
   const handleSaveNote = (
@@ -121,8 +134,38 @@ export default function App() {
   };
 
   const handleCompleteFacialChallenge = (challengeId: string, score: number) => {
-    const updated = recordFacialChallengeSuccess(progress, challengeId, score);
-    setProgress(updated);
+    const { nextState, toast } = recordFacialChallengeSuccess(
+      progress,
+      challengeId,
+      score
+    );
+    setProgress(nextState);
+    showAchievement(toast);
+  };
+
+  const handleToggleGlossaryMastered = (termId: string, termName: string) => {
+    const { nextState, toast } = recordGlossaryTermMastered(
+      progress,
+      termId,
+      termName
+    );
+    setProgress(nextState);
+    showAchievement(toast);
+  };
+
+  const handleFingerspellingResult = (
+    mode: 'guess_word' | 'spell_word' | 'rapid_letter',
+    isCorrect: boolean
+  ) => {
+    const { nextState, toast } = recordFingerspellingExercise(
+      progress,
+      mode,
+      isCorrect
+    );
+    setProgress(nextState);
+    if (toast) {
+      showAchievement(toast);
+    }
   };
 
   const handleRecordOfflineDownload = (guideId: string) => {
@@ -151,8 +194,48 @@ export default function App() {
         activeSection={activeSection}
         onSelectSection={setActiveSection}
         currentUser={currentUser}
+        xpPoints={progress.xpPoints}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
+
+      {/* Celebratory Achievement & Badge Notification Banner */}
+      {achievementToast && (
+        <div
+          className="bg-emerald-950 text-white px-6 py-3 border-b border-emerald-800 transition-all"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-3">
+              <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+              <div>
+                <span className="font-bold text-white">
+                  {achievementToast.title}
+                </span>
+                <span className="mx-2 text-emerald-400">·</span>
+                <span className="text-emerald-100">
+                  {achievementToast.message}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              {achievementToast.xpGained > 0 && (
+                <span className="font-mono font-bold text-amber-300 tabular-nums">
+                  +{achievementToast.xpGained} XP
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setAchievementToast(null)}
+                className="p-1 text-emerald-300 hover:text-white cursor-pointer"
+                aria-label="Cerrar notificación de logro"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Motivational Daily Reminder Toast Banner */}
       {motivationBanner && (
@@ -188,6 +271,20 @@ export default function App() {
           />
         )}
 
+        {activeSection === 'glosario' && (
+          <GlossaryView
+            progress={progress}
+            onToggleMastered={handleToggleGlossaryMastered}
+          />
+        )}
+
+        {activeSection === 'deletreo' && (
+          <FingerspellingPractice
+            progress={progress}
+            onExerciseResult={handleFingerspellingResult}
+          />
+        )}
+
         {activeSection === 'practica_facial' && (
           <FacialPracticeStudio
             progress={progress}
@@ -200,20 +297,7 @@ export default function App() {
             progress={progress}
             currentUser={currentUser}
             onSelectLessonFromProgress={() => setActiveSection('lecciones')}
-          />
-        )}
-
-        {activeSection === 'material_offline' && (
-          <OfflineMaterials
-            progress={progress}
-            currentUser={currentUser}
-            onRecordDownload={handleRecordOfflineDownload}
-          />
-        )}
-
-        {activeSection === 'recordatorios' && (
-          <NotificationCenter
-            progress={progress}
+            onRecordOfflineDownload={handleRecordOfflineDownload}
             onUpdateReminder={handleUpdateReminder}
             onTriggerInAppMotivation={(msg) => setMotivationBanner(msg)}
           />
@@ -226,27 +310,41 @@ export default function App() {
           <div>
             SignaViva — Plataforma interactiva de aprendizaje de lengua de signos.
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             <button
               type="button"
               onClick={() => setActiveSection('lecciones')}
               className="hover:text-slate-900 cursor-pointer"
             >
-              Catálogo de Lecciones
+              Lecciones en Vídeo
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection('glosario')}
+              className="hover:text-slate-900 cursor-pointer"
+            >
+              Glosario Interactivo
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection('deletreo')}
+              className="hover:text-slate-900 cursor-pointer"
+            >
+              Deletreo Manual
             </button>
             <button
               type="button"
               onClick={() => setActiveSection('practica_facial')}
               className="hover:text-slate-900 cursor-pointer"
             >
-              Laboratorio Facial
+              Reconocimiento Facial
             </button>
             <button
               type="button"
-              onClick={() => setActiveSection('material_offline')}
+              onClick={() => setActiveSection('progreso')}
               className="hover:text-slate-900 cursor-pointer"
             >
-              Descargas Offline
+              Logros y Descargas
             </button>
           </div>
         </div>

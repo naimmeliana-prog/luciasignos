@@ -98,6 +98,71 @@ export interface FacialChallenge {
   holdSecondsRequired: number;
 }
 
+export type GlossaryCategory =
+  | 'Saludos y Cortesía'
+  | 'Familia y Personas'
+  | 'Vida Cotidiana'
+  | 'Preguntas y Gramática'
+  | 'Tiempo y Verbos'
+  | 'Salud y Emergencias';
+
+export interface GlossaryEntry {
+  id: string;
+  term: string;
+  category: GlossaryCategory;
+  level: SkillLevel;
+  description: string;
+  handshape: string;
+  location: string;
+  movement: string;
+  nonManualMarker: string;
+  exampleSentence: string;
+  exampleGloss: string;
+  keyframes: SignAnimationKeyframe[];
+}
+
+export interface DactylologyLetter {
+  letter: string;
+  name: string;
+  handshapeSummary: string;
+  tip: string;
+  fingers: {
+    thumb: number; // 0 (folded) to 1 (extended)
+    index: number;
+    middle: number;
+    ring: number;
+    pinky: number;
+    spreadAngle: number; // 0 to 1
+    rotationDeg: number;
+    motionType?: 'static' | 'tilde_wave' | 'double_slide' | 'z_trace';
+  };
+}
+
+export interface FingerspellingWordItem {
+  id: string;
+  word: string;
+  clue: string;
+  category: string;
+  level: SkillLevel;
+}
+
+export interface GamificationBadge {
+  id: string;
+  title: string;
+  description: string;
+  xpReward: number;
+  category: 'lecciones' | 'deletreo' | 'facial' | 'constancia' | 'glosario';
+  requirementLabel: string;
+}
+
+export interface AchievementToast {
+  id: string;
+  title: string;
+  message: string;
+  xpGained: number;
+  badgeUnlocked?: string;
+}
+
 export interface StudentUser {
   id: string;
   name: string;
@@ -134,6 +199,15 @@ export interface ReminderSettings {
   lastTriggeredDate?: string;
 }
 
+export interface FingerspellingStats {
+  wordsGuessed: number;
+  wordsSpelled: number;
+  lettersRapidMatched: number;
+  currentStreak: number;
+  bestStreak: number;
+  adaptiveTier: SkillLevel;
+}
+
 export interface StudentProgressState {
   userId: string;
   lessons: Record<string, LessonProgressRecord>;
@@ -144,4 +218,8 @@ export interface StudentProgressState {
   totalMinutesStudied: number;
   DownloadedGuideIds: string[];
   reminder: ReminderSettings;
+  xpPoints: number;
+  unlockedBadgeIds: string[];
+  glossaryMasteredIds: string[];
+  fingerspelling: FingerspellingStats;
 }

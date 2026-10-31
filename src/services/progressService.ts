@@ -1,5 +1,11 @@
-import { StudentProgressState, LessonProgressRecord } from '../types/learning';
-import { LESSONS_CURRICULUM } from '../data/curriculum';
+import {
+  StudentProgressState,
+  LessonProgressRecord,
+  SkillLevel,
+  AchievementToast
+} from '../types/learning';
+import { LESSONS_CURRICULUM, FACIAL_CHALLENGES } from '../data/curriculum';
+import { GAMIFICATION_BADGES } from '../data/glossaryAndDactylology';
 
 const PROGRESS_PREFIX = 'signaviva_progress_v1_';
 
@@ -21,11 +27,14 @@ export function createInitialProgress(userId: string): StudentProgressState {
   LESSONS_CURRICULUM.forEach((lesson, idx) => {
     lessonsMap[lesson.id] = {
       lessonId: lesson.id,
-      completed: idx === 0, // Pre-complete first lesson on demo account or keep ready
+      completed: idx === 0,
       completedAt: idx === 0 ? new Date().toISOString() : undefined,
       quizScore: idx === 0 ? 100 : 0,
       facialPracticeScore: idx === 0 ? 92 : 0,
-      notes: idx === 0 ? 'Recordar proyectar "Gracias" desde el mentón manteniendo sonrisa.' : '',
+      notes:
+        idx === 0
+          ? 'Recordar proyectar "Gracias" desde el mentón manteniendo sonrisa.'
+          : '',
       bookmarked: idx === 0
     };
   });
@@ -56,6 +65,21 @@ export function createInitialProgress(userId: string): StudentProgressState {
         typeof window !== 'undefined' && 'Notification' in window
           ? Notification.permission === 'granted'
           : false
+    },
+    xpPoints: 325,
+    unlockedBadgeIds: [
+      'badge-primer-paso',
+      'badge-expresion-viva',
+      'badge-racha-constante'
+    ],
+    glossaryMasteredIds: ['glos-hola', 'glos-gracias'],
+    fingerspelling: {
+      wordsGuessed: 1,
+      wordsSpelled: 1,
+      lettersRapidMatched: 4,
+      currentStreak: 2,
+      bestStreak: 2,
+      adaptiveTier: 'inicial'
     }
   };
 }
@@ -69,7 +93,6 @@ export function loadStudentProgress(userId: string): StudentProgressState {
       return initial;
     }
     const parsed = JSON.parse(raw) as StudentProgressState;
-    // Ensure all curriculum lessons exist in record
     LESSONS_CURRICULUM.forEach((lesson) => {
       if (!parsed.lessons[lesson.id]) {
         parsed.lessons[lesson.id] = {
@@ -82,6 +105,26 @@ export function loadStudentProgress(userId: string): StudentProgressState {
         };
       }
     });
+
+    // Migrate fields for existing profiles
+    if (typeof parsed.xpPoints !== 'number') parsed.xpPoints = 325;
+    if (!Array.isArray(parsed.unlockedBadgeIds)) {
+      parsed.unlockedBadgeIds = ['badge-primer-paso', 'badge-expresion-viva'];
+    }
+    if (!Array.isArray(parsed.glossaryMasteredIds)) {
+      parsed.glossaryMasteredIds = ['glos-hola', 'glos-gracias'];
+    }
+    if (!parsed.fingerspelling) {
+      parsed.fingerspelling = {
+        wordsGuessed: 1,
+        wordsSpelled: 1,
+        lettersRapidMatched: 4,
+        currentStreak: 2,
+        bestStreak: 2,
+        adaptiveTier: 'inicial'
+      };
+    }
+
     return parsed;
   } catch {
     return createInitialProgress(userId);
@@ -92,12 +135,81 @@ export function saveStudentProgress(state: StudentProgressState): void {
   localStorage.setItem(`${PROGRESS_PREFIX}${state.userId}`, JSON.stringify(state));
 }
 
+export function evaluateAndUnlockBadges(
+  state: StudentProgressState,
+  baseXpAdded: number,
+  actionTitle: string
+): { nextState: StudentProgressState; toast: AchievementToast } {
+  const unlockedSet = new Set(state.unlockedBadgeIds);
+  let bonusXp = 0;
+  let newlyUnlockedBadgeTitle: string | undefined;
+
+  const completedLessonsCount = Object.values(state.lessons).filter(
+    (r) => r.completed
+  ).length;
+  const totalFingerspellingWords =
+    state.fingerspelling.wordsGuessed + state.fingerspelling.wordsSpelled;
+
+  const checkAndAdd = (badgeId: string, condition: boolean) => {
+    if (condition && !unlockedSet.has(badgeId)) {
+      unlockedSet.add(badgeId);
+      const badgeObj = GAMIFICATION_BADGES.find((b) => b.id === badgeId);
+      if (badgeObj) {
+        bonusXp += badgeObj.xpReward;
+        newlyUnlockedBadgeTitle = badgeObj.title;
+      }
+    }
+  };
+
+  checkAndAdd('badge-primer-paso', completedLessonsCount >= 1);
+  checkAndAdd('badge-expresion-viva', state.completedFacialChallenges.length >= 1);
+  checkAndAdd('badge-dactilologa-inicial', totalFingerspellingWords >= 3);
+  checkAndAdd('badge-exploradora-glosario', state.glossaryMasteredIds.length >= 5);
+  checkAndAdd('badge-racha-constante', state.currentStreakDays >= 3);
+  checkAndAdd(
+    'badge-maestra-mnm',
+    state.completedFacialChallenges.length >= FACIAL_CHALLENGES.length
+  );
+  checkAndAdd(
+    'badge-experta-deletreo',
+    state.fingerspelling.bestStreak >= 5 ||
+      state.fingerspelling.adaptiveTier === 'avanzado'
+  );
+  checkAndAdd(
+    'badge-graduada-signaviva',
+    completedLessonsCount >= LESSONS_CURRICULUM.length
+  );
+
+  const totalXpEarned = baseXpAdded + bonusXp;
+  const nextState: StudentProgressState = {
+    ...state,
+    xpPoints: state.xpPoints + totalXpEarned,
+    unlockedBadgeIds: Array.from(unlockedSet)
+  };
+
+  saveStudentProgress(nextState);
+
+  const toast: AchievementToast = {
+    id: `ach-${Date.now()}`,
+    title: newlyUnlockedBadgeTitle
+      ? `¡Nueva Insignia Desbloqueada: ${newlyUnlockedBadgeTitle}!`
+      : actionTitle,
+    message: newlyUnlockedBadgeTitle
+      ? `Has recibido una bonificación extra de insignia y sumado +${totalXpEarned} XP a tu perfil.`
+      : `¡Excelente trabajo! Has ganado +${totalXpEarned} XP en tu progreso.`,
+    xpGained: totalXpEarned,
+    badgeUnlocked: newlyUnlockedBadgeTitle
+  };
+
+  return { nextState, toast };
+}
+
 export function recordLessonCompletion(
   state: StudentProgressState,
   lessonId: string,
   quizScore: number,
   durationMinutes: number
-): StudentProgressState {
+): { nextState: StudentProgressState; toast: AchievementToast } {
   const today = getTodayDateString();
   const existingRecord = state.lessons[lessonId] || {
     lessonId,
@@ -136,10 +248,12 @@ export function recordLessonCompletion(
   const hadStudyToday = Boolean(state.studyLogs[today]);
   let newStreak = state.currentStreakDays;
   if (!hadStudyToday) {
-    newStreak = state.studyLogs[yesterday] ? state.currentStreakDays + 1 : Math.max(1, state.currentStreakDays);
+    newStreak = state.studyLogs[yesterday]
+      ? state.currentStreakDays + 1
+      : Math.max(1, state.currentStreakDays);
   }
 
-  const nextState: StudentProgressState = {
+  const intermediateState: StudentProgressState = {
     ...state,
     lessons: {
       ...state.lessons,
@@ -154,8 +268,12 @@ export function recordLessonCompletion(
     totalMinutesStudied: state.totalMinutesStudied + addedMinutes
   };
 
-  saveStudentProgress(nextState);
-  return nextState;
+  const baseXp = wasAlreadyCompleted ? 25 : 60;
+  return evaluateAndUnlockBadges(
+    intermediateState,
+    baseXp,
+    '¡Lección Completada!'
+  );
 }
 
 export function recordFacialChallengeSuccess(
@@ -163,9 +281,10 @@ export function recordFacialChallengeSuccess(
   challengeId: string,
   score: number,
   linkedLessonId?: string
-): StudentProgressState {
+): { nextState: StudentProgressState; toast: AchievementToast } {
   const today = getTodayDateString();
   const completedSet = new Set(state.completedFacialChallenges);
+  const wasAlreadyDone = completedSet.has(challengeId);
   completedSet.add(challengeId);
 
   const todayLog = state.studyLogs[today] || {
@@ -179,11 +298,14 @@ export function recordFacialChallengeSuccess(
   if (linkedLessonId && updatedLessons[linkedLessonId]) {
     updatedLessons[linkedLessonId] = {
       ...updatedLessons[linkedLessonId],
-      facialPracticeScore: Math.max(updatedLessons[linkedLessonId].facialPracticeScore, score)
+      facialPracticeScore: Math.max(
+        updatedLessons[linkedLessonId].facialPracticeScore,
+        score
+      )
     };
   }
 
-  const nextState: StudentProgressState = {
+  const intermediateState: StudentProgressState = {
     ...state,
     lessons: updatedLessons,
     completedFacialChallenges: Array.from(completedSet),
@@ -198,8 +320,117 @@ export function recordFacialChallengeSuccess(
     totalMinutesStudied: state.totalMinutesStudied + 4
   };
 
-  saveStudentProgress(nextState);
-  return nextState;
+  const baseXp = wasAlreadyDone ? 20 : 45;
+  return evaluateAndUnlockBadges(
+    intermediateState,
+    baseXp,
+    '¡Reto de Expresión Facial Superado!'
+  );
+}
+
+export function recordGlossaryTermMastered(
+  state: StudentProgressState,
+  termId: string,
+  termName: string
+): { nextState: StudentProgressState; toast: AchievementToast } {
+  const masteredSet = new Set(state.glossaryMasteredIds);
+  const alreadyMastered = masteredSet.has(termId);
+  if (alreadyMastered) {
+    masteredSet.delete(termId);
+    const nextState: StudentProgressState = {
+      ...state,
+      glossaryMasteredIds: Array.from(masteredSet)
+    };
+    saveStudentProgress(nextState);
+    return {
+      nextState,
+      toast: {
+        id: `glos-${Date.now()}`,
+        title: `Signo "${termName}" marcado para repaso`,
+        message: 'Puedes volver a practicarlo cuando quieras en el Glosario.',
+        xpGained: 0
+      }
+    };
+  }
+
+  masteredSet.add(termId);
+  const intermediateState: StudentProgressState = {
+    ...state,
+    glossaryMasteredIds: Array.from(masteredSet)
+  };
+
+  return evaluateAndUnlockBadges(
+    intermediateState,
+    25,
+    `¡Signo "${termName}" Dominado!`
+  );
+}
+
+export function recordFingerspellingExercise(
+  state: StudentProgressState,
+  mode: 'guess_word' | 'spell_word' | 'rapid_letter',
+  isCorrect: boolean
+): { nextState: StudentProgressState; toast?: AchievementToast } {
+  const prevFs = state.fingerspelling;
+
+  if (!isCorrect) {
+    const downgradedTier: SkillLevel =
+      prevFs.adaptiveTier === 'avanzado'
+        ? 'intermedio'
+        : prevFs.adaptiveTier === 'intermedio'
+        ? 'inicial'
+        : 'inicial';
+
+    const nextState: StudentProgressState = {
+      ...state,
+      fingerspelling: {
+        ...prevFs,
+        currentStreak: 0,
+        adaptiveTier: downgradedTier
+      }
+    };
+    saveStudentProgress(nextState);
+    return { nextState };
+  }
+
+  const nextStreak = prevFs.currentStreak + 1;
+  const nextBestStreak = Math.max(prevFs.bestStreak, nextStreak);
+
+  // Adaptive promotion: 3 consecutive successes promote difficulty level automatically
+  let nextTier: SkillLevel = prevFs.adaptiveTier;
+  if (nextStreak >= 3 && prevFs.adaptiveTier === 'inicial') {
+    nextTier = 'intermedio';
+  } else if (nextStreak >= 5 && prevFs.adaptiveTier === 'intermedio') {
+    nextTier = 'avanzado';
+  }
+
+  const intermediateState: StudentProgressState = {
+    ...state,
+    totalMinutesStudied: state.totalMinutesStudied + 2,
+    fingerspelling: {
+      wordsGuessed:
+        mode === 'guess_word' ? prevFs.wordsGuessed + 1 : prevFs.wordsGuessed,
+      wordsSpelled:
+        mode === 'spell_word' ? prevFs.wordsSpelled + 1 : prevFs.wordsSpelled,
+      lettersRapidMatched:
+        mode === 'rapid_letter'
+          ? prevFs.lettersRapidMatched + 1
+          : prevFs.lettersRapidMatched,
+      currentStreak: nextStreak,
+      bestStreak: nextBestStreak,
+      adaptiveTier: nextTier
+    }
+  };
+
+  const xpAmount = mode === 'rapid_letter' ? 15 : 35;
+  const label =
+    mode === 'guess_word'
+      ? '¡Palabra Dactilológica Adivinada!'
+      : mode === 'spell_word'
+      ? '¡Deletreo Manual Completado!'
+      : '¡Configuración Manual Identificada!';
+
+  return evaluateAndUnlockBadges(intermediateState, xpAmount, label);
 }
 
 export function saveLessonNote(
