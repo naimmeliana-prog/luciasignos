@@ -5,14 +5,18 @@ import {
   Download,
   Bookmark,
   ChevronRight,
-  Award
+  Award,
+  BookOpen,
+  FileCheck,
+  Eye
 } from 'lucide-react';
-import { LESSONS_CURRICULUM } from '../data/curriculum';
+import { LESSONS_CURRICULUM, GVA_EXAM_BANK, LINGUISTIC_MODULES } from '../data/curriculum';
 import {
   Lesson,
   SkillLevel,
   StudentProgressState,
-  StudentUser
+  StudentUser,
+  VisualMode
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
 import { downloadSingleLessonSheet } from '../services/offlineGenerator';
@@ -23,6 +27,8 @@ interface LessonCatalogProps {
   onCompleteLesson: (lessonId: string, quizScore: number, durationMinutes: number) => void;
   onSaveNote: (lessonId: string, note: string, bookmarked?: boolean) => void;
   onOpenFacialPractice: (expressionChallengeId?: string) => void;
+  onToggleVisualMode: (mode: VisualMode) => void;
+  onRecordGvaScore: (examId: string, score: number) => void;
 }
 
 export const LessonCatalog: React.FC<LessonCatalogProps> = ({
@@ -30,9 +36,12 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
   currentUser,
   onCompleteLesson,
   onSaveNote,
-  onOpenFacialPractice
+  onOpenFacialPractice,
+  onToggleVisualMode,
+  onRecordGvaScore
 }) => {
   const [levelFilter, setLevelFilter] = useState<'todos' | SkillLevel>('todos');
+  const [mainTab, setMainTab] = useState<'lecciones' | 'gva_examenes' | 'linguistica'>('lecciones');
   const [selectedLessonId, setSelectedLessonId] = useState<string>(LESSONS_CURRICULUM[0].id);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
   const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
@@ -40,6 +49,10 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
     progress.lessons[LESSONS_CURRICULUM[0].id]?.notes || ''
   );
   const [noteSavedToast, setNoteSavedToast] = useState<boolean>(false);
+
+  // GVA Exam practice state
+  const [gvaAnswers, setGvaAnswers] = useState<Record<string, number>>({});
+  const [gvaSubmitted, setGvaSubmitted] = useState<boolean>(false);
 
   const filteredLessons = LESSONS_CURRICULUM.filter((l) =>
     levelFilter === 'todos' ? true : l.level === levelFilter
@@ -82,6 +95,17 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
     onSaveNote(activeLesson.id, noteDraft, !activeRecord?.bookmarked);
   };
 
+  const handleGvaSubmit = () => {
+    setGvaSubmitted(true);
+    let correct = 0;
+    GVA_EXAM_BANK.forEach((eq) => {
+      if (gvaAnswers[eq.id] === eq.correctIndex) correct++;
+    });
+    const pct = Math.round((correct / GVA_EXAM_BANK.length) * 100);
+    onRecordGvaScore('gva-simulacro-general', pct);
+    onCompleteLesson('lec-03-gva-a1-a2', pct, 15);
+  };
+
   const completedCount = Object.values(progress.lessons).filter((r) => r.completed).length;
 
   return (
@@ -90,158 +114,128 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
         <div className="lg:col-span-7 flex flex-col justify-between space-y-5">
           <div className="space-y-3">
-            <div className="text-xs font-mono text-sky-700">
-              ESCUELA INTERACTIVA DE LENGUA DE SIGNOS · DESDE CERO HASTA AVANZADO
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-mono text-sky-700">
+                LUCIA-SIGNOS · CURSO OFICIAL LSE Y EXÁMENES GVA
+              </div>
+              {/* Visual Mode Selector Toggle (Illustrations vs Photos) */}
+              <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <span className="text-[11px] font-semibold text-slate-600 px-2">Visual:</span>
+                <button
+                  type="button"
+                  onClick={() => onToggleVisualMode('illustrations')}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
+                    progress.visualMode === 'illustrations'
+                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Ilustraciones
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onToggleVisualMode('realistic')}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer ${
+                    progress.visualMode === 'realistic'
+                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Fotos Reales
+                </button>
+              </div>
             </div>
+
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 font-display leading-tight">
-              Aprende a comunicarte con tus manos y tu expresión facial paso a paso.
+              Aprende Lengua de Signos Española (LSE) y prepara los exámenes oficiales.
             </h1>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
-              Lecciones en vídeo integradas sin salir de la web, laboratorio de expresión facial por cámara en tiempo real y cuadernos descargables para estudiar sin conexión.
+              Lecciones en vídeo, simulacros de examen de la Generalitat Valenciana (A1-B2), gramática y sintaxis LSE, glosario interactivo y reconocimiento facial.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href="#aula-interactiva"
-              className="px-5 py-2.5 text-sm font-semibold text-white bg-sky-700 rounded-lg hover:bg-sky-800 transition-colors whitespace-nowrap shrink-0"
-            >
-              Ir a la Lección Activa
-            </a>
             <button
               type="button"
-              onClick={() => onOpenFacialPractice()}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-slate-800 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+              onClick={() => setMainTab('lecciones')}
+              className={`px-4 py-2.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mainTab === 'lecciones'
+                  ? 'bg-sky-700 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
             >
-              <Camera className="w-4 h-4 text-sky-700" />
-              <span>Practicar Expresión con Cámara</span>
+              Lecciones de LSE
+            </button>
+            <button
+              type="button"
+              onClick={() => setMainTab('gva_examenes')}
+              className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mainTab === 'gva_examenes'
+                  ? 'bg-sky-700 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              <FileCheck className="w-3.5 h-3.5" />
+              <span>Exámenes GVA Oficiales</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMainTab('linguistica')}
+              className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mainTab === 'linguistica'
+                  ? 'bg-sky-700 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Gramática y Sintaxis LSE</span>
             </button>
           </div>
         </div>
 
-        {/* Visual Editorial Illustration Card (Sculpted Anatomical Signers & Hands) */}
-        <div className="lg:col-span-5 rounded-xl bg-slate-900 text-white p-6 flex flex-col justify-between border border-slate-800">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>ESTUDIO VISUAL INTERACTIVO</span>
-            <span>SIN REDIRECCIONES EXTERNAS</span>
+        {/* Visual Editorial Illustration / Photo Preview Card */}
+        <div className="lg:col-span-5 rounded-xl bg-slate-900 text-white p-6 flex flex-col justify-between border border-slate-800 overflow-hidden relative">
+          {progress.visualMode === 'realistic' ? (
+            <div className="absolute inset-0">
+              <img
+                src={activeLesson.realisticPhotoUrl || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80'}
+                alt="Fotografía real de lengua de signos"
+                className="w-full h-full object-cover opacity-45"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+            </div>
+          ) : null}
+
+          <div className="relative z-10 flex items-center justify-between text-xs font-mono text-slate-300">
+            <span>MÉTODO VISUAL DE LUCIA-SIGNOS</span>
+            <span>GVA OFICIAL · LSE</span>
           </div>
 
-          <div className="my-3 flex items-center justify-center">
-            <svg
-              viewBox="0 0 380 200"
-              className="w-full h-44 rounded-lg overflow-hidden"
-              role="img"
-              aria-label="Ilustración editorial de comunicación en lengua de signos"
-            >
-              <defs>
-                <radialGradient id="heroStudioGlow" cx="50%" cy="45%" r="60%">
-                  <stop offset="0%" stopColor="#1e3a5f" />
-                  <stop offset="70%" stopColor="#0f172a" />
-                  <stop offset="100%" stopColor="#090d16" />
-                </radialGradient>
-                <linearGradient id="skinWarmA" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#fde4cf" />
-                  <stop offset="60%" stopColor="#f3c19d" />
-                  <stop offset="100%" stopColor="#d99b72" />
-                </linearGradient>
-                <linearGradient id="skinWarmB" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#f7d3b5" />
-                  <stop offset="60%" stopColor="#e4ab83" />
-                  <stop offset="100%" stopColor="#c5855c" />
-                </linearGradient>
-              </defs>
-
-              <rect width="380" height="200" fill="url(#heroStudioGlow)" />
-
-              {/* Subtle architectural studio light rays */}
-              <circle cx="190" cy="95" r="78" fill="none" stroke="rgba(56, 189, 248, 0.14)" strokeWidth="1.2" />
-              <circle cx="190" cy="95" r="108" fill="none" stroke="rgba(45, 212, 191, 0.09)" strokeWidth="1.2" />
-
-              {/* Left Signer Portrait & Expressive Hand */}
-              <g transform="translate(82, 108)">
-                {/* Shoulders / Cardigan */}
-                <path d="M-58 92 C-52 46, -28 36, 0 36 C28 36, 52 46, 58 92 Z" fill="#0284c7" />
-                <path d="M-16 36 L0 54 L16 36 Z" fill="#f8fafc" />
-                {/* Neck & Sculpted Head */}
-                <rect x="-10" y="16" width="20" height="24" rx="6" fill="url(#skinWarmA)" />
-                <path d="M-28 -18 C-32 -52, 32 -52, 28 -18 C27 6, 16 24, 0 28 C-16 24, -27 6, -28 -18 Z" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="1.2" />
-                {/* Hair */}
-                <path d="M-30 -14 C-34 -44, -14 -58, 6 -56 C24 -55, 34 -40, 30 -12 C24 -28, 12 -38, -6 -38 C-18 -38, -26 -28, -30 -14 Z" fill="#18181b" />
-                {/* Expressive Eyebrows, Eyes & Smile */}
-                <path d="M-17 -19 Q-11 -24 -5 -19" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
-                <path d="M5 -19 Q11 -24 17 -19" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
-                <circle cx="-11" cy="-11" r="2.4" fill="#18181b" />
-                <circle cx="11" cy="-11" r="2.4" fill="#18181b" />
-                <path d="M-9 8 Q0 16 9 8" fill="none" stroke="#9f3e46" strokeWidth="2.2" strokeLinecap="round" />
-
-                {/* Sculpted Articulated Signing Hand (Foreground Right) */}
-                <g transform="translate(56, 2) rotate(-14)">
-                  <circle cx="0" cy="-12" r="26" fill="rgba(56, 189, 248, 0.16)" />
-                  <path
-                    d="M-12 14 C-16 4, -15 -8, -12 -12 L11 -12 C14 -8, 15 4, 11 14 Z"
-                    fill="url(#skinWarmA)"
-                    stroke="#38bdf8"
-                    strokeWidth="1.5"
-                  />
-                  {/* 4 Tapered Fingers */}
-                  <rect x="-11" y="-32" width="4.8" height="22" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
-                  <rect x="-5" y="-36" width="4.8" height="26" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
-                  <rect x="1" y="-34" width="4.8" height="24" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
-                  <rect x="7" y="-28" width="4.5" height="18" rx="2.2" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
-                  {/* Thumb */}
-                  <rect x="-18" y="-14" width="5" height="16" rx="2.5" transform="rotate(-32 -15 -6)" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
-                </g>
-              </g>
-
-              {/* Visual Dialogue Connection Arc */}
-              <path
-                d="M 152 84 Q 190 52 228 84"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="2.2"
-                strokeDasharray="5 4"
-              />
-              <path
-                d="M 158 106 Q 190 128 222 106"
-                fill="none"
-                stroke="#2dd4bf"
-                strokeWidth="1.8"
-                strokeDasharray="4 4"
-              />
-
-              {/* Right Signer Portrait & Expressive Hand */}
-              <g transform="translate(298, 108)">
-                <path d="M-58 92 C-52 46, -28 36, 0 36 C28 36, 52 46, 58 92 Z" fill="#0d9488" />
-                <path d="M-16 36 L0 54 L16 36 Z" fill="#f8fafc" />
-                <rect x="-10" y="16" width="20" height="24" rx="6" fill="url(#skinWarmB)" />
-                <path d="M-28 -18 C-32 -52, 32 -52, 28 -18 C27 6, 16 24, 0 28 C-16 24, -27 6, -28 -18 Z" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="1.2" />
-                <path d="M-30 -12 C-34 -46, -12 -58, 8 -55 C26 -52, 34 -38, 30 -10 C22 -28, 8 -36, -8 -36 C-20 -36, -26 -26, -30 -12 Z" fill="#27272a" />
-                <path d="M-17 -20 Q-11 -25 -5 -20" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
-                <path d="M5 -20 Q11 -25 17 -20" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
-                <circle cx="-11" cy="-11" r="2.4" fill="#18181b" />
-                <circle cx="11" cy="-11" r="2.4" fill="#18181b" />
-                <path d="M-9 8 Q0 16 9 8" fill="none" stroke="#9f3e46" strokeWidth="2.2" strokeLinecap="round" />
-
-                {/* Sculpted Articulated Signing Hand (Foreground Left) */}
-                <g transform="translate(-56, 2) rotate(14)">
-                  <circle cx="0" cy="-12" r="26" fill="rgba(45, 212, 191, 0.16)" />
-                  <path
-                    d="M-11 14 C-15 4, -14 -8, -11 -12 L12 -12 C15 -8, 16 4, 12 14 Z"
-                    fill="url(#skinWarmB)"
-                    stroke="#2dd4bf"
-                    strokeWidth="1.5"
-                  />
-                  <rect x="-11.5" y="-28" width="4.5" height="18" rx="2.2" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
-                  <rect x="-5.8" y="-34" width="4.8" height="24" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
-                  <rect x="0.2" y="-36" width="4.8" height="26" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
-                  <rect x="6.2" y="-32" width="4.8" height="22" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
-                  <rect x="13" y="-14" width="5" height="16" rx="2.5" transform="rotate(32 15 -6)" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
-                </g>
-              </g>
-            </svg>
+          <div className="relative z-10 my-4 flex items-center justify-center">
+            {progress.visualMode === 'illustrations' ? (
+              <svg
+                viewBox="0 0 320 140"
+                className="w-full max-w-xs h-32"
+                role="img"
+                aria-label="Ilustración anatómica"
+              >
+                <rect x="10" y="10" width="300" height="120" rx="10" fill="#1e293b" />
+                <circle cx="100" cy="70" r="30" fill="rgba(56, 189, 248, 0.18)" />
+                <path d="M 85 70 Q 100 45 115 70 Q 100 95 85 70 Z" fill="#fde4cf" stroke="#38bdf8" strokeWidth="2" />
+                <path d="M 140 70 Q 190 45 240 70" fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeDasharray="6 4" />
+                <circle cx="220" cy="70" r="30" fill="rgba(45, 212, 191, 0.18)" />
+                <path d="M 205 70 Q 220 45 235 70 Q 220 95 205 70 Z" fill="#f7d3b5" stroke="#2dd4bf" strokeWidth="2" />
+              </svg>
+            ) : (
+              <div className="text-center py-6">
+                <span className="inline-block px-3 py-1 bg-sky-900/80 text-sky-200 rounded-md text-xs font-mono">
+                  Modo Fotografía Real Activo
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className="text-xs text-slate-300 flex items-center justify-between pt-3 border-t border-slate-800">
+          <div className="relative z-10 text-xs text-slate-300 flex items-center justify-between pt-3 border-t border-slate-800">
             <span>Progreso actual: {completedCount} de {LESSONS_CURRICULUM.length} lecciones</span>
             <span className="font-mono text-sky-400 tabular-nums">
               Racha: {progress.currentStreakDays} días
@@ -250,14 +244,14 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
         </div>
       </section>
 
-      {/* Full-Width 4-Column Summary Strip Below Hero */}
+      {/* Full-Width 4-Column Summary Strip */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-slate-200 rounded-xl p-4">
           <div className="text-xs text-slate-500">Lecciones Dominadas</div>
           <div className="text-2xl font-bold text-slate-900 font-mono tabular-nums mt-1">
             {completedCount} / {LESSONS_CURRICULUM.length}
           </div>
-          <div className="text-xs text-slate-500 mt-1">Currículo progresivo</div>
+          <div className="text-xs text-slate-500 mt-1">Currículo GVA y LSE</div>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-xl p-4">
@@ -287,247 +281,171 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
         </div>
       </section>
 
-      {/* Interactive Classroom Workspace */}
-      <section id="aula-interactiva" className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 font-display">
-              Catálogo de Lecciones y Aula en Vídeo
-            </h2>
-            <p className="text-sm text-slate-600">
-              Selecciona tu nivel y estudia cada signo con vídeo integrado, vectores de movimiento y autoevaluación.
-            </p>
-          </div>
-
-          {/* Interactive Filter Controls (Segmented Buttons) */}
-          <div className="flex items-center gap-1 p-1 bg-slate-200/75 rounded-lg self-start">
-            {(
-              [
-                { id: 'todos', label: 'Todos los niveles' },
-                { id: 'inicial', label: 'Inicial' },
-                { id: 'intermedio', label: 'Intermedio' },
-                { id: 'avanzado', label: 'Avanzado' }
-              ] as const
-            ).map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setLevelFilter(tab.id)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
-                  levelFilter === tab.id
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Lesson List (4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
-            {filteredLessons.map((lesson) => {
-              const isSelected = lesson.id === activeLesson.id;
-              const rec = progress.lessons[lesson.id];
-              const isDone = Boolean(rec?.completed);
-
-              return (
-                <button
-                  key={lesson.id}
-                  type="button"
-                  onClick={() => handleSelectLesson(lesson)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-white border-sky-600 shadow-xs ring-1 ring-sky-600'
-                      : 'bg-white border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  {/* Clean unboxed metadata with typographic separators */}
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-mono font-semibold text-slate-700">
-                        {lesson.number}
-                      </span>
-                      <span aria-hidden="true">·</span>
-                      <span className="capitalize">{lesson.level}</span>
-                      <span aria-hidden="true">·</span>
-                      <span className="tabular-nums">{lesson.durationMinutes} min</span>
-                    </div>
-                    {isDone && (
-                      <span className="text-emerald-700 font-semibold">✓ Completada</span>
-                    )}
-                  </div>
-
-                  <h3 className="text-base font-bold text-slate-900 leading-snug">
-                    {lesson.number}. {lesson.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-1 line-clamp-2">{lesson.subtitle}</p>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Active Lesson Video Player + Study Modules (8 cols) */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Active Lesson Header */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-                    <span>Lección {activeLesson.number}</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="capitalize">Nivel {activeLesson.level}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{activeLesson.category}</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="tabular-nums">{activeLesson.durationMinutes} min</span>
-                  </div>
-                  <h2 className="text-2xl font-bold text-slate-900 font-display">
-                    {activeLesson.number}. {activeLesson.title}
-                  </h2>
-                  <p className="text-sm text-slate-600 mt-1">{activeLesson.summary}</p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleToggleBookmark}
-                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors cursor-pointer whitespace-nowrap ${
-                      activeRecord?.bookmarked
-                        ? 'bg-amber-50 border-amber-300 text-amber-900'
-                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
-                  >
-                    <Bookmark className="w-3.5 h-3.5" />
-                    <span>{activeRecord?.bookmarked ? 'Guardada' : 'Guardar'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      downloadSingleLessonSheet(
-                        activeLesson,
-                        currentUser?.name || 'Estudiante',
-                        noteDraft
-                      )
-                    }
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Descargar Ficha Offline</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Embedded Interactive Sign Video Player */}
-              <SignVideoPlayer lesson={activeLesson} />
-
-              {/* Biomechanical Breakdown Grid */}
-              <div className="pt-2">
-                <h3 className="text-sm font-bold text-slate-900 mb-3">
-                  Los 4 Parámetros Formacionales del Signo
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <div className="font-semibold text-slate-900 mb-1">
-                      1. Configuración Manual (Queirema)
-                    </div>
-                    <p className="text-slate-600 leading-relaxed">
-                      {activeLesson.biomechanics.configuracionManual}
-                    </p>
-                  </div>
-                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <div className="font-semibold text-slate-900 mb-1">
-                      2. Lugar de Articulación (Toponema)
-                    </div>
-                    <p className="text-slate-600 leading-relaxed">
-                      {activeLesson.biomechanics.ubicacionEspacial}
-                    </p>
-                  </div>
-                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <div className="font-semibold text-slate-900 mb-1">
-                      3. Trayectoria y Movimiento (Kinema)
-                    </div>
-                    <p className="text-slate-600 leading-relaxed">
-                      {activeLesson.biomechanics.trayectoriaMovimiento}
-                    </p>
-                  </div>
-                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <div className="font-semibold text-slate-900 mb-1">
-                      4. Expresión Facial (Marcador No Manual)
-                    </div>
-                    <p className="text-slate-600 leading-relaxed">
-                      {activeLesson.biomechanics.marcadorFacial}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Vocabulary Table */}
-              <div className="pt-2">
-                <h3 className="text-sm font-bold text-slate-900 mb-3">
-                  Vocabulario Desglosado en esta Lección
-                </h3>
-                <div className="overflow-x-auto border border-slate-200 rounded-lg">
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200 text-slate-600">
-                        <th className="py-2.5 px-3 font-semibold">Signo</th>
-                        <th className="py-2.5 px-3 font-semibold">Mano</th>
-                        <th className="py-2.5 px-3 font-semibold">Ubicación y Movimiento</th>
-                        <th className="py-2.5 px-3 font-semibold">Expresión Facial</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-200">
-                      {activeLesson.vocabulary.map((item) => (
-                        <tr key={item.id} className="hover:bg-slate-50/80">
-                          <td className="py-2.5 px-3 font-semibold text-slate-900 whitespace-nowrap">
-                            {item.word}
-                          </td>
-                          <td className="py-2.5 px-3 text-slate-700">{item.handshape}</td>
-                          <td className="py-2.5 px-3 text-slate-600">
-                            {item.location} · {item.movement}
-                          </td>
-                          <td className="py-2.5 px-3 text-sky-800 font-medium">
-                            {item.nonManualMarker}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Camera Practice Callout Banner */}
-              <div className="p-4 rounded-xl bg-sky-50/70 border border-sky-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div className="text-xs font-mono text-sky-800">
-                    PRÁCTICA CON CÁMARA RECOMENDADA
-                  </div>
-                  <div className="text-sm font-semibold text-slate-900 mt-0.5">
-                    {activeLesson.facialExercisePrompt}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onOpenFacialPractice()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-sky-700 text-white rounded-lg hover:bg-sky-800 transition-colors cursor-pointer whitespace-nowrap shrink-0"
-                >
-                  <span>Ir al Reconocimiento Facial</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+      {/* Main Tab: Lecciones de LSE */}
+      {mainTab === 'lecciones' && (
+        <section className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 font-display">
+                Catálogo de Lecciones y Exámenes GVA
+              </h2>
+              <p className="text-sm text-slate-600">
+                Selecciona tu nivel o simulacro oficial para estudiar con vídeo interactivo y fichas de teoría.
+              </p>
             </div>
 
-            {/* Interactive Quiz & Personal Notes Section */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              {/* Comprehension Check Quiz (7 cols) */}
-              <div className="md:col-span-7 bg-white border border-slate-200 rounded-xl p-6 space-y-4">
+            <div className="flex items-center gap-1 p-1 bg-slate-200/75 rounded-lg self-start">
+              {(
+                [
+                  { id: 'todos', label: 'Todos los niveles' },
+                  { id: 'inicial', label: 'Inicial (A1)' },
+                  { id: 'intermedio', label: 'Intermedio (B1)' },
+                  { id: 'gva_oficial', label: 'Exámenes GVA' }
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setLevelFilter(tab.id)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
+                    levelFilter === tab.id
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Column: Lesson List (4 cols) */}
+            <div className="lg:col-span-4 space-y-3">
+              {filteredLessons.map((lesson) => {
+                const isSelected = lesson.id === activeLesson.id;
+                const rec = progress.lessons[lesson.id];
+                const isDone = Boolean(rec?.completed);
+
+                return (
+                  <button
+                    key={lesson.id}
+                    type="button"
+                    onClick={() => handleSelectLesson(lesson)}
+                    className={`w-full text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-white border-sky-600 shadow-xs ring-1 ring-sky-600'
+                        : 'bg-white border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-semibold text-slate-700">
+                          {lesson.number}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span className="capitalize">{lesson.level}</span>
+                        <span aria-hidden="true">·</span>
+                        <span className="tabular-nums">{lesson.durationMinutes} min</span>
+                      </div>
+                      {isDone && (
+                        <span className="text-emerald-700 font-semibold">✓ Completada</span>
+                      )}
+                    </div>
+
+                    <h3 className="text-base font-bold text-slate-900 leading-snug">
+                      {lesson.number}. {lesson.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 mt-1 line-clamp-2">{lesson.subtitle}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Column: Active Lesson Video Player & Details (8 cols) */}
+            <div className="lg:col-span-8 space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-5">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                      <span>Lección {activeLesson.number}</span>
+                      <span aria-hidden="true">·</span>
+                      <span className="capitalize">Nivel {activeLesson.level}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{activeLesson.category}</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 font-display">
+                      {activeLesson.number}. {activeLesson.title}
+                    </h2>
+                    <p className="text-sm text-slate-600 mt-1">{activeLesson.summary}</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleToggleBookmark}
+                      className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                        activeRecord?.bookmarked
+                          ? 'bg-amber-50 border-amber-300 text-amber-900'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Bookmark className="w-3.5 h-3.5" />
+                      <span>{activeRecord?.bookmarked ? 'Guardada' : 'Guardar'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        downloadSingleLessonSheet(
+                          activeLesson,
+                          currentUser?.name || 'Estudiante',
+                          noteDraft
+                        )
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Descargar Ficha Offline</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Visual Mode Animated Signer */}
+                <div className="relative">
+                  <div className="absolute top-3 left-4 z-20 bg-slate-950/85 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-xs text-teal-300 font-mono">
+                    {progress.visualMode === 'realistic' ? 'RENDER REALISTA ANIMADO 3D' : 'ILUSTRACIÓN ESQUEMÁTICA'}
+                  </div>
+                  <SignVideoPlayer lesson={activeLesson} />
+                </div>
+
+                {/* Biomechanical Breakdown */}
+                <div className="pt-2">
+                  <h3 className="text-sm font-bold text-slate-900 mb-3">
+                    Parámetros Formacionales del Signo
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                      <div className="font-semibold text-slate-900 mb-1">
+                        1. Configuración Manual
+                      </div>
+                      <p className="text-slate-600">{activeLesson.biomechanics.configuracionManual}</p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                      <div className="font-semibold text-slate-900 mb-1">
+                        2. Ubicación Espacial
+                      </div>
+                      <p className="text-slate-600">{activeLesson.biomechanics.ubicacionEspacial}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quiz Section */}
+              <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-bold text-slate-900">
-                    Comprobación Interactiva
+                    Comprobación Interactiva de Lección
                   </h3>
                   {activeRecord?.completed && (
                     <span className="text-xs font-mono text-emerald-700 font-semibold tabular-nums">
@@ -593,54 +511,139 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
                       onClick={handleQuizSubmit}
                       className="px-4 py-2 text-xs font-semibold text-white bg-sky-700 rounded-lg hover:bg-sky-800 transition-colors cursor-pointer"
                     >
-                      Completar Lección y Verificar Respuestas
+                      Completar Lección y Registrar XP
                     </button>
                   ) : (
                     <div className="flex items-center gap-2 text-xs text-emerald-800 font-semibold">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>¡Lección registrada en tu progreso diario!</span>
+                      <span>¡Lección completada y registrada en tu progreso!</span>
                     </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Personal Study Notes (5 cols) */}
-              <div className="md:col-span-5 bg-white border border-slate-200 rounded-xl p-6 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-slate-900">
-                    Cuaderno Personal de Notas
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    Anota trucos visuales o dudas sobre esta lección. Tus apuntes se incluyen al descargar la ficha offline.
-                  </p>
-                  <textarea
-                    rows={5}
-                    value={noteDraft}
-                    onChange={(e) => setNoteDraft(e.target.value)}
-                    placeholder="Ej.: Recordar mantener las cejas elevadas al final de la pregunta..."
-                    className="w-full rounded-lg border border-slate-300 p-3 text-xs text-slate-800 focus:outline-2 focus:outline-sky-600"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between gap-2">
-                  <button
-                    type="button"
-                    onClick={handleSavePersonalNote}
-                    className="px-4 py-2 text-xs font-semibold text-slate-900 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
-                  >
-                    Guardar Apuntes
-                  </button>
-                  {noteSavedToast && (
-                    <span className="text-xs text-emerald-700 font-medium">
-                      ✓ Guardado
-                    </span>
                   )}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Main Tab: Exámenes Oficiales GVA */}
+      {mainTab === 'gva_examenes' && (
+        <section className="bg-white border border-slate-200 rounded-xl p-8 space-y-6">
+          <div className="border-b border-slate-200 pb-4">
+            <div className="text-xs font-mono text-sky-700 mb-1">
+                SIMULACRO DE PRUEBAS OFICIALES · GENERALITAT VALENCIANA
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 font-display">
+              Exámenes Oficiales de LSE (A1, A2, B1, B2)
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Pon a prueba tus conocimientos con preguntas basadas en las convocatorias oficiales de acreditación de la Generalitat Valenciana.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {GVA_EXAM_BANK.map((eq, idx) => (
+              <div key={eq.id} className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-500">
+                  <span>PREGUNTA OFICIAL GVA · NIVEL {eq.level}</span>
+                  <span>Pregunta 0{idx + 1} de {GVA_EXAM_BANK.length}</span>
+                </div>
+                <p className="text-sm font-semibold text-slate-900">{eq.question}</p>
+                <div className="space-y-2">
+                  {eq.options.map((opt, optIdx) => {
+                    const selected = gvaAnswers[eq.id] === optIdx;
+                    const correct = eq.correctIndex === optIdx;
+                    let cls = 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100';
+                    if (selected) cls = 'bg-sky-50 border-sky-600 text-slate-900 font-medium';
+                    if (gvaSubmitted) {
+                      if (correct) cls = 'bg-emerald-50 border-emerald-600 text-emerald-950 font-medium';
+                      else if (selected && !correct) cls = 'bg-red-50 border-red-300 text-red-900';
+                    }
+
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => {
+                          if (!gvaSubmitted) setGvaAnswers((p) => ({ ...p, [eq.id]: optIdx }));
+                        }}
+                        className={`w-full text-left px-4 py-2.5 rounded-lg border text-xs transition-colors cursor-pointer ${cls}`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+                {gvaSubmitted && (
+                  <p className="text-xs text-slate-600 bg-white p-3 rounded border border-slate-200">
+                    <strong>Criterio oficial GVA:</strong> {eq.explanation}
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div className="pt-2 flex items-center justify-between">
+              {!gvaSubmitted ? (
+                <button
+                  type="button"
+                  onClick={handleGvaSubmit}
+                  className="px-6 py-3 text-xs font-semibold text-white bg-sky-700 rounded-lg hover:bg-sky-800 cursor-pointer"
+                >
+                  Calificar Simulacro GVA y Sumar XP
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                  <span>¡Simulacro GVA evaluado y registrado en tu expediente!</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main Tab: Gramática y Sintaxis LSE */}
+      {mainTab === 'linguistica' && (
+        <section className="space-y-6">
+          <div className="border-b border-slate-200 pb-4">
+            <div className="text-xs font-mono text-sky-700 mb-1">
+              LINGÜÍSTICA Y REGLAS PROPIAS DE LA LENGUA DE SIGNOS ESPAÑOLA
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 font-display">
+              Gramática, Sintaxis y Sistema de Reglas LSE
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Al igual que cualquier lengua oral, la LSE posee fonología propia, morfosintaxis espacial y reglas gramaticales codificadas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {LINGUISTIC_MODULES.map((mod) => (
+              <div key={mod.id} className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
+                <div className="flex items-center justify-between text-xs font-mono text-sky-700">
+                  <span>MÓDULO LINGÜÍSTICO · {mod.category.toUpperCase()}</span>
+                  <span>{mod.subtitle}</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">{mod.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{mod.summary}</p>
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 whitespace-pre-line leading-relaxed font-sans">
+                  {mod.contentMarkdown}
+                </div>
+                <div className="pt-2">
+                  <div className="text-xs font-semibold text-slate-900 mb-1">
+                    Conclusiones clave para examen GVA:
+                  </div>
+                  <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                    {mod.keyTakeaways.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

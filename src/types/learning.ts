@@ -1,4 +1,6 @@
-export type SkillLevel = 'inicial' | 'intermedio' | 'avanzado';
+export type SkillLevel = 'inicial' | 'intermedio' | 'avanzado' | 'gva_oficial';
+
+export type VisualMode = 'illustrations' | 'realistic';
 
 export type FacialExpressionType =
   | 'neutral_atento'
@@ -12,10 +14,10 @@ export interface SignAnimationKeyframe {
   phaseLabel: string;
   durationMs: number;
   leftHand: {
-    x: number; // 0 to 1 normalized canvas width
-    y: number; // 0 to 1 normalized canvas height
-    rotation: number; // degrees
-    fingerSpread: number; // 0 (fist) to 1 (open palm)
+    x: number;
+    y: number;
+    rotation: number;
+    fingerSpread: number;
     shapeLabel: string;
   };
   rightHand: {
@@ -25,10 +27,10 @@ export interface SignAnimationKeyframe {
     fingerSpread: number;
     shapeLabel: string;
   };
-  eyebrowArch: number; // -1 (furrowed) to +1 (raised)
-  mouthOpen: number; // 0 to 1
-  mouthSmile: number; // -1 to +1
-  headTilt: number; // -15 to +15 degrees
+  eyebrowArch: number;
+  mouthOpen: number;
+  mouthSmile: number;
+  headTilt: number;
   motionArrow?: {
     fromX: number;
     fromY: number;
@@ -46,6 +48,7 @@ export interface SignVocabularyItem {
   location: string;
   movement: string;
   nonManualMarker: string;
+  realisticPhotoUrl?: string;
 }
 
 export interface LessonQuizQuestion {
@@ -78,6 +81,7 @@ export interface Lesson {
   keyframes: SignAnimationKeyframe[];
   quiz: LessonQuizQuestion[];
   offlineTips: string[];
+  realisticPhotoUrl?: string;
 }
 
 export interface FacialChallenge {
@@ -104,7 +108,9 @@ export type GlossaryCategory =
   | 'Vida Cotidiana'
   | 'Preguntas y Gramática'
   | 'Tiempo y Verbos'
-  | 'Salud y Emergencias';
+  | 'Salud y Emergencias'
+  | 'Administración y GVA'
+  | 'Educación y Cultura Sorda';
 
 export interface GlossaryEntry {
   id: string;
@@ -119,6 +125,7 @@ export interface GlossaryEntry {
   exampleSentence: string;
   exampleGloss: string;
   keyframes: SignAnimationKeyframe[];
+  realisticPhotoUrl?: string;
 }
 
 export interface DactylologyLetter {
@@ -127,15 +134,16 @@ export interface DactylologyLetter {
   handshapeSummary: string;
   tip: string;
   fingers: {
-    thumb: number; // 0 (folded) to 1 (extended)
+    thumb: number;
     index: number;
     middle: number;
     ring: number;
     pinky: number;
-    spreadAngle: number; // 0 to 1
+    spreadAngle: number;
     rotationDeg: number;
     motionType?: 'static' | 'tilde_wave' | 'double_slide' | 'z_trace';
   };
+  realisticPhotoUrl?: string;
 }
 
 export interface FingerspellingWordItem {
@@ -151,7 +159,7 @@ export interface GamificationBadge {
   title: string;
   description: string;
   xpReward: number;
-  category: 'lecciones' | 'deletreo' | 'facial' | 'constancia' | 'glosario';
+  category: 'lecciones' | 'deletreo' | 'facial' | 'constancia' | 'glosario' | 'gva';
   requirementLabel: string;
 }
 
@@ -161,6 +169,26 @@ export interface AchievementToast {
   message: string;
   xpGained: number;
   badgeUnlocked?: string;
+}
+
+export interface GvaExamQuestion {
+  id: string;
+  level: 'A1' | 'A2' | 'B1' | 'B2';
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  signGlossReference?: string;
+}
+
+export interface LinguisticModule {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: 'Fonología' | 'Morfosintaxis' | 'Pragmática' | 'Clasificadores';
+  summary: string;
+  contentMarkdown: string;
+  keyTakeaways: string[];
 }
 
 export interface StudentUser {
@@ -177,14 +205,14 @@ export interface LessonProgressRecord {
   lessonId: string;
   completed: boolean;
   completedAt?: string;
-  quizScore: number; // 0 to 100
-  facialPracticeScore: number; // 0 to 100
+  quizScore: number;
+  facialPracticeScore: number;
   notes: string;
   bookmarked: boolean;
 }
 
 export interface DailyStudyLog {
-  date: string; // YYYY-MM-DD
+  date: string;
   minutesStudied: number;
   lessonsCompletedCount: number;
   facialExercisesCount: number;
@@ -192,8 +220,8 @@ export interface DailyStudyLog {
 
 export interface ReminderSettings {
   enabled: boolean;
-  timeOfDay: string; // "19:00"
-  daysOfWeek: number[]; // 0 (Sun) - 6 (Sat)
+  timeOfDay: string;
+  daysOfWeek: number[];
   customMotivationMessage: string;
   browserPermissionGranted: boolean;
   lastTriggeredDate?: string;
@@ -222,4 +250,6 @@ export interface StudentProgressState {
   unlockedBadgeIds: string[];
   glossaryMasteredIds: string[];
   fingerspelling: FingerspellingStats;
+  visualMode: VisualMode;
+  gvaExamScores: Record<string, number>;
 }

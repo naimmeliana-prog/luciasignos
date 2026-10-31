@@ -24,11 +24,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuthModal
 }) => {
   const navItems: { id: AppSection; label: string }[] = [
-    { id: 'lecciones', label: 'Lecciones' },
-    { id: 'glosario', label: 'Glosario' },
-    { id: 'deletreo', label: 'Deletreo' },
-    { id: 'practica_facial', label: 'Práctica Facial' },
-    { id: 'progreso', label: 'Progreso y Logros' }
+    { id: 'lecciones', label: 'Lecciones y Exámenes GVA' },
+    { id: 'glosario', label: 'Glosario Interactivo' },
+    { id: 'deletreo', label: 'Deletreo (Dactilología)' },
+    { id: 'practica_facial', label: 'Práctica Facial (MNM)' },
+    { id: 'progreso', label: 'Logros y Progreso' }
   ];
 
   return (
@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => onSelectSection('lecciones')}
           className="text-xl font-bold tracking-tight text-slate-900 font-display whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-sky-600 cursor-pointer"
         >
-          SignaViva
+          LuciaSignos
         </button>
 
         {/* Zone 2: 5 concise single-line text navigation links */}

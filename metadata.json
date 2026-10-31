@@ -1,6 +1,6 @@
 {
-  "name": "SignaViva",
-  "description": "Plataforma interactiva para aprender lengua de signos desde cero hasta avanzado con lecciones en vídeo, práctica de expresión facial por cámara, seguimiento de progreso y recursos descargables.",
+  "name": "LuciaSignos",
+  "description": "Plataforma interactiva para aprender lengua de signos con lecciones en vídeo, exámenes oficiales de la Generalitat Valenciana (LSE), gramática avanzada, glosario, deletreo y práctica facial.",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

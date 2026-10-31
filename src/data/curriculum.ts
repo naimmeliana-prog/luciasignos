@@ -1,4 +1,4 @@
-import { Lesson, FacialChallenge } from '../types/learning';
+import { Lesson, FacialChallenge, GvaExamQuestion, LinguisticModule } from '../types/learning';
 
 export const LESSONS_CURRICULUM: Lesson[] = [
   {
@@ -7,7 +7,7 @@ export const LESSONS_CURRICULUM: Lesson[] = [
     title: 'Saludos Esenciales y Primer Contacto',
     subtitle: 'Aprende a saludar, presentarte y agradecer con naturalidad desde el primer día.',
     level: 'inicial',
-    durationMinutes: 10,
+    durationMinutes: 12,
     category: 'Fundamentos',
     summary:
       'En la lengua de signos, el contacto visual y la expresión facial amable son la base de toda conversación. En esta lección dominarás los saludos cotidianos y las fórmulas de cortesía indispensables.',
@@ -24,6 +24,7 @@ export const LESSONS_CURRICULUM: Lesson[] = [
     },
     targetFacialExpression: 'sonrisa_afectiva',
     facialExercisePrompt: 'Sonríe con calidez manteniendo la cabeza erguida mientras realizas el gesto de saludo y agradecimiento.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
     vocabulary: [
       {
         id: 'voc-hola',
@@ -42,32 +43,14 @@ export const LESSONS_CURRICULUM: Lesson[] = [
         location: 'Barbilla / mentón',
         movement: 'Arco frontal descendente hacia el interlocutor',
         nonManualMarker: 'Sonrisa afectiva + inclinación suave de cabeza (asentimiento)'
-      },
-      {
-        id: 'voc-por-favor',
-        word: 'Por favor',
-        phoneticVisual: 'Palma en pecho → círculo continuo',
-        handshape: 'Palma abierta apoyada sobre el tórax',
-        location: 'Centro del pecho',
-        movement: 'Rotación circular en sentido horario dos veces',
-        nonManualMarker: 'Cejas levemente elevadas con gesto amable de petición'
-      },
-      {
-        id: 'voc-buenos-dias',
-        word: 'Buenos días',
-        phoneticVisual: 'Mano en barbilla → apertura solar en arco',
-        handshape: 'Configuración plana que se abre hacia arriba',
-        location: 'Mentón hacia espacio neutro superior',
-        movement: 'Combinación de signo Bueno + apertura ascendente de Día',
-        nonManualMarker: 'Expresión despierta y luminosa'
       }
     ],
     keyframes: [
       {
-        phaseLabel: 'Fase 1: Posición inicial de saludo (Sien)',
+        phaseLabel: 'Fase 1: Posición inicial de saludo en sien',
         durationMs: 1400,
-        leftHand: { x: 0.34, y: 0.72, rotation: -10, fingerSpread: 0.3, shapeLabel: 'Reposo neutro' },
-        rightHand: { x: 0.61, y: 0.33, rotation: -22, fingerSpread: 0.9, shapeLabel: 'Mano B en sien' },
+        leftHand: { x: 0.34, y: 0.72, rotation: -10, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.61, y: 0.33, rotation: -22, fingerSpread: 0.9, shapeLabel: 'Sien' },
         eyebrowArch: 0.35,
         mouthOpen: 0.15,
         mouthSmile: 0.75,
@@ -75,35 +58,14 @@ export const LESSONS_CURRICULUM: Lesson[] = [
         motionArrow: { fromX: 0.61, fromY: 0.33, toX: 0.74, toY: 0.30, type: 'arc' }
       },
       {
-        phaseLabel: 'Fase 2: Extensión de "Hola" hacia afuera',
+        phaseLabel: 'Fase 2: Extensión abierta hacia afuera',
         durationMs: 1400,
-        leftHand: { x: 0.34, y: 0.72, rotation: -10, fingerSpread: 0.3, shapeLabel: 'Reposo neutro' },
-        rightHand: { x: 0.74, y: 0.30, rotation: 15, fingerSpread: 1.0, shapeLabel: 'Apertura cordial' },
+        leftHand: { x: 0.34, y: 0.72, rotation: -10, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.74, y: 0.30, rotation: 15, fingerSpread: 1.0, shapeLabel: 'Apertura' },
         eyebrowArch: 0.45,
         mouthOpen: 0.25,
         mouthSmile: 0.9,
         headTilt: 5
-      },
-      {
-        phaseLabel: 'Fase 3: Contacto en mentón para "Gracias"',
-        durationMs: 1400,
-        leftHand: { x: 0.35, y: 0.70, rotation: -8, fingerSpread: 0.4, shapeLabel: 'Base estable' },
-        rightHand: { x: 0.52, y: 0.44, rotation: -5, fingerSpread: 0.85, shapeLabel: 'Yemas en mentón' },
-        eyebrowArch: 0.2,
-        mouthOpen: 0.1,
-        mouthSmile: 0.8,
-        headTilt: 0,
-        motionArrow: { fromX: 0.52, fromY: 0.44, toX: 0.66, toY: 0.55, type: 'linear' }
-      },
-      {
-        phaseLabel: 'Fase 4: Proyección frontal de agradecimiento',
-        durationMs: 1500,
-        leftHand: { x: 0.35, y: 0.70, rotation: -8, fingerSpread: 0.4, shapeLabel: 'Base estable' },
-        rightHand: { x: 0.66, y: 0.55, rotation: 25, fingerSpread: 0.95, shapeLabel: 'Entrega frontal' },
-        eyebrowArch: 0.3,
-        mouthOpen: 0.2,
-        mouthSmile: 0.95,
-        headTilt: -4
       }
     ],
     quiz: [
@@ -117,25 +79,10 @@ export const LESSONS_CURRICULUM: Lesson[] = [
           'Con ambas manos entrelazadas en la cintura'
         ],
         correctIndex: 1,
-        explanation: 'El signo de "Gracias" inicia tocando suavemente el mentón con las yemas de la mano plana y se proyecta hacia el interlocutor.'
-      },
-      {
-        id: 'q2-saludos',
-        question: '¿Cuál es el componente no manual más importante al saludar o agradecer?',
-        options: [
-          'Mirar nuestras propias manos todo el tiempo',
-          'Fruncir el ceño con firmeza',
-          'Mantener contacto visual con el interlocutor y expresión facial acorde',
-          'Cerrar los ojos mientras se mueve la mano'
-        ],
-        correctIndex: 2,
-        explanation: 'En lengua de signos siempre se mantiene el contacto visual con la persona con quien hablamos; mirar las propias manos interrumpe la conexión comunicativa.'
+        explanation: 'El signo de "Gracias" inicia tocando suavemente el mentón con las yemas y se proyecta hacia el interlocutor.'
       }
     ],
-    offlineTips: [
-      'Practica frente a un espejo durante 3 minutos diarios sin mirar tu mano directamente: fija la vista en tus propios ojos.',
-      'Mantén los hombros relajados; el espacio de signado abarca desde la cintura hasta la parte superior de la cabeza.'
-    ]
+    offlineTips: ['Practica frente al espejo durante 3 minutos diarios fijando la vista en tus propios ojos.']
   },
   {
     id: 'lec-02-dactilologia',
@@ -143,7 +90,7 @@ export const LESSONS_CURRICULUM: Lesson[] = [
     title: 'Alfabeto Dactilológico y Deletreo Manual',
     subtitle: 'Domina las vocales y consonantes clave para deletrear nombres propios y lugares.',
     level: 'inicial',
-    durationMinutes: 14,
+    durationMinutes: 15,
     category: 'Dactilología',
     summary:
       'El alfabeto dactilológico representa las letras del abecedario mediante configuraciones manuales precisas. Se utiliza para nombres propios, direcciones o palabras cuyo signo específico aún no conoces.',
@@ -153,91 +100,45 @@ export const LESSONS_CURRICULUM: Lesson[] = [
       'Mantener la mano a la altura del hombro dominante con la palma orientada hacia el receptor.'
     ],
     biomechanics: {
-      configuracionManual: 'Transición fluida entre puño con pulgar lateral (A), dedos curvados (E), meñique extendido (I), círculo digital (O) y pinza índice-medio (U).',
+      configuracionManual: 'Transición fluida entre puño con pulgar lateral (A), dedos curvados (E), meñique extendido (I), círculo digital (O).',
       ubicacionEspacial: 'Delante del hombro dominante, a unos 15 cm del torso, evitando tapar la boca.',
-      trayectoriaMovimiento: 'Posición estable sin sacudidas; ligero desplazamiento lateral únicamente en letras dobles o con virgulilla.',
+      trayectoriaMovimiento: 'Posición estable sin sacudidas; ligero desplazamiento lateral únicamente en letras dobles.',
       marcadorFacial: 'Vocalización labial silenciosa y mirada atenta.'
     },
     targetFacialExpression: 'enfasis_labial',
-    facialExercisePrompt: 'Articula suavemente las vocales con los labios (sin gritar) mientras mantienes las cejas relajadas y la mirada fija.',
+    facialExercisePrompt: 'Articula suavemente las vocales con los labios sin gritar mientras mantienes las cejas relajadas.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
     vocabulary: [
       {
         id: 'voc-letra-a',
         word: 'Letra A',
-        phoneticVisual: 'Puño cerrado + pulgar extendido al costado',
-        handshape: 'Configuración A (puño compacto, pulgar vertical pegado al índice)',
-        location: 'Espacio neutro frente al hombro dominante',
+        phoneticVisual: 'Puño cerrado + pulgar lateral',
+        handshape: 'Configuración A',
+        location: 'Espacio neutro frente al hombro',
         movement: 'Estático y firme',
-        nonManualMarker: 'Labialización suave de "A"'
-      },
-      {
-        id: 'voc-letra-e',
-        word: 'Letra E',
-        phoneticVisual: 'Dedos flexionados en garra suave',
-        handshape: 'Yemas de los cinco dedos arqueadas hacia el centro de la palma',
-        location: 'Espacio neutro frente al hombro',
-        movement: 'Estático',
-        nonManualMarker: 'Comisuras labiales retraídas suavemente ("E")'
-      },
-      {
-        id: 'voc-letra-i',
-        word: 'Letra I',
-        phoneticVisual: 'Meñique vertical elevado',
-        handshape: 'Puño cerrado con el dedo meñique completamente estirado hacia arriba',
-        location: 'Espacio neutro lateral',
-        movement: 'Estático (con giro de muñeca si pasa a J)',
-        nonManualMarker: 'Atención visual neutra'
-      },
-      {
-        id: 'voc-letra-o',
-        word: 'Letra O',
-        phoneticVisual: 'Todos los dedos unidos al pulgar formando un óvalo',
-        handshape: 'Configuración O circular perfecta',
-        location: 'Espacio neutro frente al hombro',
-        movement: 'Estático',
-        nonManualMarker: 'Redondeo labial "O"'
+        nonManualMarker: 'Labialización suave de A'
       }
     ],
     keyframes: [
       {
-        phaseLabel: 'Vocal A: Puño firme con pulgar lateral',
+        phaseLabel: 'Fase 1: Configuración A',
         durationMs: 1300,
-        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo pasivo' },
-        rightHand: { x: 0.64, y: 0.45, rotation: 0, fingerSpread: 0.15, shapeLabel: 'Configuración A' },
+        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo' },
+        rightHand: { x: 0.64, y: 0.45, rotation: 0, fingerSpread: 0.15, shapeLabel: 'Letra A' },
         eyebrowArch: 0.1,
         mouthOpen: 0.45,
         mouthSmile: 0.2,
         headTilt: 0
       },
       {
-        phaseLabel: 'Vocal E: Dedos arqueados con precisión',
+        phaseLabel: 'Fase 2: Configuración E',
         durationMs: 1300,
-        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo pasivo' },
-        rightHand: { x: 0.65, y: 0.45, rotation: 5, fingerSpread: 0.45, shapeLabel: 'Configuración E' },
+        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo' },
+        rightHand: { x: 0.65, y: 0.45, rotation: 5, fingerSpread: 0.45, shapeLabel: 'Letra E' },
         eyebrowArch: 0.15,
         mouthOpen: 0.25,
         mouthSmile: 0.5,
         headTilt: 2
-      },
-      {
-        phaseLabel: 'Vocal I / O: Transición de meñique a óvalo digital',
-        durationMs: 1300,
-        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo pasivo' },
-        rightHand: { x: 0.66, y: 0.44, rotation: -5, fingerSpread: 0.35, shapeLabel: 'Configuración O' },
-        eyebrowArch: 0.1,
-        mouthOpen: 0.35,
-        mouthSmile: 0.0,
-        headTilt: 0
-      },
-      {
-        phaseLabel: 'Vocal U: Índice y medio extendidos en V/U',
-        durationMs: 1300,
-        leftHand: { x: 0.32, y: 0.74, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo pasivo' },
-        rightHand: { x: 0.64, y: 0.43, rotation: 0, fingerSpread: 0.65, shapeLabel: 'Configuración U' },
-        eyebrowArch: 0.2,
-        mouthOpen: 0.2,
-        mouthSmile: 0.15,
-        headTilt: -2
       }
     ],
     quiz: [
@@ -245,389 +146,447 @@ export const LESSONS_CURRICULUM: Lesson[] = [
         id: 'q1-dactilo',
         question: '¿Dónde debe colocarse la mano al deletrear un nombre con dactilología?',
         options: [
-          'Justo delante de los labios para tapar la boca',
-          'A la altura del hombro dominante en una posición estable y cómoda',
-          'Por encima de la cabeza moviendo todo el brazo de izquierda a derecha',
+          'Justo delante de los labios tapando la boca',
+          'A la altura del hombro dominante en una posición estable',
+          'Por encima de la cabeza moviendo todo el brazo',
           'Debajo de la mesa'
         ],
         correctIndex: 1,
-        explanation: 'Colocar la mano frente al hombro dominante permite al interlocutor ver simultáneamente tu configuración manual y tu articulación labial sin fatigar el brazo.'
-      },
-      {
-        id: 'q2-dactilo',
-        question: '¿Cuándo es más apropiado recurrir al deletreo dactilológico?',
-        options: [
-          'Para absolutamente todas las palabras de una oración larga',
-          'Para nombres propios, apellidos, siglas o términos técnicos sin signo establecido',
-          'Nunca, está prohibido en lengua de signos',
-          'Solo cuando hablamos de verbos en pasado'
-        ],
-        correctIndex: 1,
-        explanation: 'La dactilología es una herramienta puente ideal para nombres propios, lugares específicos o para preguntar cómo se signa un concepto nuevo.'
+        explanation: 'Colocar la mano frente al hombro permite al interlocutor ver la configuración manual y la articulación labial simultáneamente.'
       }
     ],
-    offlineTips: [
-      'Deletrea los nombres de 5 objetos que veas en tu habitación manteniendo el codo cerca del torso.',
-      'Prioriza la claridad de cada letra sobre la velocidad: una cadencia constante se entiende mucho mejor que deletrear rápido con rebotes.'
-    ]
+    offlineTips: ['Deletrea los nombres de 5 objetos de tu entorno manteniendo el codo cerca del torso.']
   },
   {
-    id: 'lec-03-preguntas-mnm',
+    id: 'lec-03-familia',
     number: '03',
-    title: 'Gramática Facial: Preguntas Sí/No vs. Qué/Dónde',
-    subtitle: 'Descubre cómo tus cejas y la inclinación de tu cabeza transforman una afirmación en pregunta.',
-    level: 'intermedio',
-    durationMinutes: 16,
-    category: 'Gramática Visual',
+    title: 'Familia, Hogar y Vínculos Cercanos',
+    subtitle: 'Expresa los lazos familiares, la casa y las personas de tu entorno.',
+    level: 'inicial',
+    durationMinutes: 14,
+    category: 'Familia y Personas',
     summary:
-      'En lengua de signos, los signos de interrogación "¿?" se dibujan en el rostro. Las preguntas cerradas (respuesta Sí/No) requieren elevar las cejas, mientras que las preguntas abiertas (Qué, Quién, Cómo, Dónde) exigen fruncir ligeramente el ceño.',
+      'La familia y el hogar ocupan un lugar central en la comunidad sorda. Aprenderás a signar los parentescos principales y la estructura del hogar utilizando clasificadores espaciales básicos.',
     learningObjectives: [
-      'Diferenciar el marcador facial de interrogación cerrada (cejas arriba + cabeza levemente adelantada).',
-      'Aplicar el marcador de interrogación abierta o pronominal (cejas juntas/fruncidas).',
-      'Combinar el signo manual de "¿Qué?", "¿Dónde?" y "¿Cómo estás?" con su expresión gramatical exacta.'
+      'Signar correctamente Familia, Amiga, Madre, Padre y Casa.',
+      'Utilizar el espacio neutro para ubicar a los miembros de la familia.',
+      'Mantener la congruencia en la expresión facial de afecto.'
     ],
     biomechanics: {
-      configuracionManual: 'Ambas manos con palmas hacia arriba en apertura interrogativa (para Qué/Dónde) o índice señalando al receptor (Tú).',
-      ubicacionEspacial: 'Espacio neutro medio frente al torso superior.',
-      trayectoriaMovimiento: 'Oscilación lateral corta de muñecas acompañada de pausa final sostenida.',
-      marcadorFacial: 'Cejas elevadas (preguntas Sí/No) o cejas fruncidas (preguntas Qué/Dónde/Cuándo).'
+      configuracionManual: 'Configuración F para familia; configuraciones planas B para casa.',
+      ubicacionEspacial: 'Espacio neutro frontal a la altura del pecho.',
+      trayectoriaMovimiento: 'Trazados circulares y simétricos.',
+      marcadorFacial: 'Expresión cálida y acogedora.'
     },
-    targetFacialExpression: 'cejas_elevadas_pregunta',
-    facialExercisePrompt: 'Eleva las cejas con claridad e inclina suavemente la cabeza para formular una pregunta cerrada en lengua de signos.',
+    targetFacialExpression: 'sonrisa_afectiva',
+    facialExercisePrompt: 'Sonríe con afecto al signar los miembros de tu familia.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80',
+    vocabulary: [
+      {
+        id: 'voc-familia',
+        word: 'Familia',
+        phoneticVisual: 'Manos F unidas que trazan círculo envolvente',
+        handshape: 'Configuración F',
+        location: 'Espacio neutro frente al torso',
+        movement: 'Arco circular simétrico',
+        nonManualMarker: 'Expresión cálida'
+      }
+    ],
+    keyframes: [
+      {
+        phaseLabel: 'Fase 1: Manos F unidas al centro',
+        durationMs: 1200,
+        leftHand: { x: 0.46, y: 0.55, rotation: 10, fingerSpread: 0.65, shapeLabel: 'Mano F' },
+        rightHand: { x: 0.54, y: 0.55, rotation: -10, fingerSpread: 0.65, shapeLabel: 'Mano F' },
+        eyebrowArch: 0.2,
+        mouthOpen: 0.1,
+        mouthSmile: 0.7,
+        headTilt: 0,
+        motionArrow: { fromX: 0.54, fromY: 0.55, toX: 0.68, toY: 0.62, type: 'arc' }
+      },
+      {
+        phaseLabel: 'Fase 2: Círculo envolvente',
+        durationMs: 1200,
+        leftHand: { x: 0.36, y: 0.62, rotation: -20, fingerSpread: 0.65, shapeLabel: 'Arco izq' },
+        rightHand: { x: 0.64, y: 0.62, rotation: 20, fingerSpread: 0.65, shapeLabel: 'Arco der' },
+        eyebrowArch: 0.25,
+        mouthOpen: 0.15,
+        mouthSmile: 0.8,
+        headTilt: 2
+      }
+    ],
+    quiz: [
+      {
+        id: 'q-fam-1',
+        question: '¿Qué configuración manual se utiliza habitualmente en el signo de "Familia"?',
+        options: ['Configuración F', 'Configuración A', 'Puño cerrado', 'Índice estirado'],
+        correctIndex: 0,
+        explanation: 'El signo de familia se inicia uniendo el dedo índice y el pulgar de ambas manos en configuración F.'
+      }
+    ],
+    offlineTips: ['Practica describiendo los miembros de tu familia en orden de edad en el espacio.']
+  },
+  {
+    id: 'lec-04-cotidiano',
+    number: '04',
+    title: 'Vida Cotidiana, Comida y Ocio',
+    subtitle: 'Vocabulario esencial para el día a día, agua, café y actividades de estudio.',
+    level: 'intermedio',
+    durationMinutes: 16,
+    category: 'Vida Cotidiana',
+    summary:
+      'Expande tu vocabulario hacia situaciones cotidianas de cafetería, estudio y tiempo libre. Aprende a preguntar por necesidades inmediatas.',
+    learningObjectives: [
+      'Signar Agua, Café, Aprender y Entender con fluidez.',
+      'Combinar nombres y verbos en orden sintáctico correcto.',
+      'Aplicar la modulación facial adecuada en peticiones.'
+    ],
+    biomechanics: {
+      configuracionManual: 'Configuraciones variadas (L, W, puños apilados).',
+      ubicacionEspacial: 'Mentón y espacio neutro central.',
+      trayectoriaMovimiento: 'Golpes suaves y rotaciones circulares.',
+      marcadorFacial: 'Expresión comunicativa activa.'
+    },
+    targetFacialExpression: 'neutral_atento',
+    facialExercisePrompt: 'Mantén una actitud receptiva y dinámica.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80',
+    vocabulary: [
+      {
+        id: 'voc-agua',
+        word: 'Agua',
+        phoneticVisual: 'Doble toque en barbilla con mano en L',
+        handshape: 'Configuración L / W',
+        location: 'Lateral de la barbilla',
+        movement: 'Doble toque',
+        nonManualMarker: 'Labialización de agua'
+      }
+    ],
+    keyframes: [
+      {
+        phaseLabel: 'Fase 1: Aproximación al mentón',
+        durationMs: 1100,
+        leftHand: { x: 0.34, y: 0.72, rotation: 0, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.56, y: 0.45, rotation: -15, fingerSpread: 0.55, shapeLabel: 'Toque' },
+        eyebrowArch: 0.2,
+        mouthOpen: 0.35,
+        mouthSmile: 0.3,
+        headTilt: 2
+      },
+      {
+        phaseLabel: 'Fase 2: Confirmación',
+        durationMs: 1100,
+        leftHand: { x: 0.34, y: 0.72, rotation: 0, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.53, y: 0.43, rotation: -22, fingerSpread: 0.55, shapeLabel: 'Toque 2' },
+        eyebrowArch: 0.25,
+        mouthOpen: 0.2,
+        mouthSmile: 0.45,
+        headTilt: 0
+      }
+    ],
+    quiz: [
+      {
+        id: 'q-cot-1',
+        question: '¿Dónde se realiza el signo de "Agua"?',
+        options: ['En la sien', 'En el lateral de la barbilla con dos toques', 'En el centro del pecho', 'Sobre la cabeza'],
+        correctIndex: 1,
+        explanation: 'El signo de agua se articula tocando dos veces el lateral de la barbilla con los dedos.'
+      }
+    ],
+    offlineTips: ['Pide un vaso de agua en un entorno simulado utilizando el signo correcto.']
+  },
+  {
+    id: 'lec-05-gva-a1-a2',
+    number: '05',
+    title: 'Preparación Examen GVA (Niveles A1 - A2)',
+    subtitle: 'Conoce la estructura oficial de las pruebas de acreditación de la Generalitat Valenciana.',
+    level: 'gva_oficial',
+    durationMinutes: 20,
+    category: 'Exámenes GVA Oficiales',
+    summary:
+      'Las pruebas oficiales de la Generalitat Valenciana evalúan la competencia comunicativa en lengua de signos en situaciones cotidianas, personales y administrativas básicas.',
+    learningObjectives: [
+      'Familiarizarse con los bloques de comprensión visual y expresión en exámenes GVA A1/A2.',
+      'Responder con precisión a preguntas sobre datos personales y entorno familiar.',
+      'Dominar la signación de topónimos de la Comunidad Valenciana.'
+    ],
+    biomechanics: {
+      configuracionManual: 'Precisión en numerales y vocabulario autonómico.',
+      ubicacionEspacial: 'Espacio de signado frontal estricto.',
+      trayectoriaMovimiento: 'Fluidez natural sin vacilaciones.',
+      marcadorFacial: 'Congruencia total entre pregunta y respuesta.'
+    },
+    targetFacialExpression: 'neutral_atento',
+    facialExercisePrompt: 'Mantén una expresión atenta y receptiva.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
+    vocabulary: [
+      {
+        id: 'voc-cv',
+        word: 'Comunidad Valenciana',
+        phoneticVisual: 'Territorio + seña distintiva',
+        handshape: 'Configuraciones V y C',
+        location: 'Espacio neutro',
+        movement: 'Trazado horizontal',
+        nonManualMarker: 'Neutral'
+      }
+    ],
+    keyframes: [
+      {
+        phaseLabel: 'Fase 1: Presentación personal GVA A2',
+        durationMs: 1500,
+        leftHand: { x: 0.35, y: 0.65, rotation: 0, fingerSpread: 0.4, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.62, y: 0.48, rotation: 10, fingerSpread: 0.8, shapeLabel: 'Presentación' },
+        eyebrowArch: 0.2,
+        mouthOpen: 0.2,
+        mouthSmile: 0.6,
+        headTilt: 2
+      },
+      {
+        phaseLabel: 'Fase 2: Respuesta a preguntas',
+        durationMs: 1500,
+        leftHand: { x: 0.35, y: 0.65, rotation: 0, fingerSpread: 0.4, shapeLabel: 'Reposo' },
+        rightHand: { x: 0.58, y: 0.45, rotation: -10, fingerSpread: 0.9, shapeLabel: 'Respuesta' },
+        eyebrowArch: 0.3,
+        mouthOpen: 0.15,
+        mouthSmile: 0.7,
+        headTilt: 0
+      }
+    ],
+    quiz: [
+      {
+        id: 'gva-q1',
+        question: 'En el examen GVA A2, ¿qué aspecto se valora especialmente en la prueba de expresión?',
+        options: [
+          'Hablar en voz alta de forma obligatoria',
+          'La claridad de las configuraciones manuales y el respeto al espacio signado',
+          'La velocidad extrema sin importar los signos',
+          'El uso exclusivo de la mano izquierda'
+        ],
+        correctIndex: 1,
+        explanation: 'Los tribunales de la GVA valoran la precisión queirológica, la ubicación espacial y el uso correcto de los marcadores no manuales.'
+      }
+    ],
+    offlineTips: ['Practica simulacros de 5 minutos respondiendo preguntas sobre tu profesión y residencia.']
+  },
+  {
+    id: 'lec-06-verbos-espaciales',
+    number: '06',
+    title: 'Verbos Direccionales y Espacio Tridimensional',
+    subtitle: 'Domina los verbos espaciales que incorporan el sujeto y el objeto en su movimiento.',
+    level: 'intermedio',
+    durationMinutes: 18,
+    category: 'Tiempo y Verbos',
+    summary:
+      'En LSE, los verbos direccionales (como Ayudar, Preguntar, Dar) modifican su trayectoria en el espacio tridimensional para indicar quién realiza la acción y quién la recibe sin necesidad de pronombres adicionales.',
+    learningObjectives: [
+      'Comprender la concordancia espacial en verbos direccionales.',
+      'Articular correctamente el signo de Ayudar y Dar modulando el origen y el destino.',
+      'Mantener la línea de la mirada alineada con el locus espacial.'
+    ],
+    biomechanics: {
+      configuracionManual: 'Configuración A sobre palma B para Ayudar.',
+      ubicacionEspacial: 'Espacio neutro con desplazamiento vectorial.',
+      trayectoriaMovimiento: 'De emisor a receptor (o viceversa).',
+      marcadorFacial: 'Expresión dirigida al interlocutor.'
+    },
+    targetFacialExpression: 'sonrisa_afectiva',
+    facialExercisePrompt: 'Dirige tu mirada y expresión hacia el lugar donde se sitúa el receptor de la acción.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+    vocabulary: [
+      {
+        id: 'voc-ayudar',
+        word: 'Ayudar',
+        phoneticVisual: 'Puño A sobre palma B desplazándose hacia el receptor',
+        handshape: 'Configuración A sobre B',
+        location: 'Espacio neutro',
+        movement: 'Direccional hacia el receptor',
+        nonManualMarker: 'Disposición y mirada'
+      }
+    ],
+    keyframes: [
+      {
+        phaseLabel: 'Fase 1: Inicio junto al cuerpo',
+        durationMs: 1200,
+        leftHand: { x: 0.46, y: 0.58, rotation: 10, fingerSpread: 0.9, shapeLabel: 'Palma' },
+        rightHand: { x: 0.48, y: 0.53, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Ayuda' },
+        eyebrowArch: 0.45,
+        mouthOpen: 0.15,
+        mouthSmile: 0.5,
+        headTilt: 2,
+        motionArrow: { fromX: 0.48, fromY: 0.55, toX: 0.68, toY: 0.52, type: 'linear' }
+      },
+      {
+        phaseLabel: 'Fase 2: Proyección hacia adelante',
+        durationMs: 1200,
+        leftHand: { x: 0.62, y: 0.54, rotation: 14, fingerSpread: 0.9, shapeLabel: 'Receptor' },
+        rightHand: { x: 0.65, y: 0.49, rotation: 5, fingerSpread: 0.2, shapeLabel: 'Destino' },
+        eyebrowArch: 0.55,
+        mouthOpen: 0.2,
+        mouthSmile: 0.65,
+        headTilt: 5
+      }
+    ],
+    quiz: [
+      {
+        id: 'q-verb-1',
+        question: '¿Qué caracteriza a un verbo direccional en lengua de signos?',
+        options: [
+          'Se hace siempre con las dos manos quietas',
+          'Modifica su dirección de movimiento para indicar el sujeto y el objeto',
+          'No requiere ningún marcador facial',
+          'Se utiliza exclusivamente para los números'
+        ],
+        correctIndex: 1,
+        explanation: 'Los verbos direccionales incorporan la concordancia sintáctica cambiando su punto de partida y destino en el espacio.'
+      }
+    ],
+    offlineTips: ['Practica el verbo Ayudar indicando diferentes personas imaginarias en tu habitación.']
+  },
+  {
+    id: 'lec-07-mnm-avanzados',
+    number: '07',
+    title: 'Marcadores No Manuales Avanzados y Subordinación',
+    subtitle: 'El papel gramatical de las cejas, la cabeza y los hombros en oraciones complejas.',
+    level: 'avanzado',
+    durationMinutes: 22,
+    category: 'Gramática y Sintaxis',
+    summary:
+      'En los niveles avanzados, los componentes no manuales (MNM) son obligatorios para marcar condicionales, concesivas, relativas y preguntas de información.',
+    learningObjectives: [
+      'Diferenciar el fruncimiento de cejas en preguntas WH frente a preguntas cerradas.',
+      'Sostener marcadores no manuales durante cláusulas subordinadas enteras.',
+      'Sincronizar la prosodia visual con el ritmo manual.'
+    ],
+    biomechanics: {
+      configuracionManual: 'Independencia manual y fluidez en discursos complejos.',
+      ubicacionEspacial: 'Espacio tridimensional completo.',
+      trayectoriaMovimiento: 'Fluidez narrativa avanzada.',
+      marcadorFacial: 'Control milimétrico de cejas, labios y hombros.'
+    },
+    targetFacialExpression: 'cejas_fruncidas_wh',
+    facialExercisePrompt: 'Contrae suavemente el ceño manteniendo la concentración en la estructura de la pregunta WH.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80',
     vocabulary: [
       {
         id: 'voc-que',
         word: '¿Qué?',
-        phoneticVisual: 'Palmas hacia arriba + oscilación lateral + ceño interrogativo',
-        handshape: 'Manos semiabiertas con palmas hacia el techo',
-        location: 'Espacio neutro frontal',
-        movement: 'Vibración u oscilación horizontal corta',
-        nonManualMarker: 'Cejas ligeramente fruncidas + inclinación de barbilla'
-      },
-      {
-        id: 'voc-donde',
-        word: '¿Dónde?',
-        phoneticVisual: 'Índice extendido oscilando o palmas abiertas explorando',
-        handshape: 'Dedo índice vertical o ambas manos abiertas',
-        location: 'Altura del pecho',
-        movement: 'Vaivén corto de lado a lado',
-        nonManualMarker: 'Ceño contraído de búsqueda + mirada inquisitiva'
-      },
-      {
-        id: 'voc-como-estas',
-        word: '¿Cómo estás?',
-        phoneticVisual: 'Palmas rozan pecho hacia arriba → pulgar arriba hacia interlocutor',
-        handshape: 'Manos curvas pasando a configuración de bienestar',
-        location: 'Torso hacia adelante',
-        movement: 'Doble tiempo: estado + pregunta',
-        nonManualMarker: 'Cejas elevadas invitando a la respuesta'
+        phoneticVisual: 'Palmas hacia arriba con oscilación y ceño fruncido',
+        handshape: 'Palmas abiertas hacia arriba',
+        location: 'Espacio neutro',
+        movement: 'Vaivén lateral',
+        nonManualMarker: 'Cejas fruncidas (WH)'
       }
     ],
     keyframes: [
       {
-        phaseLabel: 'Fase 1: Oración declarativa neutra',
-        durationMs: 1300,
-        leftHand: { x: 0.36, y: 0.60, rotation: -15, fingerSpread: 0.7, shapeLabel: 'Palma abierta' },
-        rightHand: { x: 0.64, y: 0.60, rotation: 15, fingerSpread: 0.7, shapeLabel: 'Palma abierta' },
-        eyebrowArch: 0.0,
-        mouthOpen: 0.1,
-        mouthSmile: 0.2,
-        headTilt: 0
-      },
-      {
-        phaseLabel: 'Fase 2: Pregunta Sí/No (Cejas elevadas + inclinación)',
-        durationMs: 1600,
-        leftHand: { x: 0.35, y: 0.56, rotation: -20, fingerSpread: 0.85, shapeLabel: 'Interrogación' },
-        rightHand: { x: 0.65, y: 0.56, rotation: 20, fingerSpread: 0.85, shapeLabel: 'Interrogación' },
-        eyebrowArch: 0.9,
+        phaseLabel: 'Fase 1: Apertura de palmas WH',
+        durationMs: 1200,
+        leftHand: { x: 0.36, y: 0.58, rotation: -20, fingerSpread: 0.85, shapeLabel: 'Palma izq' },
+        rightHand: { x: 0.64, y: 0.58, rotation: 20, fingerSpread: 0.85, shapeLabel: 'Palma der' },
+        eyebrowArch: -0.65,
         mouthOpen: 0.25,
-        mouthSmile: 0.3,
-        headTilt: 8,
-        motionArrow: { fromX: 0.65, fromY: 0.56, toX: 0.72, toY: 0.52, type: 'arc' }
+        mouthSmile: 0.0,
+        headTilt: -4,
+        motionArrow: { fromX: 0.64, fromY: 0.58, toX: 0.72, toY: 0.58, type: 'linear' }
       },
       {
-        phaseLabel: 'Fase 3: Pregunta Abierta ¿Qué / Dónde? (Ceño concentrado)',
-        durationMs: 1600,
-        leftHand: { x: 0.32, y: 0.58, rotation: -30, fingerSpread: 0.9, shapeLabel: '¿Qué / Dónde?' },
-        rightHand: { x: 0.68, y: 0.58, rotation: 30, fingerSpread: 0.9, shapeLabel: '¿Qué / Dónde?' },
-        eyebrowArch: -0.75,
+        phaseLabel: 'Fase 2: Oscilación con ceño contraído',
+        durationMs: 1200,
+        leftHand: { x: 0.30, y: 0.58, rotation: -30, fingerSpread: 0.9, shapeLabel: 'Oscilación' },
+        rightHand: { x: 0.70, y: 0.58, rotation: 30, fingerSpread: 0.9, shapeLabel: 'Oscilación' },
+        eyebrowArch: -0.8,
         mouthOpen: 0.3,
-        mouthSmile: -0.1,
-        headTilt: -6,
-        motionArrow: { fromX: 0.62, fromY: 0.58, toX: 0.72, toY: 0.58, type: 'linear' }
+        mouthSmile: -0.05,
+        headTilt: 5
       }
     ],
     quiz: [
       {
-        id: 'q1-mnm',
-        question: 'Si quieres preguntar "¿Quieres café?" (una pregunta de respuesta Sí o No), ¿cómo deben estar tus cejas?',
+        id: 'q-mnm-1',
+        question: '¿Qué marcador no manual acompaña obligatoriamente a una pregunta del tipo "¿Dónde?" o "¿Qué?"?',
         options: [
-          'Totalmente inmóviles y sin expresión',
-          'Elevadas hacia arriba acompañadas de una ligera inclinación de cabeza hacia adelante',
-          'Fruncidas con gesto de enfado',
-          'Guiñando un ojo continuamente'
+          'Sonrisa amplia y alegre',
+          'Fruncimiento o acercamiento de las cejas (marcador WH)',
+          'Cerrar los ojos por completo',
+          'Inclinación hacia atrás'
         ],
         correctIndex: 1,
-        explanation: 'Las preguntas totales (respuesta Sí/No) se marcan gramaticalmente elevando las cejas durante el signo interrogativo y sosteniendo la mirada al final.'
-      },
-      {
-        id: 'q2-mnm',
-        question: '¿Qué sucede si haces el signo manual de "¿Dónde?" con una expresión completamente neutra?',
-        options: [
-          'Se entiende exactamente igual',
-          'Pierde fuerza gramatical y puede resultar ambiguo entre una afirmación y una pregunta',
-          'Significa "Ayer"',
-          'Se convierte en un saludo formal'
-        ],
-        correctIndex: 1,
-        explanation: 'Los Marcadores No Manuales (MNM) no son simple decoración emotiva: cumplen la función sintáctica de la entonación en las lenguas orales.'
+        explanation: 'Las preguntas abiertas con pronombres interrogativos exigen el fruncimiento de cejas como marca gramatical sintáctica.'
       }
     ],
-    offlineTips: [
-      'Frente a la cámara en la pestaña "Práctica Facial", alterna 5 veces entre pregunta cerrada (cejas arriba) y pregunta abierta (cejas juntas).',
-      'Recuerda mantener el último signo de la pregunta medio segundo quieto en el aire mientras esperas la respuesta.'
-    ]
+    offlineTips: ['Practica formulando 5 preguntas abiertas frente al espejo verificando el movimiento de tus cejas.']
   },
   {
-    id: 'lec-04-emociones-familia',
-    number: '04',
-    title: 'Emociones, Empatía y Vínculos Familiares',
-    subtitle: 'Comunica cómo te sientes y habla sobre tus amigos, familia y entorno cercano.',
-    level: 'intermedio',
-    durationMinutes: 15,
-    category: 'Conversación Cotidiana',
+    id: 'lec-08-gva-b1-b2',
+    number: '08',
+    title: 'Preparación Examen GVA (Niveles B1 - B2)',
+    subtitle: 'Dominio de la fluidez argumentativa, registros formales y situaciones complejas.',
+    level: 'gva_oficial',
+    durationMinutes: 25,
+    category: 'Exámenes GVA Oficiales',
     summary:
-      'Expresar estados de ánimo y hablar de las personas que queremos requiere sincronizar el movimiento sobre el pecho con una expresividad facial congruente. Aprenderás los signos de Amiga, Familia, Feliz, Sorprendida y Tranquila.',
+      'Los niveles B1 y B2 de la Generalitat Valenciana exigen narrar acontecimientos, expresar hipótesis, debatir sobre temas sociolaborales y utilizar clasificadores con soltura.',
     learningObjectives: [
-      'Signar vínculos afectivos (Amiga/o, Familia, Persona importante).',
-      'Modular la intensidad de un sentimiento mediante la velocidad del movimiento y la expresión facial.',
-      'Expresar sorpresa, alegría y empatía con precisión visual.'
+      'Estructurar discursos coherentes utilizando conectores espaciales y temporales.',
+      'Defender una postura argumental ante situaciones hipotéticas.',
+      'Demostrar dominio en la prosodia visual avanzada.'
     ],
     biomechanics: {
-      configuracionManual: 'Índices entrelazados (Amiga/o) o manos abiertas que ascienden por el pecho (Feliz / Contento).',
-      ubicacionEspacial: 'Zona pectoral (centro de las emociones) y espacio neutro compartido.',
-      trayectoriaMovimiento: 'Doble enganche de índices para amistad; barrido ascendente para alegría; círculo colectivo para familia.',
-      marcadorFacial: 'Congruencia afectiva: apertura ocular en sorpresa, sonrisa plena en alegría.'
-    },
-    targetFacialExpression: 'apertura_sorpresa',
-    facialExercisePrompt: 'Abre la boca y eleva las cejas mostrando asombro positivo como cuando recibes una gran noticia de una amiga.',
-    vocabulary: [
-      {
-        id: 'voc-amiga',
-        word: 'Amiga / Amigo',
-        phoneticVisual: 'Índices en gancho que se enlazan en ambos sentidos',
-        handshape: 'Dedos índices curvados (Configuración X) o manos que se abrazan',
-        location: 'Espacio neutro central',
-        movement: 'Enganche recíproco dos veces invirtiendo cuál queda arriba',
-        nonManualMarker: 'Sonrisa cómplice y mirada cercana'
-      },
-      {
-        id: 'voc-feliz',
-        word: 'Feliz / Contenta',
-        phoneticVisual: 'Palmas rozan el pecho hacia arriba con energía',
-        handshape: 'Manos abiertas relajadas (Configuración 5)',
-        location: 'Parte superior del pecho',
-        movement: 'Doble movimiento circular ascendente',
-        nonManualMarker: 'Sonrisa radiante y pómulos elevados'
-      },
-      {
-        id: 'voc-familia',
-        word: 'Familia',
-        phoneticVisual: 'Ambas manos en F trazan un círculo de unión',
-        handshape: 'Índice y pulgar unidos en círculo (Configuración F)',
-        location: 'Frente al torso, iniciando juntas y cerrando el círculo',
-        movement: 'Arco simétrico envolvente hasta unir los meñiques',
-        nonManualMarker: 'Expresión serena y acogedora'
-      }
-    ],
-    keyframes: [
-      {
-        phaseLabel: 'Fase 1: Signo de "Amiga" (Unión central)',
-        durationMs: 1400,
-        leftHand: { x: 0.45, y: 0.56, rotation: 25, fingerSpread: 0.35, shapeLabel: 'Enlace izquierdo' },
-        rightHand: { x: 0.55, y: 0.54, rotation: -25, fingerSpread: 0.35, shapeLabel: 'Enlace derecho' },
-        eyebrowArch: 0.35,
-        mouthOpen: 0.2,
-        mouthSmile: 0.85,
-        headTilt: 4
-      },
-      {
-        phaseLabel: 'Fase 2: Signo de "Feliz" (Ascenso en el pecho)',
-        durationMs: 1400,
-        leftHand: { x: 0.40, y: 0.48, rotation: -12, fingerSpread: 0.9, shapeLabel: 'Ascenso vital' },
-        rightHand: { x: 0.60, y: 0.48, rotation: 12, fingerSpread: 0.9, shapeLabel: 'Ascenso vital' },
-        eyebrowArch: 0.55,
-        mouthOpen: 0.35,
-        mouthSmile: 0.95,
-        headTilt: 0,
-        motionArrow: { fromX: 0.60, fromY: 0.58, toX: 0.60, toY: 0.44, type: 'arc' }
-      },
-      {
-        phaseLabel: 'Fase 3: Expresión de Sorpresa / Asombro positivo',
-        durationMs: 1500,
-        leftHand: { x: 0.34, y: 0.46, rotation: -20, fingerSpread: 1.0, shapeLabel: 'Expansión' },
-        rightHand: { x: 0.66, y: 0.46, rotation: 20, fingerSpread: 1.0, shapeLabel: 'Expansión' },
-        eyebrowArch: 0.95,
-        mouthOpen: 0.75,
-        mouthSmile: 0.45,
-        headTilt: -3
-      }
-    ],
-    quiz: [
-      {
-        id: 'q1-emociones',
-        question: '¿Cómo se expresa en lengua de signos la diferencia entre estar "contenta" y estar "inmensamente feliz"?',
-        options: [
-          'Deletreando la palabra M-U-Y antes del signo',
-          'Aumentando la amplitud del gesto manual y la intensidad de la expresión facial y corporal',
-          'Haciendo el signo de espaldas',
-          'Usando únicamente la mano izquierda'
-        ],
-        correctIndex: 1,
-        explanation: 'La gradación e intensidad adjetival en lengua de signos se incorpora directamente en la energía del movimiento y en la expresión facial (modulación).'
-      }
-    ],
-    offlineTips: [
-      'En lengua de signos, la zona del pecho concentra la mayoría de signos relacionados con emociones, sentimientos y estados internos.',
-      'Practica contar una anécdota breve a tu reflejo cambiando claramente de expresión entre sorpresa, duda y alegría.'
-    ]
-  },
-  {
-    id: 'lec-05-estructura-sov',
-    number: '05',
-    title: 'Sintaxis Espacial, Tiempo y Estructura SOV',
-    subtitle: 'Organiza oraciones completas usando la línea temporal del cuerpo y el orden Sujeto-Objeto-Verbo.',
-    level: 'avanzado',
-    durationMinutes: 18,
-    category: 'Sintaxis y Fluidez',
-    summary:
-      'A diferencia del español hablado (Sujeto-Verbo-Objeto), la lengua de signos organiza la escena visualmente: primero situamos el Tiempo, luego el Lugar, después los participantes (Sujeto y Objeto) y finalmente la Acción (Verbo).',
-    learningObjectives: [
-      'Utilizar la línea temporal imaginaria: detrás del hombro (Pasado), frente al cuerpo (Presente) y hacia adelante (Futuro).',
-      'Estructurar frases naturales como: "MAÑANA BIBLIOTECA MI AMIGA YO APRENDER SIGNOS".',
-      'Emplear el espacio tridimensional para ubicar referentes y señalarlos (indexación) sin repetir su nombre.'
-    ],
-    biomechanics: {
-      configuracionManual: 'Mano dominante traza arco temporal (atrás para Ayer, delante para Mañana) y establece loci espaciales a izquierda y derecha.',
-      ubicacionEspacial: 'Eje sagital (hombro-frente) para el tiempo; eje horizontal frontal para ubicar personas o lugares.',
-      trayectoriaMovimiento: 'Verbos direccionales que viajan desde el punto espacial del Sujeto hacia el punto del Receptor.',
-      marcadorFacial: 'Elevación de cejas al establecer el tópico o marco temporal al inicio de la frase.'
+      configuracionManual: 'Uso avanzado de clasificadores de tamaño, forma y movimiento.',
+      ubicacionEspacial: 'Creación de loci múltiples en el espacio tridimensional.',
+      trayectoriaMovimiento: 'Fluidez discursiva con cambios de registro.',
+      marcadorFacial: 'Expresiones complejas de duda, énfasis y matización.'
     },
     targetFacialExpression: 'cejas_fruncidas_wh',
-    facialExercisePrompt: 'Marca énfasis gramatical focalizando las cejas e inclinando levemente la cabeza al establecer un punto en el espacio.',
+    facialExercisePrompt: 'Demuestra concentración y control prosódico al argumentar una propuesta.',
+    realisticPhotoUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
     vocabulary: [
       {
-        id: 'voc-ayer-pasado',
-        word: 'Ayer / Pasado',
-        phoneticVisual: 'Pulgar o palma hacia atrás sobre el hombro',
-        handshape: 'Mano abierta o pulgar extendido (Configuración A/5)',
-        location: 'Hombro dominante hacia atrás',
-        movement: 'Arco retrocediendo hacia la espalda',
-        nonManualMarker: 'Ligera inclinación posterior de cabeza'
-      },
-      {
-        id: 'voc-manana-futuro',
-        word: 'Mañana / Futuro',
-        phoneticVisual: 'Índice o palma desde mejilla en arco hacia el frente',
-        handshape: 'Configuración L o palma abierta lateral',
-        location: 'Lateral del rostro proyectándose hacia adelante',
-        movement: 'Curva ascendente frontal',
-        nonManualMarker: 'Mirada proyectada hacia el horizonte'
-      },
-      {
-        id: 'voc-aprender',
-        word: 'Aprender',
-        phoneticVisual: 'Tomar información de la palma e integrarla en la frente',
-        handshape: 'Mano plana base + mano activa que cierra sus yemas hacia la sien',
-        location: 'De la palma no dominante hacia la frente',
-        movement: 'Trayectoria ascendente de absorción mental',
-        nonManualMarker: 'Asentimiento comprensivo'
-      },
-      {
-        id: 'voc-ayudar-direccional',
-        word: 'Te ayudo / Me ayudas',
-        phoneticVisual: 'Puño con pulgar arriba apoyado en palma → viaja hacia quien recibe la ayuda',
-        handshape: 'Mano A sobre palma abierta B',
-        location: 'Del emisor al receptor (o viceversa)',
-        movement: 'Desplazamiento direccional que conjuga sujeto y objeto',
-        nonManualMarker: 'Dirección de la mirada hacia el referente espacial'
+        id: 'voc-b2-argumentar',
+        word: 'Argumentar / Debatir',
+        phoneticVisual: 'Intercambio de puntos de vista en el espacio',
+        handshape: 'Configuración G / 5',
+        location: 'Espacio neutro',
+        movement: 'Movimiento alterno',
+        nonManualMarker: 'Ceño concentrado'
       }
     ],
     keyframes: [
       {
-        phaseLabel: 'Fase 1: Marco Temporal (Futuro / Mañana hacia adelante)',
+        phaseLabel: 'Fase 1: Planteamiento de hipótesis B2',
         durationMs: 1400,
-        leftHand: { x: 0.34, y: 0.68, rotation: 0, fingerSpread: 0.4, shapeLabel: 'Referencia base' },
-        rightHand: { x: 0.62, y: 0.38, rotation: -15, fingerSpread: 0.6, shapeLabel: 'Tiempo Futuro' },
-        eyebrowArch: 0.6,
+        leftHand: { x: 0.36, y: 0.58, rotation: -15, fingerSpread: 0.8, shapeLabel: 'Hipótesis A' },
+        rightHand: { x: 0.64, y: 0.58, rotation: 15, fingerSpread: 0.8, shapeLabel: 'Hipótesis B' },
+        eyebrowArch: -0.4,
         mouthOpen: 0.2,
-        mouthSmile: 0.25,
-        headTilt: 5,
-        motionArrow: { fromX: 0.56, fromY: 0.40, toX: 0.72, toY: 0.36, type: 'arc' }
-      },
-      {
-        phaseLabel: 'Fase 2: Tomar conocimiento de la palma ("Aprender" inicio)',
-        durationMs: 1400,
-        leftHand: { x: 0.42, y: 0.60, rotation: 20, fingerSpread: 0.9, shapeLabel: 'Libro / Base' },
-        rightHand: { x: 0.48, y: 0.54, rotation: -20, fingerSpread: 0.8, shapeLabel: 'Captar idea' },
-        eyebrowArch: 0.2,
-        mouthOpen: 0.15,
-        mouthSmile: 0.4,
-        headTilt: 0,
-        motionArrow: { fromX: 0.48, fromY: 0.54, toX: 0.56, toY: 0.32, type: 'linear' }
-      },
-      {
-        phaseLabel: 'Fase 3: Integrar en la frente ("Aprender" cierre)',
-        durationMs: 1400,
-        leftHand: { x: 0.42, y: 0.62, rotation: 15, fingerSpread: 0.85, shapeLabel: 'Base abierta' },
-        rightHand: { x: 0.56, y: 0.32, rotation: -35, fingerSpread: 0.2, shapeLabel: 'Mente / Frente' },
-        eyebrowArch: 0.4,
-        mouthOpen: 0.1,
-        mouthSmile: 0.65,
+        mouthSmile: 0.1,
         headTilt: -3
       },
       {
-        phaseLabel: 'Fase 4: Verbo direccional "Te ayudo" hacia el interlocutor',
-        durationMs: 1500,
-        leftHand: { x: 0.48, y: 0.56, rotation: 10, fingerSpread: 0.9, shapeLabel: 'Palma sostén' },
-        rightHand: { x: 0.52, y: 0.52, rotation: 0, fingerSpread: 0.2, shapeLabel: 'Apoyo activo' },
-        eyebrowArch: 0.35,
-        mouthOpen: 0.2,
-        mouthSmile: 0.75,
-        headTilt: 4,
-        motionArrow: { fromX: 0.48, fromY: 0.56, toX: 0.68, toY: 0.52, type: 'linear' }
+        phaseLabel: 'Fase 2: Conclusión argumentada',
+        durationMs: 1400,
+        leftHand: { x: 0.40, y: 0.55, rotation: 0, fingerSpread: 0.9, shapeLabel: 'Cierre A' },
+        rightHand: { x: 0.60, y: 0.55, rotation: 0, fingerSpread: 0.9, shapeLabel: 'Cierre B' },
+        eyebrowArch: 0.3,
+        mouthOpen: 0.15,
+        mouthSmile: 0.5,
+        headTilt: 0
       }
     ],
     quiz: [
       {
-        id: 'q1-sov',
-        question: '¿Cómo se ordena habitualmente la frase "Mañana estudiaré lengua de signos en casa" en estructura visual?',
+        id: 'gva-b2-q1',
+        question: '¿Qué son los clasificadores en el nivel B2 de lengua de signos?',
         options: [
-          'ESTUDIARÉ MAÑANA EN CASA LENGUA DE SIGNOS',
-          'MAÑANA — CASA — LENGUA DE SIGNOS — YO ESTUDIAR (Tiempo + Lugar + Objeto + Verbo)',
-          'LENGUA DE SIGNOS CASA AYER',
-          'Deletreando cada palabra letra por letra'
+          'Errores gramaticales',
+          'Morfemas visuales que describen la forma, tamaño o movimiento de los objetos en el espacio',
+          'Signos exclusivos para números',
+          'Sinónimos de dactilología'
         ],
         correctIndex: 1,
-        explanation: 'En lengua de signos establecemos primero el marco temporal (Mañana) y espacial (Casa), luego el objeto temático y finalmente la acción verbal.'
-      },
-      {
-        id: 'q2-sov',
-        question: '¿Qué es un verbo direccional como "Ayudar", "Explicar" o "Preguntar"?',
-        options: [
-          'Un verbo cuyo movimiento cambia de dirección en el espacio para indicar quién realiza la acción y quién la recibe',
-          'Un verbo que solo se puede hacer caminando',
-          'Un verbo que no utiliza las manos',
-          'Un verbo exclusivo para hablar del clima'
-        ],
-        correctIndex: 0,
-        explanation: 'Los verbos direccionales modifican su punto de inicio y fin en el espacio tridimensional: si se mueve de mí hacia ti significa "Yo te ayudo"; si viene de ti hacia mí significa "Tú me ayudas".'
+        explanation: 'Los clasificadores son elementos altamente icónicos y gramaticales esenciales en los niveles B y C para describir la realidad.'
       }
     ],
-    offlineTips: [
-      'Imagina el espacio frente a ti como un escenario: ubica los conceptos antes de aplicarles la acción.',
-      'Recuerda siempre colocar la marca de tiempo (Ayer, Hoy, Mañana) al principio de la oración para no tener que conjugar cada verbo.'
-    ]
+    offlineTips: ['Grábate en vídeo exponiendo un tema de actualidad durante 3 minutos y revisa tus clasificadores.']
   }
 ];
 
@@ -638,13 +597,9 @@ export const FACIAL_CHALLENGES: FacialChallenge[] = [
     level: 'inicial',
     grammarFunction: 'Apertura de canal comunicativo y cortesía visual',
     targetExpression: 'sonrisa_afectiva',
-    instruction:
-      'Mira al centro de la cámara y realiza una sonrisa cálida y natural mientras acompañas con una leve inclinación de saludo.',
-    linguisticContext:
-      'Se utiliza al signar "Hola", "Gracias", "Encantada de conocerte" y "Bienvenida". Transmite receptividad y confirma que el canal visual está activo.',
-    thresholds: {
-      minMouthSmile: 0.42
-    },
+    instruction: 'Mira al centro de la cámara y realiza una sonrisa cálida y natural acompañada de una leve inclinación.',
+    linguisticContext: 'Se utiliza al signar "Hola", "Gracias", "Encantada" y "Bienvenida". Transmite receptividad.',
+    thresholds: { minMouthSmile: 0.42 },
     holdSecondsRequired: 2.5
   },
   {
@@ -653,13 +608,9 @@ export const FACIAL_CHALLENGES: FacialChallenge[] = [
     level: 'intermedio',
     grammarFunction: 'Marcador sintáctico de pregunta polar (¿Entiendes?, ¿Quieres?)',
     targetExpression: 'cejas_elevadas_pregunta',
-    instruction:
-      'Eleva ambas cejas claramente e inclina la cabeza ligeramente hacia adelante o al costado como esperando confirmación.',
-    linguisticContext:
-      'En lengua de signos, elevar las cejas convierte cualquier oración afirmativa ("Tú estudias hoy") en una pregunta cerrada ("¿Estudias hoy?").',
-    thresholds: {
-      minEyebrowArch: 0.38
-    },
+    instruction: 'Eleva ambas cejas claramente e inclina la cabeza ligeramente hacia adelante esperando confirmación.',
+    linguisticContext: 'Elevar las cejas convierte cualquier frase afirmativa en una pregunta cerrada.',
+    thresholds: { minEyebrowArch: 0.38 },
     holdSecondsRequired: 2.5
   },
   {
@@ -668,13 +619,9 @@ export const FACIAL_CHALLENGES: FacialChallenge[] = [
     level: 'intermedio',
     grammarFunction: 'Marcador sintáctico pronominal de información específica',
     targetExpression: 'cejas_fruncidas_wh',
-    instruction:
-      'Acerca o contrae suavemente el entrecejo (cejas bajas/concentradas) e inclina levemente el mentón con gesto inquisitivo.',
-    linguisticContext:
-      'Acompaña obligatoriamente a los signos interrogativos Qué, Quién, Cuándo, Dónde y Por qué. No expresa enojo, sino foco gramatical de pregunta abierta.',
-    thresholds: {
-      maxEyebrowArch: -0.25
-    },
+    instruction: 'Acerca o contrae suavemente el entrecejo con gesto inquisitivo.',
+    linguisticContext: 'Acompaña obligatoriamente a los signos interrogativos Qué, Quién, Cuándo, Dónde y Por qué.',
+    thresholds: { maxEyebrowArch: -0.25 },
     holdSecondsRequired: 2.5
   },
   {
@@ -683,15 +630,126 @@ export const FACIAL_CHALLENGES: FacialChallenge[] = [
     level: 'avanzado',
     grammarFunction: 'Superlativo visual y énfasis narrativo',
     targetExpression: 'apertura_sorpresa',
-    instruction:
-      'Eleva las cejas y abre la boca en forma de "O" expresiva para marcar asombro, magnitud o un giro importante en la historia.',
-    linguisticContext:
-      'En narraciones avanzadas y clasificadores, la apertura bucal y ocular sustituye a adverbios como " muchísimo", "increíblemente" o "de repente".',
-    thresholds: {
-      minEyebrowArch: 0.35,
-      minMouthOpen: 0.42
-    },
+    instruction: 'Eleva las cejas y abre la boca en forma de "O" para marcar asombro o magnitud.',
+    linguisticContext: 'Sustituye a adverbios como "muchísimo" o "increíblemente".',
+    thresholds: { minEyebrowArch: 0.35, minMouthOpen: 0.42 },
     holdSecondsRequired: 2.5
+  }
+];
+
+export const GVA_EXAM_BANK: GvaExamQuestion[] = [
+  {
+    id: 'gva-bank-1',
+    level: 'A1',
+    question: '¿Cómo se indica la negación básica en una frase en lengua de signos?',
+    options: [
+      'Cerrando los ojos con fuerza sin mover las manos',
+      'Realizando el signo manual de NO acompañado de un movimiento horizontal de cabeza',
+      'Levantando ambos brazos en vertical',
+      'Deletreando la palabra N-E-G-A-R'
+    ],
+    correctIndex: 1,
+    explanation: 'La negación requiere el signo manual de "No" con la oscilación horizontal de la cabeza.'
+  },
+  {
+    id: 'gva-bank-2',
+    level: 'A2',
+    question: 'En la estructura sintáctica básica de la LSE, ¿dónde suele colocarse el marcador temporal?',
+    options: [
+      'Siempre al final absoluto de la oración',
+      'Al principio de la oración para establecer el marco temporal',
+      'En medio del verbo principal',
+      'No importa la posición'
+    ],
+    correctIndex: 1,
+    explanation: 'La línea temporal se sitúa al inicio del enunciado para contextualizar toda la acción.'
+  },
+  {
+    id: 'gva-bank-3',
+    level: 'B1',
+    question: '¿Qué diferencia un verbo plano de un verbo direccional o espacial?',
+    options: [
+      'Los verbos planos se hacen sentados y los direccionales de pie',
+      'Los verbos direccionales modifican su trayectoria en el espacio para concordar con sujeto y objeto',
+      'Los verbos planos no utilizan las manos',
+      'No existe distinción'
+    ],
+    correctIndex: 1,
+    explanation: 'Los verbos direccionales incorporan los roles sintácticos directamente en su trayectoria espacial.'
+  },
+  {
+    id: 'gva-bank-4',
+    level: 'B2',
+    question: '¿Cuál es la función principal de los componentes no manuales (MNM) gramaticales?',
+    options: [
+      'Decorar la actuación artística',
+      'Ejercer funciones equivalentes a entonación, modalidad oracional y cohesión sintáctica',
+      'Sustituir por completo a las manos',
+      'Indicar únicamente el estado de ánimo'
+    ],
+    correctIndex: 1,
+    explanation: 'Los MNM gramaticales son obligatorios para marcar subordinación, interrogación y negaciones.'
+  },
+  {
+    id: 'gva-bank-5',
+    level: 'A1',
+    question: '¿Qué distancia corporal y espacial es la recomendada al signar cara a cara?',
+    options: [
+      'Más de 5 metros de distancia',
+      'La distancia natural de conversación interpersonal que permita ver manos y rostro',
+      'Contacto físico constante en los hombros',
+      'Detrás del interlocutor'
+    ],
+    correctIndex: 1,
+    explanation: 'La distancia conversacional natural permite la visibilidad simultánea del espacio de signado y la expresión facial.'
+  },
+  {
+    id: 'gva-bank-6',
+    level: 'A2',
+    question: 'Al deletrear un nombre propio con dactilología, ¿cómo deben colocarse los dedos?',
+    options: [
+      'Separados y agitados rápidamente hacia el suelo',
+      'Estables, claros y ejecutados frente al hombro dominante sin rebotes de brazo',
+      'Ocultos detrás del torso',
+      'Tocando la nariz del receptor'
+    ],
+    correctIndex: 1,
+    explanation: 'La dactilología exige claridad, estabilidad y posición frente al hombro dominante.'
+  }
+];
+
+export const LINGUISTIC_MODULES: LinguisticModule[] = [
+  {
+    id: 'ling-01-fonologia',
+    title: 'Fonología de la LSE: Los Parámetros Formacionales',
+    subtitle: 'Los 5 queremas que componen cada signo léxico.',
+    category: 'Fonología',
+    summary: 'Las lenguas de signos tienen parámetros formacionales (queremas) cuya alteración cambia el significado.',
+    contentMarkdown: `
+### Los Cinco Parámetros Formacionales (Stokoe / Klima & Bellugi)
+
+1. **Configuración manual (Quierema)**: La forma que adopta la mano al ejecutar el signo.
+2. **Lugar de articulación (Toponema)**: La zona del cuerpo o del espacio neutro donde se realiza.
+3. **Movimiento (Kinema)**: La trayectoria, dirección o tipo de movimiento.
+4. **Orientación**: Hacia dónde apunta la palma de la mano.
+5. **Componente no manual (Prosodia visual)**: Expresión facial, movimientos de cabeza y cavidad bucal.
+    `,
+    keyTakeaways: ['Un cambio en un solo parámetro transforma por completo el significado del signo.']
+  },
+  {
+    id: 'ling-02-morfosintaxis',
+    title: 'Morfosintaxis y Orden Espacial SOV',
+    subtitle: 'Por qué la LSE organiza el espacio de forma visual.',
+    category: 'Morfosintaxis',
+    summary: 'La LSE es una lengua viso-gestual que prioriza el orden Sujeto-Objeto-Verbo y la iconicidad espacial.',
+    contentMarkdown: `
+### Características Gramaticales Propias
+
+- **Estructura Temática**: Se establece primero el Tópico y luego el Comentario.
+- **Verbos de Acuerdo**: Incorporan concordancia de persona y número mediante la dirección espacial.
+- **Ausencia de Cópula**: Artículos y verbos copulativos a menudo se integran en el ritmo visual y los clasificadores.
+    `,
+    keyTakeaways: ['La gramática visual aprovecha la tridimensionalidad del espacio para economizar relaciones sintácticas.']
   }
 ];
 
@@ -712,40 +770,16 @@ export const OFFLINE_RESOURCES: OfflineResourceItem[] = [
     level: 'Nivel Inicial',
     formatLabel: 'Documento HTML/Imprimible Offline',
     pagesEstimate: '4 secciones interactivas',
-    description:
-      'Manual de bolsillo con las 27 configuraciones del abecedario dactilológico, pautas posturales del hombro y ejercicios de deletreo sin conexión.',
-    includedTopics: [
-      'Tabla completa A–Z con descripción biomecánica de cada dedo',
-      'Diferencia entre letras estáticas y letras con trayectoria (Ñ, LL, RR, Z)',
-      '15 ejercicios prácticos de deletreo progresivo para practicar en casa'
-    ]
+    description: 'Manual de bolsillo con las 27 configuraciones del abecedario dactilológico y ejercicios de deletreo.',
+    includedTopics: ['Tabla completa A–Z con descripción biomecánica', 'Diferencia entre letras estáticas y dinámicas', '15 ejercicios de deletreo']
   },
   {
     id: 'guide-gramatica-facial',
     title: 'Cuaderno de Gramática Facial y Marcadores No Manuales (MNM)',
     level: 'Nivel Intermedio',
     formatLabel: 'Documento HTML/Imprimible Offline',
-    pagesEstimate: '5 secciones + tabla de referencia',
-    description:
-      'Referencia visual sobre cómo las cejas, la mirada, los labios y la inclinación de la cabeza estructuran las preguntas y emociones.',
-    includedTopics: [
-      'Mapa comparativo: Preguntas Sí/No (cejas elevadas) vs. Qué/Dónde (ceño concentrado)',
-      'Vocalización y componentes labiales en lengua de signos',
-      'Guía de práctica frente al espejo de 7 días'
-    ]
-  },
-  {
-    id: 'guide-conversacion-sov',
-    title: 'Manual de Conversación Cotidiana y Estructura Espacial SOV',
-    level: 'Nivel Avanzado',
-    formatLabel: 'Documento HTML/Imprimible Offline',
-    pagesEstimate: '6 secciones + diálogos completos',
-    description:
-      'Guía avanzada para construir frases fluidas usando la línea temporal (Pasado, Presente, Futuro), verbos direccionales y diálogos reales.',
-    includedTopics: [
-      'Fórmula visual: Tiempo + Lugar + Sujeto + Objeto + Verbo',
-      '12 diálogos paso a paso (Cafetería, Estudio, Médicos, Presentaciones)',
-      'Lista de verificación de fluidez y uso del espacio tridimensional'
-    ]
+    pagesEstimate: '5 secciones',
+    description: 'Referencia visual sobre cómo las cejas, la mirada y los labios estructuran las preguntas y emociones.',
+    includedTopics: ['Mapa comparativo: Preguntas Sí/No vs. WH', 'Componentes labiales', 'Guía de práctica de 7 días']
   }
 ];

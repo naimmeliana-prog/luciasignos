@@ -22,7 +22,8 @@ import {
   AchievementToast,
   ReminderSettings,
   StudentProgressState,
-  StudentUser
+  StudentUser,
+  VisualMode
 } from './types/learning';
 
 const GUEST_STORAGE_ID = 'guest-local';
@@ -54,7 +55,6 @@ export default function App() {
     setProgress(loadStudentProgress(targetId));
   };
 
-  // Check daily reminder schedule
   useEffect(() => {
     const checkSchedule = () => {
       if (!progress.reminder.enabled) return;
@@ -147,6 +147,15 @@ export default function App() {
     }
   };
 
+  const handleToggleVisualMode = (mode: VisualMode) => {
+    const updated: StudentProgressState = {
+      ...progress,
+      visualMode: mode
+    };
+    setProgress(updated);
+    saveStudentProgress(updated);
+  };
+
   const handleRecordOfflineDownload = (guideId: string) => {
     const setIds = new Set(progress.DownloadedGuideIds);
     setIds.add(guideId);
@@ -177,7 +186,7 @@ export default function App() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Celebratory Achievement & Badge Notification Banner */}
+      {/* Celebratory Achievement Notification Banner */}
       {achievementToast && (
         <div
           className="bg-emerald-950 text-white px-6 py-3 border-b border-emerald-800 transition-all"
@@ -247,6 +256,18 @@ export default function App() {
             onCompleteLesson={handleCompleteLesson}
             onSaveNote={handleSaveNote}
             onOpenFacialPractice={() => setActiveSection('practica_facial')}
+            onToggleVisualMode={handleToggleVisualMode}
+            onRecordGvaScore={(examId, score) => {
+              const updated: StudentProgressState = {
+                ...progress,
+                gvaExamScores: {
+                  ...progress.gvaExamScores,
+                  [examId]: score
+                }
+              };
+              setProgress(updated);
+              saveStudentProgress(updated);
+            }}
           />
         )}
 
@@ -254,6 +275,7 @@ export default function App() {
           <GlossaryView
             progress={progress}
             onToggleMastered={handleToggleGlossaryMastered}
+            visualMode={progress.visualMode || 'illustrations'}
           />
         )}
 
@@ -299,7 +321,7 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-white mt-16">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            SignaViva — Plataforma interactiva de aprendizaje de lengua de signos.
+            LuciaSignos — Plataforma interactiva de aprendizaje de lengua de signos y preparación GVA.
           </div>
           <div className="flex flex-wrap items-center gap-6">
             <button
@@ -307,7 +329,7 @@ export default function App() {
               onClick={() => setActiveSection('lecciones')}
               className="hover:text-slate-900 cursor-pointer"
             >
-              Lecciones en Vídeo
+              Lecciones y Exámenes GVA
             </button>
             <button
               type="button"

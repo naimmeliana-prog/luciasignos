@@ -6,13 +6,15 @@ import {
   GlossaryEntry,
   Lesson,
   SkillLevel,
-  StudentProgressState
+  StudentProgressState,
+  VisualMode
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
 
 interface GlossaryViewProps {
   progress: StudentProgressState;
   onToggleMastered: (termId: string, termName: string) => void;
+  visualMode: VisualMode;
 }
 
 const CATEGORIES: ('Todas' | GlossaryCategory)[] = [
@@ -22,7 +24,9 @@ const CATEGORIES: ('Todas' | GlossaryCategory)[] = [
   'Vida Cotidiana',
   'Preguntas y Gramática',
   'Tiempo y Verbos',
-  'Salud y Emergencias'
+  'Salud y Emergencias',
+  'Administración y GVA',
+  'Educación y Cultura Sorda'
 ];
 
 const ALPHA_GROUPS = [
@@ -36,7 +40,8 @@ const ALPHA_GROUPS = [
 
 export const GlossaryView: React.FC<GlossaryViewProps> = ({
   progress,
-  onToggleMastered
+  onToggleMastered,
+  visualMode
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] =
@@ -77,7 +82,6 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
     return GLOSSARY_ENTRIES[0];
   }, [filteredEntries, activeEntryId]);
 
-  // Adapt GlossaryEntry into the Lesson shape expected by SignVideoPlayer
   const playerLessonAdapter: Lesson = useMemo(
     () => ({
       id: activeEntry.id,
@@ -100,7 +104,8 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
       vocabulary: [],
       keyframes: activeEntry.keyframes,
       quiz: [],
-      offlineTips: []
+      offlineTips: [],
+      realisticPhotoUrl: activeEntry.realisticPhotoUrl
     }),
     [activeEntry]
   );
@@ -113,13 +118,13 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
           <div className="text-xs font-mono text-sky-700 mb-1">
-            DICCIONARIO VISUAL INTERACTIVO · VÍDEO INCRUSTADO EN TIEMPO REAL
+            DICCIONARIO VISUAL INTERACTIVO · LSE Y TERMINOLOGÍA GVA
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 font-display">
             Glosario Interactivo de Lengua de Signos
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Busca cualquier término, explora su descripción biomecánica detallada y observa el vídeo demostrativo integrado con vectores de movimiento.
+            Busca cualquier término, explora su descripción biomecánica detallada y observa la demostración visual (con opción de ilustraciones anatómicas o fotografías reales).
           </p>
         </div>
 
@@ -131,20 +136,18 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
       {/* Search & Multi-Filter Toolbar */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-          {/* Search Input */}
           <div className="md:col-span-6 relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar término, descripción o ejemplo (ej. Gracias, Amiga, ¿Dónde?, Médico)..."
+              placeholder="Buscar término, descripción o ejemplo (ej. Gracias, Amiga, GVA)..."
               aria-label="Buscar en el glosario"
               className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:bg-white focus:outline-2 focus:outline-sky-600"
             />
           </div>
 
-          {/* Level Segmented Control */}
           <div className="md:col-span-6 flex flex-wrap items-center justify-end gap-1.5">
             {(
               [
@@ -170,7 +173,6 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
           {CATEGORIES.map((cat) => (
             <button
@@ -188,7 +190,6 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
           ))}
         </div>
 
-        {/* Alphabetical Quick Filter */}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 flex-wrap">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-xs text-slate-500 mr-1">Índice A–Z:</span>
@@ -214,19 +215,15 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
         </div>
       </div>
 
-      {/* Two-Column Split: Searchable Dictionary List (5 cols) + Embedded Video Inspector (7 cols) */}
+      {/* Two-Column Split */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Term Directory List */}
-        <div className="lg:col-span-5 space-y-2.5">
+        <div className="lg:col-span-5 space-y-2.5 max-h-[720px] overflow-y-auto pr-1">
           {filteredEntries.length === 0 ? (
             <div className="bg-white border border-slate-200 rounded-xl p-8 text-center space-y-3">
               <BookOpen className="w-6 h-6 text-slate-400 mx-auto" />
               <div className="text-sm font-semibold text-slate-900">
                 No se encontraron términos con esos filtros
               </div>
-              <p className="text-xs text-slate-500">
-                Prueba limpiando el texto de búsqueda o seleccionando "Todas" las categorías.
-              </p>
               <button
                 type="button"
                 onClick={() => {
@@ -263,9 +260,7 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                       <span className="capitalize">Nivel {entry.level}</span>
                     </div>
                     {done && (
-                      <span className="text-emerald-700 font-semibold">
-                        ✓ Dominado
-                      </span>
+                      <span className="text-emerald-700 font-semibold">✓ Dominado</span>
                     )}
                   </div>
 
@@ -281,7 +276,7 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
           )}
         </div>
 
-        {/* Right: Embedded Video Studio & Detailed Entry View */}
+        {/* Right: Detailed Entry View */}
         <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-6 space-y-6">
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
@@ -322,52 +317,39 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
             {activeEntry.description}
           </p>
 
-          {/* Embedded Sign Video Player */}
+          {/* Visual Mode: Animated Signer */}
           <div>
             <div className="text-xs font-semibold text-slate-800 mb-2">
-              Demostración en Vídeo Integrado (Sin salir de la web)
+              Demostración Visual Animada ({visualMode === 'realistic' ? 'Modo Realista Animado' : 'Modo Ilustración'})
             </div>
-            <SignVideoPlayer lesson={playerLessonAdapter} />
+            <div className="relative">
+              <div className="absolute top-3 left-4 z-20 bg-slate-950/85 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-xs text-teal-300 font-mono">
+                {visualMode === 'realistic' ? 'RENDER REALISTA ANIMADO 3D' : 'ILUSTRACIÓN ESQUEMÁTICA'}
+              </div>
+              <SignVideoPlayer lesson={playerLessonAdapter} />
+            </div>
           </div>
 
-          {/* 4 Parameters Breakdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-              <div className="font-semibold text-slate-900 mb-1">
-                Configuración Manual
-              </div>
+              <div className="font-semibold text-slate-900 mb-1">Configuración Manual</div>
               <p className="text-slate-600">{activeEntry.handshape}</p>
             </div>
             <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-              <div className="font-semibold text-slate-900 mb-1">
-                Ubicación Espacial
-              </div>
+              <div className="font-semibold text-slate-900 mb-1">Ubicación Espacial</div>
               <p className="text-slate-600">{activeEntry.location}</p>
-            </div>
-            <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-              <div className="font-semibold text-slate-900 mb-1">
-                Trayectoria y Movimiento
-              </div>
-              <p className="text-slate-600">{activeEntry.movement}</p>
-            </div>
-            <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80">
-              <div className="font-semibold text-slate-900 mb-1">
-                Marcador Facial (MNM)
-              </div>
-              <p className="text-slate-600">{activeEntry.nonManualMarker}</p>
             </div>
           </div>
 
-          {/* Contextual Sentence & SOV Gloss */}
           <div className="p-4 rounded-xl bg-slate-900 text-white space-y-2">
             <div className="text-xs font-mono text-sky-400">
-              EJEMPLO DE USO EN CONTEXTO Y GLOSA SINTÁCTICA
+              EJEMPLO DE USO Y GLOSA SINTÁCTICA
             </div>
             <div className="text-sm text-slate-200">
               <strong>Español:</strong> "{activeEntry.exampleSentence}"
             </div>
             <div className="text-xs font-mono text-teal-300">
-              <strong>Estructura Signada (Glosa):</strong> {activeEntry.exampleGloss}
+              <strong>Glosa LSE:</strong> {activeEntry.exampleGloss}
             </div>
           </div>
         </div>

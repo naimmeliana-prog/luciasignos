@@ -125,10 +125,6 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
         setHoldSeconds((prev) => {
           const next = Number((prev + 0.1).toFixed(1));
           if (next >= selectedChallenge.holdSecondsRequired) {
-            if (justCompletedId !== selectedChallenge.id) {
-              setJustCompletedId(selectedChallenge.id);
-              onCompleteChallenge(selectedChallenge.id, 96);
-            }
             return selectedChallenge.holdSecondsRequired;
           }
           return next;
@@ -138,14 +134,21 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
       }
     }, 100);
     return () => clearInterval(interval);
-  }, [
-    isTargetMet,
-    cameraActive,
-    manualSimulationMode,
-    selectedChallenge,
-    justCompletedId,
-    onCompleteChallenge
-  ]);
+  }, [isTargetMet, cameraActive, manualSimulationMode, selectedChallenge.holdSecondsRequired]);
+
+  // Handle completion when hold time is reached
+  useEffect(() => {
+    if (
+      holdSeconds >= selectedChallenge.holdSecondsRequired &&
+      justCompletedId !== selectedChallenge.id
+    ) {
+      setJustCompletedId(selectedChallenge.id);
+      const timer = setTimeout(() => {
+        onCompleteChallenge(selectedChallenge.id, 96);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [holdSeconds, selectedChallenge, justCompletedId, onCompleteChallenge]);
 
   // Reset hold progress when switching challenge
   const handleSelectChallenge = (challenge: FacialChallenge) => {
