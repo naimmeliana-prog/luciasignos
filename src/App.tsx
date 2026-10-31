@@ -184,6 +184,8 @@ export default function App() {
         currentUser={currentUser}
         xpPoints={progress.xpPoints}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        visualMode={progress.visualMode || 'illustrations'}
+        onToggleVisualMode={handleToggleVisualMode}
       />
 
       {/* Celebratory Achievement Notification Banner */}

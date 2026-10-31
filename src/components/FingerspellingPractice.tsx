@@ -358,13 +358,26 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
           <div className="relative aspect-4/3 w-full bg-slate-950">
-            <canvas
-              ref={canvasRef}
-              width={640}
-              height={480}
-              className="w-full h-full object-contain block"
-              aria-label="Visor anatómico de configuración manual dactilológica"
-            />
+            {progress.visualMode === 'realistic' ? (
+              <div className="relative w-full h-full">
+                <img
+                  src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"
+                  alt="Dactilología real"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 left-4 bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700 text-xs text-teal-300 font-mono">
+                  FOTOGRAFÍA REAL DE DACTILOLOGÍA · LETRA {displayedLetterObj.letter}
+                </div>
+              </div>
+            ) : (
+              <canvas
+                ref={canvasRef}
+                width={640}
+                height={480}
+                className="w-full h-full object-contain block"
+                aria-label="Visor anatómico de configuración manual dactilológica"
+              />
+            )}
           </div>
 
           {gameMode === 'guess_word' && (

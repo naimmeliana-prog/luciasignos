@@ -10,6 +10,7 @@ import {
   VisualMode
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
+import { RealisticSignPlayer } from './RealisticSignPlayer';
 
 interface GlossaryViewProps {
   progress: StudentProgressState;
@@ -102,7 +103,28 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
       targetFacialExpression: 'neutral_atento',
       facialExercisePrompt: activeEntry.nonManualMarker,
       vocabulary: [],
-      keyframes: activeEntry.keyframes,
+      keyframes: activeEntry.keyframes && activeEntry.keyframes.length > 0 ? activeEntry.keyframes : [
+        {
+          phaseLabel: `Fase 1: Signado de ${activeEntry.term}`,
+          durationMs: 1500,
+          leftHand: { x: 0.35, y: 0.7, rotation: 0, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+          rightHand: { x: 0.62, y: 0.45, rotation: 0, fingerSpread: 0.8, shapeLabel: activeEntry.handshape },
+          eyebrowArch: 0.2,
+          mouthOpen: 0.15,
+          mouthSmile: 0.7,
+          headTilt: 2
+        },
+        {
+          phaseLabel: `Fase 2: Conclusión del signo`,
+          durationMs: 1500,
+          leftHand: { x: 0.35, y: 0.7, rotation: 0, fingerSpread: 0.3, shapeLabel: 'Reposo' },
+          rightHand: { x: 0.70, y: 0.42, rotation: 15, fingerSpread: 0.9, shapeLabel: 'Proyección' },
+          eyebrowArch: 0.3,
+          mouthOpen: 0.2,
+          mouthSmile: 0.8,
+          headTilt: 0
+        }
+      ],
       quiz: [],
       offlineTips: [],
       realisticPhotoUrl: activeEntry.realisticPhotoUrl
@@ -322,12 +344,11 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
             <div className="text-xs font-semibold text-slate-800 mb-2">
               Demostración Visual Animada ({visualMode === 'realistic' ? 'Modo Realista Animado' : 'Modo Ilustración'})
             </div>
-            <div className="relative">
-              <div className="absolute top-3 left-4 z-20 bg-slate-950/85 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-xs text-teal-300 font-mono">
-                {visualMode === 'realistic' ? 'RENDER REALISTA ANIMADO 3D' : 'ILUSTRACIÓN ESQUEMÁTICA'}
-              </div>
+            {visualMode === 'realistic' ? (
+              <RealisticSignPlayer lesson={playerLessonAdapter} />
+            ) : (
               <SignVideoPlayer lesson={playerLessonAdapter} />
-            </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">

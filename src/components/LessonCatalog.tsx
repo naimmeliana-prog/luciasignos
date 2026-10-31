@@ -8,7 +8,8 @@ import {
   Award,
   BookOpen,
   FileCheck,
-  Eye
+  Eye,
+  Layers
 } from 'lucide-react';
 import { LESSONS_CURRICULUM, GVA_EXAM_BANK, LINGUISTIC_MODULES } from '../data/curriculum';
 import {
@@ -19,6 +20,8 @@ import {
   VisualMode
 } from '../types/learning';
 import { SignVideoPlayer } from './SignVideoPlayer';
+import { RealisticSignPlayer } from './RealisticSignPlayer';
+import { GrammarModuleView } from './GrammarModuleView';
 import { downloadSingleLessonSheet } from '../services/offlineGenerator';
 
 interface LessonCatalogProps {
@@ -41,7 +44,7 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
   onRecordGvaScore
 }) => {
   const [levelFilter, setLevelFilter] = useState<'todos' | SkillLevel>('todos');
-  const [mainTab, setMainTab] = useState<'lecciones' | 'gva_examenes' | 'linguistica'>('lecciones');
+  const [mainTab, setMainTab] = useState<'lecciones' | 'gva_examenes' | 'linguistica' | 'gramatica'>('lecciones');
   const [selectedLessonId, setSelectedLessonId] = useState<string>(LESSONS_CURRICULUM[0].id);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
   const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
@@ -189,6 +192,18 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Gramática y Sintaxis LSE</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMainTab('gramatica')}
+              className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mainTab === 'gramatica'
+                  ? 'bg-sky-700 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Módulo Gramatical (SOV/Espacio)</span>
             </button>
           </div>
         </div>
@@ -412,12 +427,11 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
                 </div>
 
                 {/* Visual Mode Animated Signer */}
-                <div className="relative">
-                  <div className="absolute top-3 left-4 z-20 bg-slate-950/85 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-xs text-teal-300 font-mono">
-                    {progress.visualMode === 'realistic' ? 'RENDER REALISTA ANIMADO 3D' : 'ILUSTRACIÓN ESQUEMÁTICA'}
-                  </div>
+                {progress.visualMode === 'realistic' ? (
+                  <RealisticSignPlayer lesson={activeLesson} />
+                ) : (
                   <SignVideoPlayer lesson={activeLesson} />
-                </div>
+                )}
 
                 {/* Biomechanical Breakdown */}
                 <div className="pt-2">
@@ -644,6 +658,8 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
           </div>
         </section>
       )}
+
+      {mainTab === 'gramatica' && <GrammarModuleView progress={progress} />}
     </div>
   );
 };
