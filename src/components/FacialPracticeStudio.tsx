@@ -368,18 +368,6 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
             {/* Interactive Sculpted Expressive Portrait Stage when camera is off */}
             {!cameraActive && (
               <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-slate-900">
-                {progress.visualMode === 'realistic' ? (
-                  <div className="relative w-full h-full min-h-[260px] flex items-center justify-center">
-                    <img
-                      src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80"
-                      alt="Expresión facial real"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute top-3 left-4 bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700 text-xs text-teal-300 font-mono z-10">
-                      FOTOGRAFÍA REAL DE EXPRESIÓN FACIAL (MNM)
-                    </div>
-                  </div>
-                ) : (
                   <svg
                     viewBox="0 0 240 220"
                     className="w-52 h-44 mb-3"
@@ -483,7 +471,6 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
                     strokeWidth="2.6"
                   />
                   </svg>
-                )}
 
                 <p className="text-xs text-slate-300 max-w-md mb-3">
                   {manualSimulationMode

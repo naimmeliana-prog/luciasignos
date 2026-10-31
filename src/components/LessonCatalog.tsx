@@ -46,6 +46,7 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
   // GVA Exam practice state
   const [gvaAnswers, setGvaAnswers] = useState<Record<string, number>>({});
   const [gvaSubmitted, setGvaSubmitted] = useState<boolean>(false);
+  const [gvaLevelFilter, setGvaLevelFilter] = useState<'todos' | 'A1' | 'A2' | 'B1' | 'B2'>('todos');
 
   const filteredLessons = LESSONS_CURRICULUM.filter((l) =>
     levelFilter === 'todos' ? true : l.level === levelFilter
@@ -478,20 +479,39 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
       {/* Main Tab: Exámenes Oficiales GVA */}
       {mainTab === 'gva_examenes' && (
         <section className="bg-white border border-slate-200 rounded-xl p-8 space-y-6">
-          <div className="border-b border-slate-200 pb-4">
-            <div className="text-xs font-mono text-sky-700 mb-1">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <div className="text-xs font-mono text-sky-700 mb-1">
                 SIMULACRO DE PRUEBAS OFICIALES · GENERALITAT VALENCIANA
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 font-display">
+                Exámenes Oficiales de LSE (A1, A2, B1, B2)
+              </h2>
+              <p className="text-sm text-slate-600 mt-1">
+                Pon a prueba tus conocimientos con preguntas basadas en las convocatorias oficiales de acreditación de la Generalitat Valenciana.
+              </p>
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 font-display">
-              Exámenes Oficiales de LSE (A1, A2, B1, B2)
-            </h2>
-            <p className="text-sm text-slate-600 mt-1">
-              Pon a prueba tus conocimientos con preguntas basadas en las convocatorias oficiales de acreditación de la Generalitat Valenciana.
-            </p>
+
+            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg shrink-0">
+              {(['todos', 'A1', 'A2', 'B1', 'B2'] as const).map((lvl) => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => setGvaLevelFilter(lvl)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer ${
+                    gvaLevelFilter === lvl
+                      ? 'bg-sky-700 text-white'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {lvl === 'todos' ? 'Todos' : `Nivel ${lvl}`}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-6">
-            {GVA_EXAM_BANK.map((eq, idx) => (
+            {GVA_EXAM_BANK.filter((eq) => gvaLevelFilter === 'todos' || eq.level === gvaLevelFilter).map((eq, idx) => (
               <div key={eq.id} className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                 <div className="flex items-center justify-between text-xs font-mono text-slate-500">
                   <span>PREGUNTA OFICIAL GVA · NIVEL {eq.level}</span>

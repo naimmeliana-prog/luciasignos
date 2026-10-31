@@ -358,34 +358,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
           <div className="relative aspect-4/3 w-full bg-slate-950">
-            {progress.visualMode === 'realistic' ? (
-              <div className="relative w-full h-full">
-                <img
-                  src={
-                    {
-                      A: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
-                      B: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-                      C: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-                      D: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80',
-                      E: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
-                      F: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80',
-                      G: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80',
-                      H: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
-                      I: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-                      L: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80',
-                      O: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
-                      S: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
-                      U: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80'
-                    }[displayedLetterObj.letter] || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80'
-                  }
-                  alt={`Dactilología real letra ${displayedLetterObj.letter}`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 left-4 bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-lg border border-slate-700 text-xs text-teal-300 font-mono">
-                  FOTOGRAFÍA REAL DE DACTILOLOGÍA · LETRA {displayedLetterObj.letter}
-                </div>
-              </div>
-            ) : (
               <canvas
                 ref={canvasRef}
                 width={640}
@@ -393,7 +365,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 className="w-full h-full object-contain block"
                 aria-label="Visor anatómico de configuración manual dactilológica"
               />
-            )}
           </div>
 
           {gameMode === 'guess_word' && (
