@@ -7,17 +7,14 @@ import { FingerspellingPractice } from './components/FingerspellingPractice';
 import { FacialPracticeStudio } from './components/FacialPracticeStudio';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { AuthModal } from './components/AuthModal';
-import {
-  ensureDemoStudentAccount,
-  getActiveStudentSession,
-  setActiveStudentSession
-} from './services/authService';
+import { getActiveStudentSession } from './services/authService';
 import {
   loadStudentProgress,
   recordFacialChallengeSuccess,
   recordFingerspellingExercise,
   recordGlossaryTermMastered,
   recordLessonCompletion,
+  resetStudentProgressToZero,
   saveLessonNote,
   saveStudentProgress
 } from './services/progressService';
@@ -28,13 +25,15 @@ import {
   StudentUser
 } from './types/learning';
 
+const GUEST_STORAGE_ID = 'guest-local';
+
 export default function App() {
   const [activeSection, setActiveSection] = useState<AppSection>('lecciones');
   const [currentUser, setCurrentUser] = useState<StudentUser | null>(() =>
     getActiveStudentSession()
   );
   const [progress, setProgress] = useState<StudentProgressState>(() =>
-    loadStudentProgress(getActiveStudentSession()?.id || 'stu-clara-demo')
+    loadStudentProgress(getActiveStudentSession()?.id || GUEST_STORAGE_ID)
   );
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [motivationBanner, setMotivationBanner] = useState<string | null>(null);
@@ -49,29 +48,9 @@ export default function App() {
     }, 5000);
   };
 
-  // Initialize default student account if none is logged in
-  useEffect(() => {
-    let mounted = true;
-    const init = async () => {
-      const existing = getActiveStudentSession();
-      if (!existing) {
-        const demo = await ensureDemoStudentAccount();
-        if (mounted) {
-          setActiveStudentSession(demo);
-          setCurrentUser(demo);
-          setProgress(loadStudentProgress(demo.id));
-        }
-      }
-    };
-    init();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const handleAuthChange = (user: StudentUser | null) => {
     setCurrentUser(user);
-    const targetId = user?.id || 'stu-clara-demo';
+    const targetId = user?.id || GUEST_STORAGE_ID;
     setProgress(loadStudentProgress(targetId));
   };
 
@@ -300,6 +279,18 @@ export default function App() {
             onRecordOfflineDownload={handleRecordOfflineDownload}
             onUpdateReminder={handleUpdateReminder}
             onTriggerInAppMotivation={(msg) => setMotivationBanner(msg)}
+            onResetProgressToZero={() => {
+              const resetState = resetStudentProgressToZero(
+                currentUser?.id || GUEST_STORAGE_ID
+              );
+              setProgress(resetState);
+              showAchievement({
+                id: `rst-${Date.now()}`,
+                title: 'Contadores puestos a cero',
+                message: 'Todo el progreso, XP, rachas e insignias se han reiniciado a 0.',
+                xpGained: 0
+              });
+            }}
           />
         )}
       </main>

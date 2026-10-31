@@ -7,7 +7,7 @@ import {
 import { LESSONS_CURRICULUM, FACIAL_CHALLENGES } from '../data/curriculum';
 import { GAMIFICATION_BADGES } from '../data/glossaryAndDactylology';
 
-const PROGRESS_PREFIX = 'signaviva_progress_v1_';
+const PROGRESS_PREFIX = 'signaviva_progress_zero_v3_';
 
 function getTodayDateString(): string {
   const now = new Date();
@@ -21,39 +21,28 @@ function getYesterdayDateString(): string {
 }
 
 export function createInitialProgress(userId: string): StudentProgressState {
-  const today = getTodayDateString();
   const lessonsMap: Record<string, LessonProgressRecord> = {};
 
-  LESSONS_CURRICULUM.forEach((lesson, idx) => {
+  LESSONS_CURRICULUM.forEach((lesson) => {
     lessonsMap[lesson.id] = {
       lessonId: lesson.id,
-      completed: idx === 0,
-      completedAt: idx === 0 ? new Date().toISOString() : undefined,
-      quizScore: idx === 0 ? 100 : 0,
-      facialPracticeScore: idx === 0 ? 92 : 0,
-      notes:
-        idx === 0
-          ? 'Recordar proyectar "Gracias" desde el mentón manteniendo sonrisa.'
-          : '',
-      bookmarked: idx === 0
+      completed: false,
+      completedAt: undefined,
+      quizScore: 0,
+      facialPracticeScore: 0,
+      notes: '',
+      bookmarked: false
     };
   });
 
   return {
     userId,
     lessons: lessonsMap,
-    completedFacialChallenges: ['fc-01-saludo-afectivo'],
-    studyLogs: {
-      [today]: {
-        date: today,
-        minutesStudied: 12,
-        lessonsCompletedCount: 1,
-        facialExercisesCount: 1
-      }
-    },
-    currentStreakDays: 3,
-    longestStreakDays: 5,
-    totalMinutesStudied: 42,
+    completedFacialChallenges: [],
+    studyLogs: {},
+    currentStreakDays: 0,
+    longestStreakDays: 0,
+    totalMinutesStudied: 0,
     DownloadedGuideIds: [],
     reminder: {
       enabled: true,
@@ -66,22 +55,24 @@ export function createInitialProgress(userId: string): StudentProgressState {
           ? Notification.permission === 'granted'
           : false
     },
-    xpPoints: 325,
-    unlockedBadgeIds: [
-      'badge-primer-paso',
-      'badge-expresion-viva',
-      'badge-racha-constante'
-    ],
-    glossaryMasteredIds: ['glos-hola', 'glos-gracias'],
+    xpPoints: 0,
+    unlockedBadgeIds: [],
+    glossaryMasteredIds: [],
     fingerspelling: {
-      wordsGuessed: 1,
-      wordsSpelled: 1,
-      lettersRapidMatched: 4,
-      currentStreak: 2,
-      bestStreak: 2,
+      wordsGuessed: 0,
+      wordsSpelled: 0,
+      lettersRapidMatched: 0,
+      currentStreak: 0,
+      bestStreak: 0,
       adaptiveTier: 'inicial'
     }
   };
+}
+
+export function resetStudentProgressToZero(userId: string): StudentProgressState {
+  const fresh = createInitialProgress(userId);
+  saveStudentProgress(fresh);
+  return fresh;
 }
 
 export function loadStudentProgress(userId: string): StudentProgressState {
@@ -106,21 +97,16 @@ export function loadStudentProgress(userId: string): StudentProgressState {
       }
     });
 
-    // Migrate fields for existing profiles
-    if (typeof parsed.xpPoints !== 'number') parsed.xpPoints = 325;
-    if (!Array.isArray(parsed.unlockedBadgeIds)) {
-      parsed.unlockedBadgeIds = ['badge-primer-paso', 'badge-expresion-viva'];
-    }
-    if (!Array.isArray(parsed.glossaryMasteredIds)) {
-      parsed.glossaryMasteredIds = ['glos-hola', 'glos-gracias'];
-    }
+    if (typeof parsed.xpPoints !== 'number') parsed.xpPoints = 0;
+    if (!Array.isArray(parsed.unlockedBadgeIds)) parsed.unlockedBadgeIds = [];
+    if (!Array.isArray(parsed.glossaryMasteredIds)) parsed.glossaryMasteredIds = [];
     if (!parsed.fingerspelling) {
       parsed.fingerspelling = {
-        wordsGuessed: 1,
-        wordsSpelled: 1,
-        lettersRapidMatched: 4,
-        currentStreak: 2,
-        bestStreak: 2,
+        wordsGuessed: 0,
+        wordsSpelled: 0,
+        lettersRapidMatched: 0,
+        currentStreak: 0,
+        bestStreak: 0,
         adaptiveTier: 'inicial'
       };
     }
@@ -305,6 +291,15 @@ export function recordFacialChallengeSuccess(
     };
   }
 
+  const yesterday = getYesterdayDateString();
+  const hadStudyToday = Boolean(state.studyLogs[today]);
+  let newStreak = state.currentStreakDays;
+  if (!hadStudyToday) {
+    newStreak = state.studyLogs[yesterday]
+      ? state.currentStreakDays + 1
+      : Math.max(1, state.currentStreakDays);
+  }
+
   const intermediateState: StudentProgressState = {
     ...state,
     lessons: updatedLessons,
@@ -317,6 +312,8 @@ export function recordFacialChallengeSuccess(
         facialExercisesCount: todayLog.facialExercisesCount + 1
       }
     },
+    currentStreakDays: newStreak,
+    longestStreakDays: Math.max(state.longestStreakDays, newStreak),
     totalMinutesStudied: state.totalMinutesStudied + 4
   };
 
@@ -396,7 +393,6 @@ export function recordFingerspellingExercise(
   const nextStreak = prevFs.currentStreak + 1;
   const nextBestStreak = Math.max(prevFs.bestStreak, nextStreak);
 
-  // Adaptive promotion: 3 consecutive successes promote difficulty level automatically
   let nextTier: SkillLevel = prevFs.adaptiveTier;
   if (nextStreak >= 3 && prevFs.adaptiveTier === 'inicial') {
     nextTier = 'intermedio';

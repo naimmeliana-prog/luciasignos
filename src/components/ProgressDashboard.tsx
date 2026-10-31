@@ -10,10 +10,11 @@ import {
 } from 'lucide-react';
 import { LESSONS_CURRICULUM, FACIAL_CHALLENGES } from '../data/curriculum';
 import {
-  COMMUNITY_LEADERBOARD_BASE,
   GAMIFICATION_BADGES,
   LeaderboardEntry
 } from '../data/glossaryAndDactylology';
+import { getRegisteredStudents } from '../services/authService';
+import { loadStudentProgress } from '../services/progressService';
 import {
   ReminderSettings,
   StudentProgressState,
@@ -29,6 +30,7 @@ interface ProgressDashboardProps {
   onRecordOfflineDownload: (guideId: string) => void;
   onUpdateReminder: (reminder: ReminderSettings) => void;
   onTriggerInAppMotivation: (message: string) => void;
+  onResetProgressToZero: () => void;
 }
 
 export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
@@ -37,7 +39,8 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
   onSelectLessonFromProgress,
   onRecordOfflineDownload,
   onUpdateReminder,
-  onTriggerInAppMotivation
+  onTriggerInAppMotivation,
+  onResetProgressToZero
 }) => {
   const [subTab, setSubTab] = useState<
     'gamificacion_progreso' | 'material_offline' | 'recordatorios'
@@ -102,27 +105,42 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
     )
   );
 
-  // Merge current student into the Leaderboard and sort by XP descending
+  // Build Leaderboard exclusively from real registered students + current user
   const sortedLeaderboard: LeaderboardEntry[] = useMemo(() => {
-    const studentEntry: LeaderboardEntry = {
-      id: currentUser?.id || 'stu-current',
-      name: currentUser ? `${currentUser.name} (Tú)` : 'Clara Martínez (Tú)',
-      avatarInitials: currentUser?.avatarInitials || 'CM',
-      levelLabel: `Rango ${studentRankInfo.rankNumber} · ${studentRankInfo.title}`,
-      xpPoints: progress.xpPoints,
-      streakDays: progress.currentStreakDays,
-      badgesCount: progress.unlockedBadgeIds.length,
-      isCurrentUser: true
-    };
-    return [...COMMUNITY_LEADERBOARD_BASE, studentEntry].sort(
-      (a, b) => b.xpPoints - a.xpPoints
-    );
+    const registered = getRegisteredStudents();
+    const entries: LeaderboardEntry[] = registered.map((stu) => {
+      const isMe = currentUser?.id === stu.id;
+      const stuProg = isMe ? progress : loadStudentProgress(stu.id);
+      return {
+        id: stu.id,
+        name: isMe ? `${stu.name} (Tú)` : stu.name,
+        avatarInitials: stu.avatarInitials,
+        levelLabel: `Nivel ${stu.preferredLevel}`,
+        xpPoints: stuProg.xpPoints,
+        streakDays: stuProg.currentStreakDays,
+        badgesCount: stuProg.unlockedBadgeIds.length,
+        isCurrentUser: isMe
+      };
+    });
+
+    if (!currentUser) {
+      entries.push({
+        id: 'guest-local',
+        name: 'Estudiante (Sesión actual)',
+        avatarInitials: 'ES',
+        levelLabel: `Rango ${studentRankInfo.rankNumber} · ${studentRankInfo.title}`,
+        xpPoints: progress.xpPoints,
+        streakDays: progress.currentStreakDays,
+        badgesCount: progress.unlockedBadgeIds.length,
+        isCurrentUser: true
+      });
+    }
+
+    return entries.sort((a, b) => b.xpPoints - a.xpPoints);
   }, [
     currentUser,
     studentRankInfo,
-    progress.xpPoints,
-    progress.currentStreakDays,
-    progress.unlockedBadgeIds.length
+    progress
   ]);
 
   const studentLeaderboardPosition =
@@ -195,14 +213,23 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
             </button>
           </div>
 
-          <button
-            type="button"
-            onClick={handleExportProgressJson}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 cursor-pointer whitespace-nowrap"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Exportar Respaldo (.JSON)</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onResetProgressToZero}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 cursor-pointer whitespace-nowrap"
+            >
+              <span>Poner Contadores a Cero</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleExportProgressJson}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 cursor-pointer whitespace-nowrap"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Exportar Respaldo (.JSON)</span>
+            </button>
+          </div>
         </div>
       </div>
 

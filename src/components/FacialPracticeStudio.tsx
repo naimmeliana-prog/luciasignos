@@ -362,56 +362,110 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
               />
             )}
 
-            {/* Interactive Expressive Avatar Stage when camera is off */}
+            {/* Interactive Sculpted Expressive Portrait Stage when camera is off */}
             {!cameraActive && (
               <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-slate-900">
                 <svg
-                  viewBox="0 0 220 200"
-                  className="w-44 h-40 mb-3"
-                  aria-label="Previsualización de expresión facial"
+                  viewBox="0 0 240 220"
+                  className="w-52 h-44 mb-3"
+                  aria-label="Previsualización anatómica de expresión facial"
                 >
-                  {/* Face circle */}
-                  <ellipse
-                    cx="110"
-                    cy="102"
-                    rx="58"
-                    ry="68"
-                    fill="#ffdbac"
+                  <defs>
+                    <radialGradient id="portraitFaceGrad" cx="45%" cy="38%" r="60%">
+                      <stop offset="0%" stopColor="#fde4cf" />
+                      <stop offset="65%" stopColor="#f3c19d" />
+                      <stop offset="100%" stopColor="#d99b72" />
+                    </radialGradient>
+                  </defs>
+
+                  {/* Studio Aura */}
+                  <circle
+                    cx="120"
+                    cy="108"
+                    r="86"
+                    fill="none"
+                    stroke={isTargetMet ? 'rgba(16, 185, 129, 0.35)' : 'rgba(56, 189, 248, 0.22)'}
+                    strokeWidth="2"
+                    strokeDasharray="6 5"
+                  />
+
+                  {/* Neck & Shoulders */}
+                  <path d="M62 212 C68 178, 92 168, 120 168 C148 168, 172 178, 178 212 Z" fill="#0f365c" />
+                  <rect x="104" y="148" width="32" height="28" rx="8" fill="url(#portraitFaceGrad)" />
+
+                  {/* Ears */}
+                  <ellipse cx="61" cy="108" rx="8" ry="16" fill="#e4ab83" />
+                  <ellipse cx="179" cy="108" rx="8" ry="16" fill="#e4ab83" />
+
+                  {/* Sculpted Head & Jawline */}
+                  <path
+                    d="M64 90 C62 42, 178 42, 176 90 C175 132, 154 162, 120 172 C86 162, 65 132, 64 90 Z"
+                    fill="url(#portraitFaceGrad)"
                     stroke={isTargetMet ? '#10b981' : '#38bdf8'}
-                    strokeWidth="3"
+                    strokeWidth="2.5"
                   />
-                  {/* Eyebrows responding to metrics.eyebrowArch */}
+
+                  {/* Layered Hair Crown */}
                   <path
-                    d={`M 74 ${76 - metrics.eyebrowArch * 12} Q 88 ${
-                      68 - metrics.eyebrowArch * 14
-                    } 100 ${76 - metrics.eyebrowArch * 6}`}
+                    d="M60 96 C56 46, 86 26, 124 28 C160 28, 184 50, 180 96 C172 70, 150 56, 114 54 C86 54, 68 70, 60 96 Z"
+                    fill="#18181b"
+                  />
+
+                  {/* Dynamic Eyebrows responding to metrics.eyebrowArch */}
+                  <path
+                    d={`M 80 ${82 - metrics.eyebrowArch * 12} Q 96 ${
+                      72 - metrics.eyebrowArch * 15
+                    } 109 ${82 - metrics.eyebrowArch * 6}`}
                     fill="none"
-                    stroke="#0f172a"
+                    stroke="#18181b"
                     strokeWidth="4.5"
                     strokeLinecap="round"
                   />
                   <path
-                    d={`M 146 ${76 - metrics.eyebrowArch * 12} Q 132 ${
-                      68 - metrics.eyebrowArch * 14
-                    } 120 ${76 - metrics.eyebrowArch * 6}`}
+                    d={`M 160 ${82 - metrics.eyebrowArch * 12} Q 144 ${
+                      72 - metrics.eyebrowArch * 15
+                    } 131 ${82 - metrics.eyebrowArch * 6}`}
                     fill="none"
-                    stroke="#0f172a"
+                    stroke="#18181b"
                     strokeWidth="4.5"
                     strokeLinecap="round"
                   />
-                  {/* Eyes */}
-                  <circle cx="88" cy="90" r="5" fill="#0f172a" />
-                  <circle cx="132" cy="90" r="5" fill="#0f172a" />
-                  {/* Mouth responding to metrics.mouthSmile & metrics.mouthOpen */}
+
+                  {/* Almond Eyes with Irises & Catchlights */}
+                  <g transform="translate(95, 96)">
+                    <path d="M-12 0 Q0 -8 12 0 Q0 7 -12 0 Z" fill="#ffffff" />
+                    <circle cx="0" cy="0" r="5" fill="#4f3222" />
+                    <circle cx="0" cy="0" r="2.4" fill="#09090b" />
+                    <circle cx="1.6" cy="-1.6" r="1.3" fill="#ffffff" />
+                    <path d="M-13 0.5 Q0 -8.5 13 0.5" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                  </g>
+                  <g transform="translate(145, 96)">
+                    <path d="M-12 0 Q0 -8 12 0 Q0 7 -12 0 Z" fill="#ffffff" />
+                    <circle cx="0" cy="0" r="5" fill="#4f3222" />
+                    <circle cx="0" cy="0" r="2.4" fill="#09090b" />
+                    <circle cx="1.6" cy="-1.6" r="1.3" fill="#ffffff" />
+                    <path d="M-13 0.5 Q0 -8.5 13 0.5" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                  </g>
+
+                  {/* Nose Bridge */}
                   <path
-                    d={`M 88 ${132 - metrics.mouthSmile * 5} Q 110 ${
-                      132 + metrics.mouthSmile * 18
-                    } 132 ${132 - metrics.mouthSmile * 5} Q 110 ${
-                      132 + metrics.mouthSmile * 18 + metrics.mouthOpen * 22
-                    } 88 ${132 - metrics.mouthSmile * 5}`}
-                    fill="#7f1d1d"
-                    stroke="#991b1b"
-                    strokeWidth="3"
+                    d="M118 96 Q116 112 115 118 Q120 122 125 118"
+                    fill="none"
+                    stroke="#a66c49"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+
+                  {/* Expressive Lips responding to metrics.mouthSmile & metrics.mouthOpen */}
+                  <path
+                    d={`M 96 ${138 - metrics.mouthSmile * 5} Q 120 ${
+                      138 + metrics.mouthSmile * 16
+                    } 144 ${138 - metrics.mouthSmile * 5} Q 120 ${
+                      138 + metrics.mouthSmile * 16 + Math.max(4, metrics.mouthOpen * 24)
+                    } 96 ${138 - metrics.mouthSmile * 5}`}
+                    fill={metrics.mouthOpen > 0.2 ? '#7f1d1d' : '#c86d6d'}
+                    stroke="#9f3e46"
+                    strokeWidth="2.6"
                   />
                 </svg>
 

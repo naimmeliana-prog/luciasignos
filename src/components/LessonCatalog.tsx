@@ -119,46 +119,124 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
           </div>
         </div>
 
-        {/* Visual Editorial Illustration Card (Zero-Broken-Image Policy Resilient SVG Showcase) */}
+        {/* Visual Editorial Illustration Card (Sculpted Anatomical Signers & Hands) */}
         <div className="lg:col-span-5 rounded-xl bg-slate-900 text-white p-6 flex flex-col justify-between border border-slate-800">
           <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>MÉTODO VISUAL 360°</span>
+            <span>ESTUDIO VISUAL INTERACTIVO</span>
             <span>SIN REDIRECCIONES EXTERNAS</span>
           </div>
 
-          <div className="my-4 flex items-center justify-center">
+          <div className="my-3 flex items-center justify-center">
             <svg
-              viewBox="0 0 320 150"
-              className="w-full max-w-xs h-36"
+              viewBox="0 0 380 200"
+              className="w-full h-44 rounded-lg overflow-hidden"
               role="img"
-              aria-label="Ilustración de comunicación en lengua de signos"
+              aria-label="Ilustración editorial de comunicación en lengua de signos"
             >
-              <rect x="8" y="8" width="304" height="134" rx="12" fill="#1e293b" />
-              {/* Left communicative hand */}
-              <g transform="translate(86, 78) rotate(-14)">
-                <circle cx="0" cy="0" r="32" fill="rgba(56, 189, 248, 0.14)" />
-                <rect x="-14" y="-8" width="28" height="26" rx="6" fill="#ffdbac" stroke="#38bdf8" strokeWidth="2" />
-                <rect x="-12" y="-28" width="5" height="22" rx="2.5" fill="#ffdbac" />
-                <rect x="-5" y="-32" width="5" height="26" rx="2.5" fill="#ffdbac" />
-                <rect x="2" y="-30" width="5" height="24" rx="2.5" fill="#ffdbac" />
-                <rect x="9" y="-25" width="5" height="19" rx="2.5" fill="#ffdbac" />
+              <defs>
+                <radialGradient id="heroStudioGlow" cx="50%" cy="45%" r="60%">
+                  <stop offset="0%" stopColor="#1e3a5f" />
+                  <stop offset="70%" stopColor="#0f172a" />
+                  <stop offset="100%" stopColor="#090d16" />
+                </radialGradient>
+                <linearGradient id="skinWarmA" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fde4cf" />
+                  <stop offset="60%" stopColor="#f3c19d" />
+                  <stop offset="100%" stopColor="#d99b72" />
+                </linearGradient>
+                <linearGradient id="skinWarmB" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#f7d3b5" />
+                  <stop offset="60%" stopColor="#e4ab83" />
+                  <stop offset="100%" stopColor="#c5855c" />
+                </linearGradient>
+              </defs>
+
+              <rect width="380" height="200" fill="url(#heroStudioGlow)" />
+
+              {/* Subtle architectural studio light rays */}
+              <circle cx="190" cy="95" r="78" fill="none" stroke="rgba(56, 189, 248, 0.14)" strokeWidth="1.2" />
+              <circle cx="190" cy="95" r="108" fill="none" stroke="rgba(45, 212, 191, 0.09)" strokeWidth="1.2" />
+
+              {/* Left Signer Portrait & Expressive Hand */}
+              <g transform="translate(82, 108)">
+                {/* Shoulders / Cardigan */}
+                <path d="M-58 92 C-52 46, -28 36, 0 36 C28 36, 52 46, 58 92 Z" fill="#0284c7" />
+                <path d="M-16 36 L0 54 L16 36 Z" fill="#f8fafc" />
+                {/* Neck & Sculpted Head */}
+                <rect x="-10" y="16" width="20" height="24" rx="6" fill="url(#skinWarmA)" />
+                <path d="M-28 -18 C-32 -52, 32 -52, 28 -18 C27 6, 16 24, 0 28 C-16 24, -27 6, -28 -18 Z" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="1.2" />
+                {/* Hair */}
+                <path d="M-30 -14 C-34 -44, -14 -58, 6 -56 C24 -55, 34 -40, 30 -12 C24 -28, 12 -38, -6 -38 C-18 -38, -26 -28, -30 -14 Z" fill="#18181b" />
+                {/* Expressive Eyebrows, Eyes & Smile */}
+                <path d="M-17 -19 Q-11 -24 -5 -19" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                <path d="M5 -19 Q11 -24 17 -19" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="-11" cy="-11" r="2.4" fill="#18181b" />
+                <circle cx="11" cy="-11" r="2.4" fill="#18181b" />
+                <path d="M-9 8 Q0 16 9 8" fill="none" stroke="#9f3e46" strokeWidth="2.2" strokeLinecap="round" />
+
+                {/* Sculpted Articulated Signing Hand (Foreground Right) */}
+                <g transform="translate(56, 2) rotate(-14)">
+                  <circle cx="0" cy="-12" r="26" fill="rgba(56, 189, 248, 0.16)" />
+                  <path
+                    d="M-12 14 C-16 4, -15 -8, -12 -12 L11 -12 C14 -8, 15 4, 11 14 Z"
+                    fill="url(#skinWarmA)"
+                    stroke="#38bdf8"
+                    strokeWidth="1.5"
+                  />
+                  {/* 4 Tapered Fingers */}
+                  <rect x="-11" y="-32" width="4.8" height="22" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
+                  <rect x="-5" y="-36" width="4.8" height="26" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
+                  <rect x="1" y="-34" width="4.8" height="24" rx="2.4" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
+                  <rect x="7" y="-28" width="4.5" height="18" rx="2.2" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
+                  {/* Thumb */}
+                  <rect x="-18" y="-14" width="5" height="16" rx="2.5" transform="rotate(-32 -15 -6)" fill="url(#skinWarmA)" stroke="#8c583a" strokeWidth="0.9" />
+                </g>
               </g>
-              {/* Connection wave */}
+
+              {/* Visual Dialogue Connection Arc */}
               <path
-                d="M 125 68 Q 160 42 195 68"
+                d="M 152 84 Q 190 52 228 84"
                 fill="none"
                 stroke="#38bdf8"
-                strokeWidth="2.5"
+                strokeWidth="2.2"
                 strokeDasharray="5 4"
               />
-              {/* Right communicative hand */}
-              <g transform="translate(234, 78) rotate(14)">
-                <circle cx="0" cy="0" r="32" fill="rgba(20, 184, 166, 0.14)" />
-                <rect x="-14" y="-8" width="28" height="26" rx="6" fill="#ffdbac" stroke="#14b8a6" strokeWidth="2" />
-                <rect x="-12" y="-28" width="5" height="22" rx="2.5" fill="#ffdbac" />
-                <rect x="-5" y="-32" width="5" height="26" rx="2.5" fill="#ffdbac" />
-                <rect x="2" y="-30" width="5" height="24" rx="2.5" fill="#ffdbac" />
-                <rect x="9" y="-25" width="5" height="19" rx="2.5" fill="#ffdbac" />
+              <path
+                d="M 158 106 Q 190 128 222 106"
+                fill="none"
+                stroke="#2dd4bf"
+                strokeWidth="1.8"
+                strokeDasharray="4 4"
+              />
+
+              {/* Right Signer Portrait & Expressive Hand */}
+              <g transform="translate(298, 108)">
+                <path d="M-58 92 C-52 46, -28 36, 0 36 C28 36, 52 46, 58 92 Z" fill="#0d9488" />
+                <path d="M-16 36 L0 54 L16 36 Z" fill="#f8fafc" />
+                <rect x="-10" y="16" width="20" height="24" rx="6" fill="url(#skinWarmB)" />
+                <path d="M-28 -18 C-32 -52, 32 -52, 28 -18 C27 6, 16 24, 0 28 C-16 24, -27 6, -28 -18 Z" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="1.2" />
+                <path d="M-30 -12 C-34 -46, -12 -58, 8 -55 C26 -52, 34 -38, 30 -10 C22 -28, 8 -36, -8 -36 C-20 -36, -26 -26, -30 -12 Z" fill="#27272a" />
+                <path d="M-17 -20 Q-11 -25 -5 -20" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                <path d="M5 -20 Q11 -25 17 -20" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="-11" cy="-11" r="2.4" fill="#18181b" />
+                <circle cx="11" cy="-11" r="2.4" fill="#18181b" />
+                <path d="M-9 8 Q0 16 9 8" fill="none" stroke="#9f3e46" strokeWidth="2.2" strokeLinecap="round" />
+
+                {/* Sculpted Articulated Signing Hand (Foreground Left) */}
+                <g transform="translate(-56, 2) rotate(14)">
+                  <circle cx="0" cy="-12" r="26" fill="rgba(45, 212, 191, 0.16)" />
+                  <path
+                    d="M-11 14 C-15 4, -14 -8, -11 -12 L12 -12 C15 -8, 16 4, 12 14 Z"
+                    fill="url(#skinWarmB)"
+                    stroke="#2dd4bf"
+                    strokeWidth="1.5"
+                  />
+                  <rect x="-11.5" y="-28" width="4.5" height="18" rx="2.2" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
+                  <rect x="-5.8" y="-34" width="4.8" height="24" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
+                  <rect x="0.2" y="-36" width="4.8" height="26" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
+                  <rect x="6.2" y="-32" width="4.8" height="22" rx="2.4" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
+                  <rect x="13" y="-14" width="5" height="16" rx="2.5" transform="rotate(32 15 -6)" fill="url(#skinWarmB)" stroke="#7c4d32" strokeWidth="0.9" />
+                </g>
               </g>
             </svg>
           </div>

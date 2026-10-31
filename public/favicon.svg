@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="handLeftGrad" x1="2" y1="6" x2="36" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="handRightGrad" x1="28" y1="6" x2="62" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </linearGradient>
+    <linearGradient id="sparkGrad" x1="18" y1="2" x2="46" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Expressive Hand (fills left & bottom-left edge-to-edge) -->
+  <path
+    d="M4 38 C1 29, 3 18, 7 11 C8.5 8.5, 12 9.5, 11.5 13 L10 24
+       L14 6.5 C15 3, 19.5 3.5, 19 7.5 L17 23
+       L22 4.5 C23 1, 27.5 2, 27 6 L24.5 24
+       L29.5 8.5 C30.8 5, 35 6.5, 34 10.5 L30 28
+       L37 22 C40 19.5, 43.5 23, 40.5 26.5 L29 40
+       C24 46, 16 53, 8 59 C4 62, 1 57, 2.5 52 C4 47, 5.5 43, 4 38 Z"
+    fill="url(#handLeftGrad)"
+  />
+
+  <!-- Right Expressive Hand in Dialogue (fills right & bottom-right edge-to-edge) -->
+  <path
+    d="M60 38 C63 29, 61 18, 57 11 C55.5 8.5, 52 9.5, 52.5 13 L54 24
+       L50 6.5 C49 3, 44.5 3.5, 45 7.5 L47 23
+       L42 4.5 C41 1, 36.5 2, 37 6 L39.5 24
+       L34.5 8.5 C33.2 5, 29 6.5, 30 10.5 L34 28
+       L27 22 C24 19.5, 20.5 23, 23.5 26.5 L35 40
+       C40 46, 48 53, 56 59 C60 62, 63 57, 61.5 52 C60 47, 58.5 43, 60 38 Z"
+    fill="url(#handRightGrad)"
+    opacity="0.92"
+  />
+
+  <!-- Visual Communication Wave Arc at Top Center -->
+  <path
+    d="M32 0.5 L34.2 6.8 L40.5 9 L34.2 11.2 L32 17.5 L29.8 11.2 L23.5 9 L29.8 6.8 Z"
+    fill="url(#sparkGrad)"
+  />
+</svg>

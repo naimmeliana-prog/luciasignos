@@ -6,8 +6,8 @@ interface StoredStudentAccount {
   passwordHash: string;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'signaviva_accounts_v1';
-const ACTIVE_SESSION_KEY = 'signaviva_active_session_v1';
+const ACCOUNTS_STORAGE_KEY = 'signaviva_accounts_real_v2';
+const ACTIVE_SESSION_KEY = 'signaviva_active_session_real_v2';
 
 async function hashPasswordWithSalt(password: string, salt: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -46,29 +46,8 @@ function saveAccounts(accounts: StoredStudentAccount[]): void {
   localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
 }
 
-export async function ensureDemoStudentAccount(): Promise<StudentUser> {
-  const accounts = loadAccounts();
-  const demoEmail = 'clara.estudiante@signaviva.es';
-  const existing = accounts.find((a) => a.user.email.toLowerCase() === demoEmail);
-  if (existing) {
-    return existing.user;
-  }
-
-  const salt = 'demo_salt_clara_2026';
-  const passwordHash = await hashPasswordWithSalt('Signos2026!', salt);
-  const demoUser: StudentUser = {
-    id: 'stu-clara-demo',
-    name: 'Clara Martínez',
-    email: demoEmail,
-    createdAt: new Date().toISOString(),
-    dailyGoalMinutes: 15,
-    preferredLevel: 'inicial',
-    avatarInitials: 'CM'
-  };
-
-  accounts.push({ user: demoUser, salt, passwordHash });
-  saveAccounts(accounts);
-  return demoUser;
+export function getRegisteredStudents(): StudentUser[] {
+  return loadAccounts().map((a) => a.user);
 }
 
 export function getActiveStudentSession(): StudentUser | null {
@@ -138,13 +117,12 @@ export async function loginStudent(
   email: string,
   password: string
 ): Promise<{ user?: StudentUser; error?: string }> {
-  await ensureDemoStudentAccount();
   const cleanEmail = email.trim().toLowerCase();
   const accounts = loadAccounts();
   const account = accounts.find((a) => a.user.email.toLowerCase() === cleanEmail);
 
   if (!account) {
-    return { error: 'No se encontró ningún estudiante con ese correo electrónico.' };
+    return { error: 'No se encontró ningún estudiante registrado con ese correo electrónico.' };
   }
 
   const computedHash = await hashPasswordWithSalt(password, account.salt);

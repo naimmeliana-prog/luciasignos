@@ -816,41 +816,5 @@ export interface LeaderboardEntry {
   isCurrentUser?: boolean;
 }
 
-export const COMMUNITY_LEADERBOARD_BASE: LeaderboardEntry[] = [
-  {
-    id: 'peer-1',
-    name: 'Sofía Navarro',
-    avatarInitials: 'SN',
-    levelLabel: 'Nivel Avanzado',
-    xpPoints: 640,
-    streakDays: 9,
-    badgesCount: 6
-  },
-  {
-    id: 'peer-2',
-    name: 'Lucía Fernández',
-    avatarInitials: 'LF',
-    levelLabel: 'Nivel Intermedio',
-    xpPoints: 485,
-    streakDays: 6,
-    badgesCount: 5
-  },
-  {
-    id: 'peer-3',
-    name: 'Mateo Ruiz',
-    avatarInitials: 'MR',
-    levelLabel: 'Nivel Intermedio',
-    xpPoints: 340,
-    streakDays: 4,
-    badgesCount: 4
-  },
-  {
-    id: 'peer-4',
-    name: 'Elena Morales',
-    avatarInitials: 'EM',
-    levelLabel: 'Nivel Inicial',
-    xpPoints: 210,
-    streakDays: 2,
-    badgesCount: 2
-  }
-];
+export const COMMUNITY_LEADERBOARD_BASE: LeaderboardEntry[] = [];
+

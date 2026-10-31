@@ -51,7 +51,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   const currentWordItem: FingerspellingWordItem =
     levelWords[wordIndex % levelWords.length];
 
-  // Mode 1 (Guess Word) state
   const [guessInput, setGuessInput] = useState<string>('');
   const [guessFeedback, setGuessFeedback] = useState<{
     correct: boolean;
@@ -61,14 +60,12 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   const [isAnimatingWord, setIsAnimatingWord] = useState<boolean>(true);
   const [slowMotion, setSlowMotion] = useState<boolean>(false);
 
-  // Mode 2 (Spell Word) state
   const [spelledLetters, setSpelledLetters] = useState<string[]>([]);
   const [spellFeedback, setSpellFeedback] = useState<{
     correct: boolean;
     message: string;
   } | null>(null);
 
-  // Mode 3 (Rapid Letter Recognition) state
   const [targetRapidLetter, setTargetRapidLetter] = useState<DactylologyLetter>(
     () => DACTYLOLOGY_ALPHABET[0]
   );
@@ -79,7 +76,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Adaptive letter interval duration in ms
   const letterDurationMs = useMemo(() => {
     const base =
       activeLevel === 'inicial'
@@ -90,7 +86,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     return slowMotion ? Math.round(base * 1.55) : base;
   }, [activeLevel, slowMotion]);
 
-  // Reset states on word or mode change
   useEffect(() => {
     setGuessInput('');
     setGuessFeedback(null);
@@ -100,7 +95,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     setIsAnimatingWord(true);
   }, [currentWordItem.id, gameMode]);
 
-  // Step through letters of currentWordItem in Mode 1
   useEffect(() => {
     if (gameMode !== 'guess_word' || !isAnimatingWord) return;
     const chars = currentWordItem.word.split('');
@@ -110,7 +104,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     return () => clearInterval(interval);
   }, [gameMode, isAnimatingWord, currentWordItem.word, letterDurationMs]);
 
-  // Determine which DactylologyLetter to render on the interactive Canvas
   const displayedLetterObj: DactylologyLetter = useMemo(() => {
     if (gameMode === 'guess_word') {
       const ch = currentWordItem.word[activeLetterIdx] || 'A';
@@ -138,7 +131,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     targetRapidLetter
   ]);
 
-  // Render hand configuration on canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -170,7 +162,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     currentWordItem.word.length
   ]);
 
-  // Generate distractors for Mode 1 quick choice & Mode 3 letter choices
   const wordChoices = useMemo(() => {
     const others = FINGERSPELLING_WORDS.filter(
       (w) => w.word !== currentWordItem.word
@@ -269,7 +260,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      {/* Header & Adaptive Difficulty Bar */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
           <div className="text-xs font-mono text-sky-700 mb-1">
@@ -283,7 +273,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
           </p>
         </div>
 
-        {/* Adaptive Status Card */}
         <div className="flex flex-wrap items-center gap-3 bg-white border border-slate-200 rounded-xl p-3.5 shrink-0">
           <div className="text-xs">
             <div className="text-slate-500">Nivel Adaptativo Activo</div>
@@ -327,14 +316,13 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         </div>
       </div>
 
-      {/* 3 Game Mode Tabs */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {(
           [
             {
               id: 'guess_word',
               title: '1. Adivina la Palabra',
-              desc: 'Observa la mano animada deletreando en tiempo real y descubre qué palabra es.'
+              desc: 'Observa la mano anatómica deletreando en tiempo real y descubre qué palabra es.'
             },
             {
               id: 'spell_word',
@@ -367,9 +355,7 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         })}
       </div>
 
-      {/* Two-Column Sandbox: Interactive Hand Stage (6 cols) + Exercise Controls (6 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Animated Dactylology Hand Viewport */}
         <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
           <div className="relative aspect-4/3 w-full bg-slate-950">
             <canvas
@@ -377,13 +363,12 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
               width={640}
               height={480}
               className="w-full h-full object-contain block"
-              aria-label="Visor de configuración manual dactilológica"
+              aria-label="Visor anatómico de configuración manual dactilológica"
             />
           </div>
 
           {gameMode === 'guess_word' && (
             <div className="p-4 bg-slate-900 border-t border-slate-800 space-y-3">
-              {/* Letter Step Indicators */}
               <div className="flex items-center justify-center gap-2">
                 {currentWordItem.word.split('').map((ch, idx) => {
                   const isActive = idx === activeLetterIdx;
@@ -434,7 +419,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
           )}
         </div>
 
-        {/* Right: Active Exercise Interaction Deck */}
         <div className="lg:col-span-6 bg-white border border-slate-200 rounded-xl p-6 space-y-6">
           {gameMode === 'guess_word' && (
             <div className="space-y-5">
@@ -451,7 +435,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 </p>
               </div>
 
-              {/* Direct Text Input */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -474,7 +457,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 </button>
               </form>
 
-              {/* Quick Choice Buttons */}
               <div className="space-y-2">
                 <div className="text-xs font-semibold text-slate-700">
                   O selecciona directamente entre estas opciones:
@@ -538,7 +520,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 </p>
               </div>
 
-              {/* Spelled Slots */}
               <div className="flex items-center justify-between gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <div className="flex items-center gap-2 flex-wrap">
                   {currentWordItem.word.split('').map((targetChar, idx) => {
@@ -584,7 +565,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 </div>
               </div>
 
-              {/* Interactive Visual Handshape Keyboard */}
               <div className="space-y-2">
                 <div className="text-xs font-semibold text-slate-700">
                   Teclado de Configuraciones Manuales (A–Z):
@@ -684,7 +664,6 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
             </div>
           )}
 
-          {/* Reference Dactylology Description Box */}
           <div className="pt-4 border-t border-slate-100 flex items-start gap-2.5 text-xs text-slate-600">
             <Sparkles className="w-4 h-4 text-sky-700 shrink-0 mt-0.5" />
             <div>
@@ -709,110 +688,227 @@ function drawDactylologyHandCanvas(
   ctx.save();
   ctx.clearRect(0, 0, width, height);
 
-  // Dark studio backdrop
-  const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, '#0f172a');
-  bg.addColorStop(1, '#1e293b');
+  // Studio Spotlight Backdrop
+  const bg = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.52,
+    30,
+    width * 0.5,
+    height * 0.52,
+    width * 0.65
+  );
+  bg.addColorStop(0, '#1e293b');
+  bg.addColorStop(0.7, '#0f172a');
+  bg.addColorStop(1, '#080d1a');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
-  // Reference concentric target circles
   const cx = width / 2;
   const cy = height * 0.56;
 
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.16)';
+  // Ambient focus rings
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.14)';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(cx, cy - 20, 125, 0, Math.PI * 2);
+  ctx.arc(cx, cy - 18, 136, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Draw Articulated Hand Model
+  ctx.strokeStyle = 'rgba(20, 184, 166, 0.08)';
+  ctx.beginPath();
+  ctx.arc(cx, cy - 18, 168, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Draw High-Detail Anatomical Hand Model
   ctx.save();
-  ctx.translate(cx, cy + 25);
+  ctx.translate(cx, cy + 32);
   ctx.rotate((letterObj.fingers.rotationDeg * Math.PI) / 180);
 
-  // Wrist & Forearm
-  ctx.fillStyle = '#1e3a5f';
-  ctx.fillRect(-34, 52, 68, 90);
-  ctx.fillStyle = '#f1c27d';
-  ctx.fillRect(-26, 26, 52, 32);
+  const skinGrad = ctx.createLinearGradient(-56, -130, 56, 80);
+  skinGrad.addColorStop(0, '#fde4cf');
+  skinGrad.addColorStop(0.55, '#f3c19d');
+  skinGrad.addColorStop(1, '#d99b72');
 
-  // Palm Base
-  ctx.fillStyle = '#ffdbac';
-  ctx.strokeStyle = '#0284c7';
-  ctx.lineWidth = 3;
+  const foldedGrad = ctx.createLinearGradient(0, -60, 0, 10);
+  foldedGrad.addColorStop(0, '#eec09c');
+  foldedGrad.addColorStop(1, '#c88a62');
+
+  // Forearm & Tailored Sleeve Cuff
+  ctx.fillStyle = '#e5af88';
   ctx.beginPath();
-  ctx.roundRect(-48, -42, 96, 78, 22);
+  ctx.moveTo(-32, 34);
+  ctx.lineTo(32, 34);
+  ctx.lineTo(38, 86);
+  ctx.lineTo(-38, 86);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#0f365c';
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(-44, 62, 88, 70, 10);
   ctx.fill();
   ctx.stroke();
 
-  // 4 Fingers (Index, Middle, Ring, Pinky)
+  // Sculpted Anatomical Palm Contour (Metacarpal base + Thenar & Hypothenar eminence)
+  ctx.fillStyle = skinGrad;
+  ctx.strokeStyle = '#8c583a';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(-36, 38);
+  ctx.bezierCurveTo(-56, 22, -58, -14, -50, -44);
+  ctx.quadraticCurveTo(0, -52, 50, -44);
+  ctx.bezierCurveTo(56, -14, 52, 22, 36, 38);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Natural Palm Creases (Heart line, Head line, Thenar line)
+  ctx.strokeStyle = 'rgba(140, 88, 58, 0.32)';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  // Heart line
+  ctx.moveTo(-40, -18);
+  ctx.quadraticCurveTo(4, -14, 42, -24);
+  // Head line
+  ctx.moveTo(-42, -4);
+  ctx.quadraticCurveTo(-4, -2, 28, 8);
+  // Thenar (life) line
+  ctx.moveTo(-26, -10);
+  ctx.quadraticCurveTo(-8, 10, -14, 30);
+  ctx.stroke();
+
+  // 4 Articulated Fingers (Index, Middle, Ring, Pinky)
   const fingerRatios = [
     letterObj.fingers.index,
     letterObj.fingers.middle,
     letterObj.fingers.ring,
     letterObj.fingers.pinky
   ];
-  const baseOffsets = [-32, -11, 11, 32];
-  const maxLengths = [86, 94, 88, 72];
+  const baseOffsets = [-35, -12, 12, 35];
+  const maxLengths = [92, 104, 96, 78];
+  const fingerWidths = [20, 21, 20, 17];
 
   fingerRatios.forEach((ratio, idx) => {
     const xBase = baseOffsets[idx];
-    const len = 24 + ratio * maxLengths[idx];
-    const spreadRad = (idx - 1.5) * letterObj.fingers.spreadAngle * 0.24;
+    const w = fingerWidths[idx];
+    const spreadRad = (idx - 1.5) * letterObj.fingers.spreadAngle * 0.25;
 
     ctx.save();
-    ctx.translate(xBase, -38);
+    ctx.translate(xBase, -42);
     ctx.rotate(spreadRad);
 
-    ctx.fillStyle = ratio > 0.45 ? '#ffdbac' : '#e6be8a';
-    ctx.strokeStyle = '#0f172a';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.roundRect(-9, -len, 18, len, 9);
-    ctx.fill();
-    ctx.stroke();
+    if (ratio >= 0.45) {
+      // Extended Multi-Phalange Tapered Finger
+      const len = 34 + ratio * maxLengths[idx];
+      ctx.fillStyle = skinGrad;
+      ctx.strokeStyle = '#8c583a';
+      ctx.lineWidth = 2.2;
 
-    // Knuckle crease
-    ctx.strokeStyle = 'rgba(15, 23, 42, 0.25)';
-    ctx.beginPath();
-    ctx.moveTo(-6, -len * 0.55);
-    ctx.lineTo(6, -len * 0.55);
-    ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-w / 2, 4);
+      ctx.lineTo(-w * 0.44, -len + 12);
+      ctx.quadraticCurveTo(0, -len - 4, w * 0.44, -len + 12);
+      ctx.lineTo(w / 2, 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Proximal & Distal Interphalangeal Joint Creases
+      ctx.strokeStyle = 'rgba(140, 88, 58, 0.38)';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(-w * 0.34, -len * 0.36);
+      ctx.lineTo(w * 0.34, -len * 0.36);
+      ctx.moveTo(-w * 0.30, -len * 0.68);
+      ctx.lineTo(w * 0.30, -len * 0.68);
+      ctx.stroke();
+
+      // Anatomical Fingernail / Fingerpad highlight
+      ctx.fillStyle = 'rgba(255, 245, 238, 0.65)';
+      ctx.beginPath();
+      ctx.roundRect(-w * 0.28, -len + 4, w * 0.56, 11, 5);
+      ctx.fill();
+    } else {
+      // Curled / Flexed Finger folding naturally into the palm
+      const curlDepth = 26 + (1 - ratio) * 18;
+      ctx.fillStyle = foldedGrad;
+      ctx.strokeStyle = '#7c4d32';
+      ctx.lineWidth = 2.2;
+
+      ctx.beginPath();
+      ctx.roundRect(-w / 2, -14, w, curlDepth, 9);
+      ctx.fill();
+      ctx.stroke();
+
+      // Knuckle crease & curled fingernail
+      ctx.strokeStyle = 'rgba(124, 77, 50, 0.45)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-w * 0.35, 2);
+      ctx.lineTo(w * 0.35, 2);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255, 245, 238, 0.55)';
+      ctx.beginPath();
+      ctx.roundRect(-w * 0.28, curlDepth - 24, w * 0.56, 7, 3);
+      ctx.fill();
+    }
+
     ctx.restore();
   });
 
-  // Thumb
+  // Sculpted Thumb with Thenar Muscle Base
   ctx.save();
   const thumbRatio = letterObj.fingers.thumb;
-  const thumbAngle = -0.35 - thumbRatio * 0.65;
-  ctx.translate(-46, -6);
-  ctx.rotate(thumbAngle);
-  ctx.fillStyle = '#ffdbac';
-  ctx.strokeStyle = '#0f172a';
-  ctx.lineWidth = 2.5;
-  const thumbLen = 32 + thumbRatio * 42;
-  ctx.beginPath();
-  ctx.roundRect(-10, -thumbLen, 20, thumbLen, 10);
-  ctx.fill();
-  ctx.stroke();
+  if (thumbRatio >= 0.5) {
+    // Extended lateral thumb (e.g. A, L, Y, G, C)
+    const thumbAngle = -0.35 - thumbRatio * 0.58;
+    ctx.translate(-46, -2);
+    ctx.rotate(thumbAngle);
+    ctx.fillStyle = skinGrad;
+    ctx.strokeStyle = '#8c583a';
+    ctx.lineWidth = 2.2;
+    const thumbLen = 38 + thumbRatio * 40;
+    ctx.beginPath();
+    ctx.roundRect(-11, -thumbLen, 22, thumbLen, 11);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255, 245, 238, 0.65)';
+    ctx.beginPath();
+    ctx.roundRect(-6.5, -thumbLen + 4, 13, 10, 5);
+    ctx.fill();
+  } else {
+    // Adducted / Folded thumb across the palm (e.g. B, E, I, M, N, S, U, V, W)
+    ctx.translate(-36, -6);
+    ctx.rotate(0.85);
+    ctx.fillStyle = foldedGrad;
+    ctx.strokeStyle = '#7c4d32';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.roundRect(-10, -44, 20, 46, 10);
+    ctx.fill();
+    ctx.stroke();
+  }
   ctx.restore();
 
-  // Motion indicator if letter has trajectory (Ñ, J, Z)
+  // Motion trajectory arrow for dynamic letters (Ñ, J, Z)
   if (letterObj.fingers.motionType && letterObj.fingers.motionType !== 'static') {
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 3;
     ctx.setLineDash([6, 4]);
     ctx.beginPath();
-    ctx.moveTo(-55, -135);
-    ctx.quadraticCurveTo(0, -155, 55, -135);
+    ctx.moveTo(-64, -152);
+    ctx.quadraticCurveTo(0, -174, 64, -152);
     ctx.stroke();
   }
 
   ctx.restore();
 
   // Top HUD Bar
-  ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
   ctx.fillRect(16, 16, width - 32, 44);
   ctx.fillStyle = '#e2e8f0';
   ctx.font = '600 13px "IBM Plex Mono", monospace';
