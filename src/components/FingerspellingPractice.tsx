@@ -26,7 +26,7 @@ interface FingerspellingPracticeProps {
   ) => void;
 }
 
-type GameMode = 'guess_word' | 'spell_word' | 'rapid_letter';
+type GameMode = 'guess_word' | 'spell_word' | 'rapid_letter' | 'alphabet_table';
 
 export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   progress,
@@ -73,6 +73,8 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
     correct: boolean;
     message: string;
   } | null>(null);
+
+  const [selectedAlphabetItem, setSelectedAlphabetItem] = useState<DactylologyLetter | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -259,7 +261,8 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <section className="max-w-7xl mx-auto px-6 py-8">
+      <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
           <div className="text-xs font-mono text-sky-700 mb-1">
@@ -316,7 +319,7 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {(
           [
             {
@@ -333,6 +336,11 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
               id: 'rapid_letter',
               title: '3. Reto Rápido de Letras',
               desc: 'Identifica al instante el queirema dactilológico en pantalla para ganar puntos de agilidad.'
+            },
+            {
+              id: 'alphabet_table',
+              title: '4. Tabla Completa A–Z',
+              desc: 'Consulta la tabla oficial con las 27 configuraciones manuales del alfabeto dactilológico.'
             }
           ] as const
         ).map((m) => {
@@ -355,9 +363,69 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-          <div className="relative aspect-4/3 w-full bg-slate-950">
+      <>
+        {gameMode === 'alphabet_table' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-6">
+          <div>
+            <div className="text-xs font-mono text-sky-700">
+              REFERENCIA OFICIAL LSE · ABECEDARIO DACTILOLÓGICO COMPLETO A–Z
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mt-1">
+              Tabla Completa del Alfabeto Dactilológico
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Consulta la configuración manual, posición del pulgar y pautas de articulación de cada letra del abecedario dactilológico en Lengua de Signos Española.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {DACTYLOLOGY_ALPHABET.map((item) => (
+              <div
+                key={item.letter}
+                onClick={() => setSelectedAlphabetItem(item)}
+                className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3 hover:border-sky-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
+              >
+                <div className="space-y-3">
+                  <div className="w-full h-28 bg-slate-900 rounded-lg relative overflow-hidden flex items-center justify-center border border-slate-800 group-hover:border-sky-500 transition-colors">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="w-20 h-20 text-sky-400 group-hover:scale-105 transition-transform" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="30" y="55" width="40" height="35" rx="8" fill="rgba(2,132,199,0.15)" stroke="currentColor" />
+                        <circle cx="50" cy="40" r="14" fill="rgba(2,132,199,0.25)" />
+                        <path d={`M40 55 L${38 + item.fingers.thumb * 8} ${35 - item.fingers.thumb * 15} M46 55 L46 ${22 - item.fingers.index * 12} M54 55 L54 ${22 - item.fingers.middle * 12} M60 55 L62 ${28 - item.fingers.ring * 10}`} />
+                        <text x="50" y="45" textAnchor="middle" fill="#38bdf8" fontSize="16" fontFamily="monospace" fontWeight="bold">{item.letter}</text>
+                      </svg>
+                    </div>
+                    <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur px-2 py-0.5 rounded text-[10px] font-mono text-sky-300 border border-slate-700">
+                      CLIC PARA VER DETALLES
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="w-9 h-9 rounded-lg bg-sky-700 text-white font-mono font-bold flex items-center justify-center text-base shadow-xs">
+                      {item.letter}
+                    </span>
+                    <span className="text-xs font-mono text-slate-500">
+                      {item.name}
+                    </span>
+                  </div>
+                  <div className="text-xs font-semibold text-slate-900">
+                    {item.handshapeSummary}
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-slate-600 pt-2 border-t border-slate-200">
+                  <strong>Tip de ejecución:</strong> {item.tip}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {gameMode !== 'alphabet_table' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="relative aspect-4/3 w-full bg-slate-950">
               <canvas
                 ref={canvasRef}
                 width={640}
@@ -365,9 +433,9 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 className="w-full h-full object-contain block"
                 aria-label="Visor anatómico de configuración manual dactilológica"
               />
-          </div>
+            </div>
 
-          {gameMode === 'guess_word' && (
+            {gameMode === 'guess_word' && (
             <div className="p-4 bg-slate-900 border-t border-slate-800 space-y-3">
               <div className="flex items-center justify-center gap-2">
                 {currentWordItem.word.split('').map((ch, idx) => {
@@ -672,6 +740,89 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
             </div>
           </div>
         </div>
+      </div>
+      )}
+      </>
+
+      {selectedAlphabetItem && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-3">
+                <span className="w-12 h-12 rounded-xl bg-sky-700 text-white font-mono font-bold text-2xl flex items-center justify-center shadow-md">
+                  {selectedAlphabetItem.letter}
+                </span>
+                <div>
+                  <div className="text-xs font-mono text-sky-700">REFERENCIA DACTILOLÓGICA OFICIAL LSE</div>
+                  <h3 className="text-xl font-bold text-slate-900">{selectedAlphabetItem.name}</h3>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedAlphabetItem(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="w-full h-48 bg-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border border-slate-800">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className="w-32 h-32 text-sky-400" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="25" y="50" width="50" height="40" rx="10" fill="rgba(2,132,199,0.15)" stroke="currentColor" />
+                    <circle cx="50" cy="35" r="16" fill="rgba(2,132,199,0.25)" />
+                    <path d={`M35 50 L${35 + selectedAlphabetItem.fingers.thumb * 20} ${50 - selectedAlphabetItem.fingers.thumb * 25} M45 50 L45 ${25 - selectedAlphabetItem.fingers.index * 15} M55 50 L55 ${20 - selectedAlphabetItem.fingers.middle * 15} M65 50 L65 ${25 - selectedAlphabetItem.fingers.ring * 15} M75 50 L80 ${35 - selectedAlphabetItem.fingers.pinky * 10}`} />
+                    <text x="50" y="40" textAnchor="middle" fill="#38bdf8" fontSize="22" fontFamily="monospace" fontWeight="bold">{selectedAlphabetItem.letter}</text>
+                  </svg>
+                </div>
+                <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur px-2.5 py-1 rounded text-xs font-mono text-sky-300 border border-slate-700">
+                  VISTA ANATÓMICA DETALLADA · LETRA {selectedAlphabetItem.letter}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-slate-900">Resumen de Configuración Manual:</div>
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 font-medium">
+                  {selectedAlphabetItem.handshapeSummary}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-slate-900">Pautas Biomecánicas y Tip de Ejecución:</div>
+                <div className="p-3 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-950">
+                  {selectedAlphabetItem.tip}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 pt-2 text-center font-mono text-xs">
+                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
+                  <div className="text-slate-500 text-[10px]">Pulgar</div>
+                  <div className="font-bold text-slate-900">{Math.round(selectedAlphabetItem.fingers.thumb * 100)}%</div>
+                </div>
+                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
+                  <div className="text-slate-500 text-[10px]">Índice</div>
+                  <div className="font-bold text-slate-900">{Math.round(selectedAlphabetItem.fingers.index * 100)}%</div>
+                </div>
+                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
+                  <div className="text-slate-500 text-[10px]">Rotación</div>
+                  <div className="font-bold text-slate-900">{selectedAlphabetItem.fingers.rotationDeg}°</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedAlphabetItem(null)}
+                className="px-5 py-2.5 bg-sky-700 text-white rounded-xl text-xs font-semibold hover:bg-sky-800 cursor-pointer"
+              >
+                Entendido, Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </section>
   );

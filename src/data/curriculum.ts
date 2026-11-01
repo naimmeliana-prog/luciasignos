@@ -653,6 +653,45 @@ export const GVA_EXAM_BANK: GvaExamQuestion[] = [
   },
   {
     id: 'gva-bank-2',
+    level: 'A1',
+    question: 'En la presentación personal básica en LSE, ¿qué se debe realizar en primer lugar?',
+    options: [
+      'Deletrear todo el historial médico',
+      'Establecer contacto visual y signar el saludo inicial ("Hola")',
+      'Dar la espalda al interlocutor',
+      'Cantar en voz alta'
+    ],
+    correctIndex: 1,
+    explanation: 'El contacto visual y el saludo inicial establecen el canal comunicativo adecuado en LSE.'
+  },
+  {
+    id: 'gva-bank-3',
+    level: 'A1',
+    question: '¿Cuál es la orientación correcta de la palma al signar los números del 1 al 5?',
+    options: [
+      'Orientada hacia el propio pecho del emisor',
+      'Orientada hacia el interlocutor (hacia afuera)',
+      'Apuntando hacia el suelo',
+      'Tapando los ojos'
+    ],
+    correctIndex: 1,
+    explanation: 'Los numerales cardinales básicos se orientan con la palma hacia afuera para que sean legibles.'
+  },
+  {
+    id: 'gva-bank-4',
+    level: 'A1',
+    question: '¿Qué componente no manual acompaña a las expresiones de cortesía como "Gracias"?',
+    options: [
+      'Ceño fruncido con agresividad',
+      'Sonrisa afectiva y asentimiento suave de cabeza',
+      'Cerrar los ojos con fuerza',
+      'Inclinarse hacia atrás'
+    ],
+    correctIndex: 1,
+    explanation: 'La cortesía en LSE exige una sonrisa afectiva y un asentimiento que refuerce el agradecimiento.'
+  },
+  {
+    id: 'gva-bank-5',
     level: 'A2',
     question: 'En la estructura sintáctica básica de la LSE, ¿dónde suele colocarse el marcador temporal?',
     options: [
@@ -663,45 +702,6 @@ export const GVA_EXAM_BANK: GvaExamQuestion[] = [
     ],
     correctIndex: 1,
     explanation: 'La línea temporal se sitúa al inicio del enunciado para contextualizar toda la acción.'
-  },
-  {
-    id: 'gva-bank-3',
-    level: 'B1',
-    question: '¿Qué diferencia un verbo plano de un verbo direccional o espacial?',
-    options: [
-      'Los verbos planos se hacen sentados y los direccionales de pie',
-      'Los verbos direccionales modifican su trayectoria en el espacio para concordar con sujeto y objeto',
-      'Los verbos planos no utilizan las manos',
-      'No existe distinción'
-    ],
-    correctIndex: 1,
-    explanation: 'Los verbos direccionales incorporan los roles sintácticos directamente en su trayectoria espacial.'
-  },
-  {
-    id: 'gva-bank-4',
-    level: 'B2',
-    question: '¿Cuál es la función principal de los componentes no manuales (MNM) gramaticales?',
-    options: [
-      'Decorar la actuación artística',
-      'Ejercer funciones equivalentes a entonación, modalidad oracional y cohesión sintáctica',
-      'Sustituir por completo a las manos',
-      'Indicar únicamente el estado de ánimo'
-    ],
-    correctIndex: 1,
-    explanation: 'Los MNM gramaticales son obligatorios para marcar subordinación, interrogación y negaciones.'
-  },
-  {
-    id: 'gva-bank-5',
-    level: 'A1',
-    question: '¿Qué distancia corporal y espacial es la recomendada al signar cara a cara?',
-    options: [
-      'Más de 5 metros de distancia',
-      'La distancia natural de conversación interpersonal que permita ver manos y rostro',
-      'Contacto físico constante en los hombros',
-      'Detrás del interlocutor'
-    ],
-    correctIndex: 1,
-    explanation: 'La distancia conversacional natural permite la visibilidad simultánea del espacio de signado y la expresión facial.'
   },
   {
     id: 'gva-bank-6',
@@ -715,6 +715,136 @@ export const GVA_EXAM_BANK: GvaExamQuestion[] = [
     ],
     correctIndex: 1,
     explanation: 'La dactilología exige claridad, estabilidad y posición frente al hombro dominante.'
+  },
+  {
+    id: 'gva-bank-7',
+    level: 'A2',
+    question: '¿Cómo se indica la pluralidad en LSE cuando no se especifica un número exacto?',
+    options: [
+      'Repitiendo el signo mediante reduplicación o indicando cantidad en el espacio',
+      'Escribiendo en un papel',
+      'Gritando la palabra',
+      'Utilizando exclusivamente la mano izquierda'
+    ],
+    correctIndex: 0,
+    explanation: 'La reduplicación del signo o el uso de cuantificadores espaciales expresa el plural.'
+  },
+  {
+    id: 'gva-bank-8',
+    level: 'A2',
+    question: '¿Qué distancia corporal y espacial es la recomendada al signar cara a cara?',
+    options: [
+      'Más de 5 metros de distancia',
+      'La distancia natural de conversación interpersonal que permita ver manos y rostro',
+      'Contacto físico constante en los hombros',
+      'Detrás del interlocutor'
+    ],
+    correctIndex: 1,
+    explanation: 'La distancia conversacional natural permite la visibilidad simultánea del espacio de signado y la expresión facial.'
+  },
+  {
+    id: 'gva-bank-9',
+    level: 'B1',
+    question: '¿Qué diferencia un verbo plano de un verbo direccional o espacial?',
+    options: [
+      'Los verbos planos se hacen sentados y los direccionales de pie',
+      'Los verbos direccionales modifican su trayectoria en el espacio para concordar con sujeto y objeto',
+      'Los verbos planos no utilizan las manos',
+      'No existe distinción'
+    ],
+    correctIndex: 1,
+    explanation: 'Los verbos direccionales incorporan los roles sintácticos directamente en su trayectoria espacial.'
+  },
+  {
+    id: 'gva-bank-10',
+    level: 'B1',
+    question: 'En una oración condicional en LSE (ej. "Si llueve, no voy"), ¿qué marcador no manual es obligatorio?',
+    options: [
+      'Elevación de cejas y ligera inclinación de cabeza en la prótesis condicional',
+      'Cerrar los oídos',
+      'Girar en círculos',
+      'Ningún marcador'
+    ],
+    correctIndex: 0,
+    explanation: 'La prótesis condicional se marca mediante la elevación de cejas y la inclinación de la cabeza.'
+  },
+  {
+    id: 'gva-bank-11',
+    level: 'B1',
+    question: '¿Qué son los clasificadores descriptivos en lengua de signos?',
+    options: [
+      'Errores de articulación',
+      'Configuraciones manuales que especifican la forma, tamaño y textura de los objetos',
+      'Palabras en castellano escritas',
+      'Sinónimos de números'
+    ],
+    correctIndex: 1,
+    explanation: 'Los clasificadores descriptivos configuran visualmente el tamaño, la forma y la apariencia de elementos.'
+  },
+  {
+    id: 'gva-bank-12',
+    level: 'B1',
+    question: '¿Cómo se marcan las oraciones subordinadas de relativo en el nivel B1 de LSE?',
+    options: [
+      'Con un parpadeo lento y ligera inclinación hacia atrás de la cabeza',
+      'Gritando',
+      'Bajando las manos al suelo',
+      'No llevan marca visual'
+    ],
+    correctIndex: 0,
+    explanation: 'Las relativas se acompañan de marcas no manuales específicas como la tensión cervical y elevación o flexión sutil.'
+  },
+  {
+    id: 'gva-bank-13',
+    level: 'B2',
+    question: '¿Cuál es la función principal de los componentes no manuales (MNM) gramaticales?',
+    options: [
+      'Decorar la actuación artística',
+      'Ejercer funciones equivalentes a entonación, modalidad oracional y cohesión sintáctica',
+      'Sustituir por completo a las manos',
+      'Indicar únicamente el estado de ánimo'
+    ],
+    correctIndex: 1,
+    explanation: 'Los MNM gramaticales son obligatorios para marcar subordinación, interrogación y negaciones.'
+  },
+  {
+    id: 'gva-bank-14',
+    level: 'B2',
+    question: 'En un debate formal o exposición argumentada (B2), ¿cómo se utiliza el espacio tridimensional?',
+    options: [
+      'Se ignoran los espacios',
+      'Se establecen loci (puntos espaciales) persistentes para contraponer argumentos o personas',
+      'Se signa únicamente con una mano pegada al cuerpo',
+      'Se cambia de idioma constantemente'
+    ],
+    correctIndex: 1,
+    explanation: 'La asignación de loci espaciales permite mantener la referencia discursiva de diferentes posturas y argumentos.'
+  },
+  {
+    id: 'gva-bank-15',
+    level: 'B2',
+    question: '¿Qué exigencia prosódica se valora en la prueba de expresión del nivel B2 de la GVA?',
+    options: [
+      'La sincronía perfecta entre el ritmo manual, la modulación facial y el uso de clasificadores avanzados',
+      'La velocidad sin importar la claridad',
+      'La lectura labial en voz alta',
+      'El uso exclusivo de dactilología'
+    ],
+    correctIndex: 0,
+    explanation: 'El nivel B2 exige naturalidad, riqueza léxica y perfecta sincronía prosódico-visual.'
+  },
+  {
+    id: 'gva-bank-16',
+    level: 'B2',
+    question: '¿Cómo se manejan los matices aspectuales (continuidad, reiteración, inceptividad) en los verbos de LSE?',
+    options: [
+      'Mediante la modificación temporal del movimiento, velocidad y reiteración del signo',
+      'Con adjetivos en español',
+      'Escribiendo notas',
+      'No se pueden expresar'
+    ],
+    correctIndex: 0,
+    explanation: 'Los aspectos verbales se modulan directamente alterando la cinética y la duración del movimiento signado.'
   }
 ];
 
