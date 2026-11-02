@@ -11,6 +11,7 @@ import {
   DACTYLOLOGY_ALPHABET,
   FINGERSPELLING_WORDS
 } from '../data/glossaryAndDactylology';
+import { CNSE_BANCOLSE_ITEMS } from '../data/cnseBank';
 import {
   DactylologyLetter,
   FingerspellingWordItem,
@@ -26,13 +27,227 @@ interface FingerspellingPracticeProps {
   ) => void;
 }
 
-type GameMode = 'guess_word' | 'spell_word' | 'rapid_letter' | 'alphabet_table';
+type GameMode = 'guess_word' | 'spell_word' | 'rapid_letter' | 'alphabet_table' | 'duel_mode' | 'step_tutorial' | 'fesopras_chart';
+
+const AnatomicalHandGraphic: React.FC<{ letter: string; fingers: DactylologyLetter['fingers']; size?: 'normal' | 'large' }> = ({ letter, size = 'normal' }) => {
+  const isLarge = size === 'large';
+  const l = letter.toUpperCase();
+
+  return (
+    <div className={`relative flex flex-col ${isLarge ? 'w-full h-96' : 'w-full h-64'} rounded-2xl bg-[#0b3166] border-2 border-sky-600 shadow-2xl overflow-hidden p-4 text-white`}>
+      {/* Header with Letter and Title */}
+      <div className="flex items-center justify-between border-b border-sky-800/60 pb-3 mb-3 shrink-0">
+        <div className="flex items-center gap-3">
+          <span className="w-10 h-10 rounded-xl bg-white text-[#0b3166] font-mono font-extrabold text-xl flex items-center justify-center shadow-lg">
+            {l}
+          </span>
+          <div>
+            <div className="text-[10px] font-mono tracking-widest text-sky-300 uppercase">Alfabeto Dactilológico Español</div>
+            <h4 className="text-sm font-bold text-white">Letra {l} - FESOPRAS</h4>
+          </div>
+        </div>
+        <div className="bg-sky-950/80 text-sky-200 px-2.5 py-1 rounded-lg text-[10px] font-mono border border-sky-800">
+          FESOPRAS 2026
+        </div>
+      </div>
+
+      {/* Central Illustration Area with Distinct 3D Handshape */}
+      <div className="flex-1 flex flex-col items-center justify-center relative bg-[#061d3d] rounded-xl border border-sky-900/80 p-4 shadow-inner overflow-hidden">
+        <svg className={`w-full ${isLarge ? 'h-48' : 'h-32'}`} viewBox="0 0 160 160" fill="none">
+          <g transform="translate(80, 80)">
+            {l === 'A' && (
+              /* Fist with lateral thumb */
+              <g>
+                <path d="M -22 20 C -32 0 -30 -24 -10 -30 C 10 -30 26 -12 24 20 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M -26 -4 C -34 -8 -36 10 -24 14 C -20 16 -16 10 -18 2 Z" fill="#f39c12" stroke="#d68910" strokeWidth="2" />
+                <path d="M -14 20 L 14 20 L 18 46 L -18 46 Z" fill="#e67e22" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {l === 'B' && (
+              /* 4 fingers upright */
+              <g>
+                <rect x="-16" y="10" width="32" height="24" rx="6" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -12 10 L -12 -34 C -12 -40 -7 -40 -7 -34 L -7 10 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -4 10 L -4 -38 C -4 -44 1 -44 1 -38 L 1 10 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 4 10 L 4 -36 C 4 -42 9 -42 9 -36 L 9 10 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 12 10 L 12 -28 C 12 -34 17 -34 17 -28 L 17 10 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -14 34 L 14 34 L 18 52 L -18 52 Z" fill="#e67e22" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {(l === 'C' || l === 'CH') && (
+              /* Curved C shape */
+              <g>
+                <path d="M 10 -35 C -20 -35 -35 -10 -35 15 C -35 30 -20 42 10 42 C 22 42 26 35 22 30 C -2 30 -18 20 -18 10 C -18 -5 -2 -22 14 -22 C 20 -22 24 -28 10 -35 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M 14 38 L 28 50" fill="none" stroke="#e67e22" strokeWidth="6" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'D' && (
+              /* Index vertical, others in circle */
+              <g>
+                <path d="M 2 -12 L 2 -48 C 2 -55 8 -55 8 -48 L 8 -12 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <circle cx="-6" cy="12" r="14" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -14 24 L 14 24 L 18 50 L -18 50 Z" fill="#e67e22" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {l === 'E' && (
+              /* 5 fingers clawed */
+              <g>
+                <circle cx="0" cy="10" r="22" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M -22 -4 C -28 -12 -18 -22 -10 -16" fill="none" stroke="#d68910" strokeWidth="3" strokeLinecap="round" />
+                <path d="M -12 -12 C -18 -24 -2 -28 2 -16" fill="none" stroke="#d68910" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 2 -14 C 4 -28 18 -24 16 -12" fill="none" stroke="#d68910" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 14 -8 C 24 -16 26 0 16 6" fill="none" stroke="#d68910" strokeWidth="3" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'F' && (
+              /* Thumb-index circle, 3 fingers up */
+              <g>
+                <circle cx="-6" cy="10" r="10" fill="none" stroke="#d68910" strokeWidth="3" />
+                <path d="M 4 8 L 4 -32 C 4 -38 9 -38 9 -32 L 9 8 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 12 10 L 12 -28 C 12 -34 17 -34 17 -28 L 17 10 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 20 12 L 20 -22 C 20 -28 25 -28 25 -22 L 25 12 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {(l === 'G' || l === 'Q') && (
+              /* Horizontal thumb & index */
+              <g>
+                <path d="M -30 2 L 30 2 C 38 2 38 12 30 12 L -30 12 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -24 -12 L 20 -12 C 26 -12 26 -4 20 -4 L -24 -4 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {l === 'H' && (
+              /* Index and middle horizontal */
+              <g>
+                <path d="M -35 -4 L 25 -4 C 32 -4 32 4 25 4 L -35 4 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M -35 10 L 25 10 C 32 10 32 18 25 18 L -35 18 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {l === 'I' && (
+              /* Pinky up */
+              <g>
+                <rect x="-14" y="14" width="28" height="22" rx="6" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 12 14 L 12 -28 C 12 -35 18 -35 18 -28 L 18 14 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {l === 'J' && (
+              /* Pinky curving J */
+              <g>
+                <rect x="-14" y="14" width="28" height="22" rx="6" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 12 14 L 12 -20 C 12 -30 22 -30 22 -20 L 22 24 C 22 36 6 36 2 28" fill="none" stroke="#d68910" strokeWidth="4" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'K' && (
+              /* Index vertical, middle angled */
+              <g>
+                <path d="M -6 -10 L -12 -46 C -14 -52 -8 -54 -4 -48 L 4 -12 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 6 -4 L 22 -38 C 25 -44 32 -40 28 -34 L 14 2 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {(l === 'L' || l === 'LL') && (
+              /* L shape */
+              <g>
+                <path d="M -4 20 L -4 -45 C -4 -52 2 -52 2 -45 L 2 20 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2.2" />
+                <path d="M -30 14 L 24 14 C 32 14 32 22 24 22 L -30 22 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2.2" />
+              </g>
+            )}
+            {l === 'M' && (
+              /* 3 fingers over thumb */
+              <g>
+                <rect x="-20" y="-8" width="40" height="32" rx="10" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M -16 -8 L -16 -24" stroke="#b9770e" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 0 -8 L 0 -28" stroke="#b9770e" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 16 -8 L 16 -22" stroke="#b9770e" strokeWidth="3" strokeLinecap="round" />
+              </g>
+            )}
+            {(l === 'N' || l === 'Ñ') && (
+              /* 2 fingers over thumb */
+              <g>
+                <rect x="-18" y="-6" width="36" height="32" rx="10" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M -10 -6 L -10 -26" stroke="#b9770e" strokeWidth="3.5" strokeLinecap="round" />
+                <path d="M 10 -6 L 10 -26" stroke="#b9770e" strokeWidth="3.5" strokeLinecap="round" />
+              </g>
+            )}
+            {(l === 'O' || l === 'S') && (
+              /* Circular O / S */
+              <g>
+                <circle cx="0" cy="4" r="22" fill="#f5b041" stroke="#d68910" strokeWidth="3" />
+                <circle cx="0" cy="4" r="10" fill="#061d3d" />
+              </g>
+            )}
+            {(l === 'P' || l === 'T') && (
+              /* P / T configuration */
+              <g>
+                <rect x="-16" y="-10" width="32" height="36" rx="8" fill="#f5b041" stroke="#d68910" strokeWidth="2.5" />
+                <path d="M 0 10 L 0 45" stroke="#d68910" strokeWidth="4" />
+              </g>
+            )}
+            {(l === 'R' || l === 'RR') && (
+              /* Crossed fingers R */
+              <g>
+                <path d="M -6 -30 L 8 20" stroke="#f5b041" strokeWidth="8" strokeLinecap="round" />
+                <path d="M 6 -30 L -8 20" stroke="#f5b041" strokeWidth="8" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'U' && (
+              /* U index & middle */
+              <g>
+                <path d="M -8 16 L -8 -30 C -8 -36 -3 -36 -3 -30 L -3 16 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+                <path d="M 3 16 L 3 -30 C 3 -36 8 -36 8 -30 L 8 16 Z" fill="#f5b041" stroke="#d68910" strokeWidth="2" />
+              </g>
+            )}
+            {(l === 'V' || l === 'W') && (
+              /* V / W open */
+              <g>
+                <path d="M -16 -20 L -4 20" stroke="#f5b041" strokeWidth="9" strokeLinecap="round" />
+                <path d="M 16 -20 L 4 20" stroke="#f5b041" strokeWidth="9" strokeLinecap="round" />
+                {l === 'W' && <path d="M 0 -15 L 0 20" stroke="#f5b041" strokeWidth="9" strokeLinecap="round" />}
+              </g>
+            )}
+            {l === 'X' && (
+              /* Hooked index */
+              <g>
+                <path d="M -15 -20 C 15 -20 20 15 -5 15" fill="none" stroke="#f5b041" strokeWidth="10" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'Y' && (
+              /* Thumb & pinky wide */
+              <g>
+                <path d="M -35 -25 L 0 5 L 35 -25" fill="none" stroke="#f5b041" strokeWidth="10" strokeLinecap="round" />
+              </g>
+            )}
+            {l === 'Z' && (
+              /* Zigzag Z */
+              <g>
+                <path d="M -25 -20 L 25 -20 L -25 20 L 25 20" fill="none" stroke="#f5b041" strokeWidth="8" strokeLinejoin="round" />
+              </g>
+            )}
+            
+            {/* Letter badge overlay */}
+            <text x="0" y="65" textAnchor="middle" fill="#ffffff" fontSize="22" fontWeight="extrabold" fontFamily="monospace">{l}</text>
+          </g>
+        </svg>
+
+        {/* Motion indicator for dynamic letters */}
+        {['CH', 'G', 'H', 'LL', 'Ñ', 'RR', 'V', 'W', 'X', 'Y', 'Z'].includes(l) && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded text-[10px] font-mono border border-sky-400/30">
+            <span>⇄ Movimiento FESOPRAS</span>
+          </div>
+        )}
+      </div>
+
+      {/* Footer attribution matching FESOPRAS */}
+      <div className="mt-3 text-[10px] font-mono text-sky-200 text-center bg-sky-950/90 py-1.5 px-3 rounded-xl border border-sky-800 shrink-0 truncate">
+        Federación de Personas Sordas del Principado de Asturias (FESOPRAS)
+      </div>
+    </div>
+  );
+};
 
 export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   progress,
   onExerciseResult
 }) => {
-  const [gameMode, setGameMode] = useState<GameMode>('guess_word');
+  const [gameMode, setGameMode] = useState<GameMode>('fesopras_chart');
   const [adaptiveAuto, setAdaptiveAuto] = useState<boolean>(true);
   const [manualLevel, setManualLevel] = useState<SkillLevel>(
     progress.fingerspelling.adaptiveTier
@@ -75,6 +290,77 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
   } | null>(null);
 
   const [selectedAlphabetItem, setSelectedAlphabetItem] = useState<DactylologyLetter | null>(null);
+  const [tutorialIndex, setTutorialIndex] = useState<number>(0);
+
+  // Duel Mode 1v1 state
+  const [duelStatus, setDuelStatus] = useState<'setup' | 'playing' | 'gameover'>('setup');
+  const [player1Name, setPlayer1Name] = useState<string>('Estudiante 1 (Ana)');
+  const [player2Name, setPlayer2Name] = useState<string>('Estudiante 2 (Carlos)');
+  const [duelTimeLeft, setDuelTimeLeft] = useState<number>(45);
+  const [activeDuelTurn, setActiveDuelTurn] = useState<1 | 2>(1);
+  const [player1Score, setPlayer1Score] = useState<number>(0);
+  const [player2Score, setPlayer2Score] = useState<number>(0);
+  const [duelWordIdx, setDuelWordIdx] = useState<number>(0);
+  const [duelAnswerInput, setDuelAnswerInput] = useState<string>('');
+  const [duelFeedbackMessage, setDuelFeedbackMessage] = useState<string | null>(null);
+  const [duelLeaderboard, setDuelLeaderboard] = useState<Array<{ name: string; score: number; date: string }>>([
+    { name: 'Lucía G. (Maestra LSE)', score: 11, date: 'Hoy' },
+    { name: 'Mateo R.', score: 8, date: 'Ayer' },
+    { name: 'Sofía M.', score: 7, date: 'Hace 2 días' }
+  ]);
+
+  useEffect(() => {
+    if (gameMode !== 'duel_mode' || duelStatus !== 'playing') return;
+    if (duelTimeLeft <= 0) {
+      if (activeDuelTurn === 1) {
+        setActiveDuelTurn(2);
+        setDuelTimeLeft(45);
+        setDuelFeedbackMessage(`¡Tiempo agotado para ${player1Name}! Turno de ${player2Name}.`);
+      } else {
+        setDuelStatus('gameover');
+        setDuelLeaderboard((prev) => [
+          { name: player1Name, score: player1Score, date: 'Ahora' },
+          { name: player2Name, score: player2Score, date: 'Ahora' },
+          ...prev
+        ]);
+      }
+      return;
+    }
+    const timer = setInterval(() => {
+      setDuelTimeLeft((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [gameMode, duelStatus, duelTimeLeft, activeDuelTurn, player1Name, player2Name, player1Score, player2Score]);
+
+  const handleStartDuel = () => {
+    setDuelStatus('playing');
+    setDuelTimeLeft(45);
+    setActiveDuelTurn(1);
+    setPlayer1Score(0);
+    setPlayer2Score(0);
+    setDuelWordIdx(0);
+    setDuelAnswerInput('');
+    setDuelFeedbackMessage('¡Comienza el duelo! Deletrea o identifica la palabra lo más rápido posible.');
+  };
+
+  const handleCheckDuelAnswer = (submittedWord: string) => {
+    const targetWord = FINGERSPELLING_WORDS[duelWordIdx % FINGERSPELLING_WORDS.length].word;
+    const cleanSubmitted = submittedWord.trim().toUpperCase();
+    if (cleanSubmitted === targetWord) {
+      if (activeDuelTurn === 1) {
+        setPlayer1Score((s) => s + 1);
+      } else {
+        setPlayer2Score((s) => s + 1);
+      }
+      setDuelFeedbackMessage(`¡Correcto! +1 punto para ${activeDuelTurn === 1 ? player1Name : player2Name}.`);
+      setDuelWordIdx((idx) => idx + 1);
+      setDuelAnswerInput('');
+    } else {
+      setDuelFeedbackMessage(`Incorrecto. Era "${targetWord}". Siguiente palabra.`);
+      setDuelWordIdx((idx) => idx + 1);
+      setDuelAnswerInput('');
+    }
+  };
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -319,7 +605,7 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3">
         {(
           [
             {
@@ -340,7 +626,22 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
             {
               id: 'alphabet_table',
               title: '4. Tabla Completa A–Z',
-              desc: 'Consulta la tabla oficial con las 27 configuraciones manuales del alfabeto dactilológico.'
+              desc: 'Consulta la tabla oficial con las 27 configuraciones manuales del alfabeto.'
+            },
+            {
+              id: 'duel_mode',
+              title: '5. Modo Duelo 1v1',
+              desc: 'Competencia en tiempo real entre dos estudiantes con cronómetro y ranking en vivo.'
+            },
+            {
+              id: 'step_tutorial',
+              title: '6. Tutorial Paso a Paso',
+              desc: 'Tarjetas flash guiadas para aprender la posición exacta de los dedos letra por letra.'
+            },
+            {
+              id: 'fesopras_chart',
+              title: '7. Infografía FESOPRAS',
+              desc: 'Visualiza la infografía original exacta del Alfabeto Dactilológico Español de FESOPRAS.'
             }
           ] as const
         ).map((m) => {
@@ -364,8 +665,50 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
       </div>
 
       <>
+        {gameMode === 'fesopras_chart' && (
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm max-w-5xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+              <div>
+                <div className="text-xs font-mono text-sky-700 mb-1">
+                  INFOGRAFÍA OFICIAL · FESOPRAS
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 font-display">
+                  Alfabeto Dactilológico Español - FESOPRAS
+                </h2>
+                <p className="text-sm text-slate-600 mt-1">
+                  Federación de Personas Sordas del Principado de Asturias (FESOPRAS). Infografía oficial integrada directamente en la aplicación.
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#0b3166] rounded-2xl p-4 border border-sky-600 flex flex-col items-center justify-center shadow-2xl">
+              <img
+                src="/assets/aistudio/descarga_5f1b9159.jfif"
+                alt="Alfabeto Dactilológico Español FESOPRAS"
+                className="w-full max-h-[85vh] object-contain rounded-xl shadow-lg"
+              />
+            </div>
+          </div>
+        )}
+
         {gameMode === 'alphabet_table' && (
         <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0b3166] text-white p-6 rounded-2xl shadow-md">
+            <div>
+              <div className="text-xs font-mono text-sky-300">INFOGRAFÍA OFICIAL DE REFERENCIA</div>
+              <h2 className="text-xl font-bold mt-1">Alfabeto Dactilológico Español (FESOPRAS)</h2>
+              <p className="text-xs text-sky-100 mt-1">
+                Basado en la infografía oficial de la Federación de Personas Sordas del Principado de Asturias.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setGameMode('fesopras_chart')}
+              className="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold cursor-pointer shadow transition-transform hover:scale-105 shrink-0"
+            >
+              Ver Infografía Completa a Pantalla Completa 🔍
+            </button>
+          </div>
+
           <div>
             <div className="text-xs font-mono text-sky-700">
               REFERENCIA OFICIAL LSE · ABECEDARIO DACTILOLÓGICO COMPLETO A–Z
@@ -386,19 +729,7 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
                 className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3 hover:border-sky-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
               >
                 <div className="space-y-3">
-                  <div className="w-full h-28 bg-slate-900 rounded-lg relative overflow-hidden flex items-center justify-center border border-slate-800 group-hover:border-sky-500 transition-colors">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <svg className="w-20 h-20 text-sky-400 group-hover:scale-105 transition-transform" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="30" y="55" width="40" height="35" rx="8" fill="rgba(2,132,199,0.15)" stroke="currentColor" />
-                        <circle cx="50" cy="40" r="14" fill="rgba(2,132,199,0.25)" />
-                        <path d={`M40 55 L${38 + item.fingers.thumb * 8} ${35 - item.fingers.thumb * 15} M46 55 L46 ${22 - item.fingers.index * 12} M54 55 L54 ${22 - item.fingers.middle * 12} M60 55 L62 ${28 - item.fingers.ring * 10}`} />
-                        <text x="50" y="45" textAnchor="middle" fill="#38bdf8" fontSize="16" fontFamily="monospace" fontWeight="bold">{item.letter}</text>
-                      </svg>
-                    </div>
-                    <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur px-2 py-0.5 rounded text-[10px] font-mono text-sky-300 border border-slate-700">
-                      CLIC PARA VER DETALLES
-                    </div>
-                  </div>
+                  <AnatomicalHandGraphic letter={item.letter} fingers={item.fingers} />
 
                   <div className="flex items-center justify-between">
                     <span className="w-9 h-9 rounded-lg bg-sky-700 text-white font-mono font-bold flex items-center justify-center text-base shadow-xs">
@@ -422,7 +753,364 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
         </div>
       )}
 
-      {gameMode !== 'alphabet_table' && (
+      {gameMode === 'duel_mode' && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+            <div>
+              <div className="text-xs font-mono text-sky-700 mb-1">
+                COMPETENCIA EN TIEMPO REAL · MODALIDAD 1V1
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 font-display">
+                Modo Duelo de Deletreo LSE
+              </h2>
+              <p className="text-sm text-slate-600 mt-1">
+                Dos estudiantes compiten en rondas de 45 segundos para descifrar y deletrear el mayor número de palabras posibles. ¡Incluye ranking en vivo!
+              </p>
+            </div>
+
+            {duelStatus === 'playing' && (
+              <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-3 rounded-xl border border-slate-800 shadow-md">
+                <div className="text-center">
+                  <div className="text-[10px] font-mono text-slate-400">CRONÓMETRO</div>
+                  <div className="text-2xl font-mono font-bold text-amber-400 tabular-nums">{duelTimeLeft}s</div>
+                </div>
+                <div className="h-8 w-px bg-slate-700" />
+                <div className="text-center">
+                  <div className="text-[10px] font-mono text-slate-400">TURNO ACTIVO</div>
+                  <div className="text-sm font-bold text-sky-300">
+                    {activeDuelTurn === 1 ? player1Name : player2Name}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {duelStatus === 'setup' && (
+            <div className="max-w-2xl mx-auto space-y-6 py-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-xs font-semibold text-slate-700">Nombre del Jugador 1</label>
+                  <input
+                    type="text"
+                    value={player1Name}
+                    onChange={(e) => setPlayer1Name(e.target.value)}
+                    className="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl text-slate-900 font-semibold focus:outline-2 focus:outline-sky-600"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs font-semibold text-slate-700">Nombre del Jugador 2</label>
+                  <input
+                    type="text"
+                    value={player2Name}
+                    onChange={(e) => setPlayer2Name(e.target.value)}
+                    className="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl text-slate-900 font-semibold focus:outline-2 focus:outline-sky-600"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-sky-50 border border-sky-200 rounded-xl p-5 space-y-2 text-xs text-sky-950">
+                <div className="font-bold flex items-center gap-1.5 text-sky-900 text-sm">
+                  <Sparkles className="w-4 h-4 text-sky-700" />
+                  <span>Reglas del Duelo 1v1</span>
+                </div>
+                <p>
+                  Cada estudiante dispone de 45 segundos por turno para identificar o deletrear correctamente las palabras presentadas en pantalla. El sistema lleva el registro de puntos y actualiza la tabla de clasificación en vivo.
+                </p>
+              </div>
+
+              <div className="flex justify-center pt-4">
+                <button
+                  type="button"
+                  onClick={handleStartDuel}
+                  className="px-8 py-3.5 bg-sky-700 text-white rounded-xl text-sm font-semibold hover:bg-sky-800 shadow-md cursor-pointer transition-transform hover:scale-105"
+                >
+                  ¡Comenzar Duelo en Tiempo Real!
+                </button>
+              </div>
+            </div>
+          )}
+
+          {duelStatus === 'playing' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white space-y-6 shadow-md">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                  <div>
+                    <div className="text-xs font-mono text-sky-400">TURNO DE {activeDuelTurn === 1 ? player1Name.toUpperCase() : player2Name.toUpperCase()}</div>
+                    <h3 className="text-xl font-bold mt-0.5">Deletrea la palabra objetivo</h3>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-slate-400 font-mono">Puntuación Actual</div>
+                    <div className="text-2xl font-bold font-mono text-emerald-400">
+                      {activeDuelTurn === 1 ? player1Score : player2Score} pts
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 text-center space-y-4">
+                  <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">Palabra Objetivo LSE</div>
+                  <div className="text-3xl sm:text-4xl font-mono font-extrabold tracking-widest text-sky-300">
+                    {FINGERSPELLING_WORDS[duelWordIdx % FINGERSPELLING_WORDS.length].word}
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    <strong>Pista:</strong> {FINGERSPELLING_WORDS[duelWordIdx % FINGERSPELLING_WORDS.length].clue}
+                  </p>
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (duelAnswerInput) handleCheckDuelAnswer(duelAnswerInput);
+                  }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={duelAnswerInput}
+                      onChange={(e) => setDuelAnswerInput(e.target.value.toUpperCase())}
+                      placeholder="Escribe la palabra en mayúsculas..."
+                      className="flex-1 px-4 py-3 text-sm font-mono uppercase bg-slate-950 border border-slate-700 rounded-xl text-white focus:outline-2 focus:outline-sky-500"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="px-6 py-3 bg-sky-600 text-white rounded-xl text-xs font-semibold hover:bg-sky-500 cursor-pointer"
+                    >
+                      Enviar
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5 pt-2">
+                    {[
+                      FINGERSPELLING_WORDS[(duelWordIdx) % FINGERSPELLING_WORDS.length].word,
+                      FINGERSPELLING_WORDS[(duelWordIdx + 1) % FINGERSPELLING_WORDS.length].word,
+                      FINGERSPELLING_WORDS[(duelWordIdx + 2) % FINGERSPELLING_WORDS.length].word,
+                      FINGERSPELLING_WORDS[(duelWordIdx + 3) % FINGERSPELLING_WORDS.length].word
+                    ].sort().map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => handleCheckDuelAnswer(opt)}
+                        className="py-3 px-4 text-sm font-mono font-bold rounded-xl border border-slate-700 bg-slate-950 hover:bg-sky-950 hover:border-sky-500 text-white transition-colors cursor-pointer"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </form>
+
+                {duelFeedbackMessage && (
+                  <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-amber-300 font-medium">
+                    {duelFeedbackMessage}
+                  </div>
+                )}
+              </div>
+
+              <div className="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-6">
+                <h3 className="text-base font-bold text-slate-900">Marcador en Vivo del Duelo</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
+                    <div>
+                      <div className="text-xs font-mono text-slate-500">Jugador 1</div>
+                      <div className="text-sm font-bold text-slate-900">{player1Name}</div>
+                    </div>
+                    <div className="text-2xl font-mono font-extrabold text-sky-700">{player1Score} pts</div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
+                    <div>
+                      <div className="text-xs font-mono text-slate-500">Jugador 2</div>
+                      <div className="text-sm font-bold text-slate-900">{player2Name}</div>
+                    </div>
+                    <div className="text-2xl font-mono font-extrabold text-indigo-700">{player2Score} pts</div>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (activeDuelTurn === 1) {
+                        setActiveDuelTurn(2);
+                        setDuelTimeLeft(45);
+                        setDuelFeedbackMessage(`Turno cambiado a ${player2Name}.`);
+                      } else {
+                        setDuelStatus('gameover');
+                      }
+                    }}
+                    className="w-full py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
+                  >
+                    {activeDuelTurn === 1 ? `Finalizar Turno de ${player1Name} y Pasar a Jugador 2` : 'Finalizar Duelo y Ver Resultados'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {duelStatus === 'gameover' && (
+            <div className="max-w-2xl mx-auto space-y-8 py-6 text-center">
+              <div className="p-8 bg-sky-50 border border-sky-200 rounded-2xl space-y-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-sky-700 text-white shadow-md mx-auto">
+                  <Trophy className="w-8 h-8 text-amber-300" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900">¡Duelo Finalizado con Éxito!</h3>
+                  <p className="text-sm text-slate-600 mt-1">
+                    {player1Score > player2Score
+                      ? `¡Ganador: ${player1Name} con ${player1Score} aciertos!`
+                      : player2Score > player1Score
+                      ? `¡Ganador: ${player2Name} con ${player2Score} aciertos!`
+                      : '¡Empate técnico excelente entre ambos estudiantes!'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto pt-2">
+                  <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="text-xs text-slate-500">{player1Name}</div>
+                    <div className="text-2xl font-mono font-bold text-sky-700">{player1Score} pts</div>
+                  </div>
+                  <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="text-xs text-slate-500">{player2Name}</div>
+                    <div className="text-2xl font-mono font-bold text-indigo-700">{player2Score} pts</div>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleStartDuel}
+                    className="px-6 py-3 bg-sky-700 text-white rounded-xl text-xs font-semibold hover:bg-sky-800 cursor-pointer"
+                  >
+                    Jugar Otro Duelo 1v1
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDuelStatus('setup')}
+                    className="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
+                  >
+                    Cambiar Nombres
+                  </button>
+                </div>
+              </div>
+
+              {/* Live Ranking Table */}
+              <div className="space-y-4 text-left">
+                <h4 className="text-lg font-bold text-slate-900">Ranking en Vivo del Duelo de Deletreo</h4>
+                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+                  <div className="grid grid-cols-12 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-600 border-b border-slate-200">
+                    <div className="col-span-2">Posición</div>
+                    <div className="col-span-6">Estudiante / Pareja</div>
+                    <div className="col-span-4 text-right">Puntuación</div>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {duelLeaderboard
+                      .sort((a, b) => b.score - a.score)
+                      .map((entry, idx) => (
+                        <div key={`${entry.name}-${idx}`} className="grid grid-cols-12 px-4 py-3 text-xs text-slate-700 items-center">
+                          <div className="col-span-2 font-mono font-bold text-sky-700">#{idx + 1}</div>
+                          <div className="col-span-6 font-semibold text-slate-900">{entry.name}</div>
+                          <div className="col-span-4 text-right font-mono font-bold tabular-nums text-emerald-700">{entry.score} aciertos</div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {gameMode === 'step_tutorial' && (() => {
+        const currentTutorialItem = DACTYLOLOGY_ALPHABET[tutorialIndex % DACTYLOLOGY_ALPHABET.length];
+        return (
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-8 shadow-sm max-w-4xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+              <div>
+                <div className="text-xs font-mono text-sky-700 mb-1">
+                  TUTORIAL PASO A PASO · TARJETAS FLASH A–Z
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 font-display">
+                  Guía Interactiva de Posición de Dedos
+                </h2>
+                <p className="text-sm text-slate-600 mt-1">
+                  Aprende la postura anatómica paso a paso para cada letra antes de practicar con la cámara.
+                </p>
+              </div>
+
+              <div className="text-xs font-mono font-bold bg-sky-50 text-sky-800 px-4 py-2 rounded-xl border border-sky-200">
+                Letra {tutorialIndex + 1} de {DACTYLOLOGY_ALPHABET.length}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-6 space-y-4">
+                <AnatomicalHandGraphic letter={currentTutorialItem.letter} fingers={currentTutorialItem.fingers} size="large" />
+                <div className="flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setTutorialIndex((i) => (i - 1 + DACTYLOLOGY_ALPHABET.length) % DACTYLOLOGY_ALPHABET.length)}
+                    className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold cursor-pointer"
+                  >
+                    ← Letra Anterior
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTutorialIndex((i) => (i + 1) % DACTYLOLOGY_ALPHABET.length)}
+                    className="flex-1 py-3 bg-sky-700 hover:bg-sky-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  >
+                    Siguiente Letra →
+                  </button>
+                </div>
+              </div>
+
+              <div className="lg:col-span-6 space-y-6">
+                <div>
+                  <div className="text-xs font-mono text-sky-700 font-bold uppercase">Letra {currentTutorialItem.letter} · {currentTutorialItem.name}</div>
+                  <h3 className="text-2xl font-bold text-slate-900 mt-1">{currentTutorialItem.handshapeSummary}</h3>
+                </div>
+
+                <div className="space-y-4 text-xs text-slate-700">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-sky-700" />
+                      <span>Paso 1: Posición de Antebrazo y Muñeca</span>
+                    </div>
+                    <p>Sitúa la mano dominante frente al hombro derecho a unos 15 cm del torso con la palma orientada firmemente hacia el interlocutor.</p>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-sky-50 border border-sky-200 space-y-2">
+                    <div className="font-bold text-sky-950 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-sky-700" />
+                      <span>Paso 2: Configuración del Pulgar y Dedos</span>
+                    </div>
+                    <p>{currentTutorialItem.tip}</p>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
+                    <div className="font-bold text-emerald-950 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Paso 3: Marcador No Manual y Vocalización</span>
+                    </div>
+                    <p>Articula silenciosamente la letra con los labios mientras mantienes la mirada firme en el receptor sin sacudidas bruscas.</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setGameMode('spell_word')}
+                    className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-md"
+                  >
+                    Practicar esta Letra con Deletreo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {gameMode !== 'alphabet_table' && gameMode !== 'duel_mode' && gameMode !== 'step_tutorial' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div className="relative aspect-4/3 w-full bg-slate-950">
@@ -744,85 +1432,77 @@ export const FingerspellingPractice: React.FC<FingerspellingPracticeProps> = ({
       )}
       </>
 
-      {selectedAlphabetItem && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-3">
-                <span className="w-12 h-12 rounded-xl bg-sky-700 text-white font-mono font-bold text-2xl flex items-center justify-center shadow-md">
-                  {selectedAlphabetItem.letter}
-                </span>
-                <div>
-                  <div className="text-xs font-mono text-sky-700">REFERENCIA DACTILOLÓGICA OFICIAL LSE</div>
-                  <h3 className="text-xl font-bold text-slate-900">{selectedAlphabetItem.name}</h3>
+      {selectedAlphabetItem && (() => {
+        const cnseInfo = CNSE_BANCOLSE_ITEMS.find(c => c.letter === selectedAlphabetItem.letter) || CNSE_BANCOLSE_ITEMS[0];
+        return (
+          <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex flex-col p-4 sm:p-6 overflow-hidden">
+            <div className="bg-white rounded-2xl max-w-3xl w-full mx-auto max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200 overflow-hidden my-auto">
+              {/* Header with top-right X close button */}
+              <div className="flex items-center justify-between border-b border-slate-100 p-6 pb-4 shrink-0 bg-white">
+                <div className="flex items-center gap-3">
+                  <span className="w-12 h-12 rounded-xl bg-emerald-700 text-white font-mono font-bold text-2xl flex items-center justify-center shadow-md">
+                    {selectedAlphabetItem.letter}
+                  </span>
+                  <div>
+                    <div className="text-xs font-mono text-emerald-800 font-bold">BANCO DE IMÁGENES Y SIGNOS LSE - FUNDACIÓN CNSE</div>
+                    <h3 className="text-xl font-bold text-slate-900">{selectedAlphabetItem.name}</h3>
+                  </div>
                 </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedAlphabetItem(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="w-full h-48 bg-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border border-slate-800">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-32 h-32 text-sky-400" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="25" y="50" width="50" height="40" rx="10" fill="rgba(2,132,199,0.15)" stroke="currentColor" />
-                    <circle cx="50" cy="35" r="16" fill="rgba(2,132,199,0.25)" />
-                    <path d={`M35 50 L${35 + selectedAlphabetItem.fingers.thumb * 20} ${50 - selectedAlphabetItem.fingers.thumb * 25} M45 50 L45 ${25 - selectedAlphabetItem.fingers.index * 15} M55 50 L55 ${20 - selectedAlphabetItem.fingers.middle * 15} M65 50 L65 ${25 - selectedAlphabetItem.fingers.ring * 15} M75 50 L80 ${35 - selectedAlphabetItem.fingers.pinky * 10}`} />
-                    <text x="50" y="40" textAnchor="middle" fill="#38bdf8" fontSize="22" fontFamily="monospace" fontWeight="bold">{selectedAlphabetItem.letter}</text>
-                  </svg>
-                </div>
-                <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur px-2.5 py-1 rounded text-xs font-mono text-sky-300 border border-slate-700">
-                  VISTA ANATÓMICA DETALLADA · LETRA {selectedAlphabetItem.letter}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedAlphabetItem(null)}
+                  className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-lg cursor-pointer shrink-0 transition-colors shadow-xs"
+                  title="Cerrar ventana"
+                >
+                  ✕
+                </button>
               </div>
 
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-slate-900">Resumen de Configuración Manual:</div>
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 font-medium">
-                  {selectedAlphabetItem.handshapeSummary}
+              {/* Central scrollable area for letter reference from LSE bank */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <AnatomicalHandGraphic letter={selectedAlphabetItem.letter} fingers={selectedAlphabetItem.fingers} size="large" />
+
+                <div className="space-y-3">
+                  <div className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Configuración Manual Oficial (Fundación CNSE):</div>
+                  <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-bold text-emerald-950">
+                    {cnseInfo.handshapeSummary}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Pautas Biomecánicas y Tip de Ejecución:</div>
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium leading-relaxed">
+                    {cnseInfo.tip}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Marcador No Manual (MNM) y Expresión:</div>
+                  <div className="p-4 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-950 leading-relaxed">
+                    {cnseInfo.nonManualMarker}
+                  </div>
+                </div>
+
+                {/* CC BY-NC-SA license informative text in the footer of card */}
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-950 leading-relaxed">
+                  <strong>Atribución legal (CC BY-NC-SA 3.0):</strong> {cnseInfo.attribution}. Las acciones, productos y utilidades derivadas de su utilización no podrán generar ningún tipo de lucro.
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-slate-900">Pautas Biomecánicas y Tip de Ejecución:</div>
-                <div className="p-3 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-950">
-                  {selectedAlphabetItem.tip}
-                </div>
+              {/* Fixed Entendido, Cerrar button at the bottom */}
+              <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedAlphabetItem(null)}
+                  className="px-6 py-3 bg-sky-700 hover:bg-sky-800 text-white rounded-xl text-sm font-bold cursor-pointer shadow-md transition-all hover:scale-105"
+                >
+                  Entendido, Cerrar
+                </button>
               </div>
-
-              <div className="grid grid-cols-3 gap-2 pt-2 text-center font-mono text-xs">
-                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 text-[10px]">Pulgar</div>
-                  <div className="font-bold text-slate-900">{Math.round(selectedAlphabetItem.fingers.thumb * 100)}%</div>
-                </div>
-                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 text-[10px]">Índice</div>
-                  <div className="font-bold text-slate-900">{Math.round(selectedAlphabetItem.fingers.index * 100)}%</div>
-                </div>
-                <div className="p-2 bg-slate-100 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 text-[10px]">Rotación</div>
-                  <div className="font-bold text-slate-900">{selectedAlphabetItem.fingers.rotationDeg}°</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setSelectedAlphabetItem(null)}
-                className="px-5 py-2.5 bg-sky-700 text-white rounded-xl text-xs font-semibold hover:bg-sky-800 cursor-pointer"
-              >
-                Entendido, Cerrar
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
       </div>
     </section>
   );

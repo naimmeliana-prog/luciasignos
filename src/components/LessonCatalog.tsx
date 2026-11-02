@@ -5,7 +5,8 @@ import {
   Bookmark,
   BookOpen,
   FileCheck,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { LESSONS_CURRICULUM, GVA_EXAM_BANK, LINGUISTIC_MODULES } from '../data/curriculum';
 import {
@@ -196,6 +197,29 @@ export const LessonCatalog: React.FC<LessonCatalogProps> = ({
               Racha: {progress.currentStreakDays} días
             </span>
           </div>
+        </div>
+      </section>
+
+      {/* Reto Diario Section */}
+      <section className="bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2 max-w-xl">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 font-mono text-xs border border-amber-400/35">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>RETO DIARIO LSE · MULTIPLICADOR 2X XP</span>
+          </div>
+          <h3 className="text-2xl font-bold font-display">Palabra del Día: <span className="font-mono text-amber-300 underline">EMPATÍA</span></h3>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Completa el reto diario deletreando o practicando el signo de hoy para mantener tu racha activa y duplicar tus puntos XP en tu expediente de aprendizaje.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => alert('¡Reto diario completado con éxito! +100 XP (Multiplicador 2X aplicado).')}
+            className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl text-xs transition-transform hover:scale-105 cursor-pointer shadow"
+          >
+            Completar Reto de Hoy (+100 XP)
+          </button>
         </div>
       </section>
 

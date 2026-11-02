@@ -626,6 +626,57 @@ export const FacialPracticeStudio: React.FC<FacialPracticeStudioProps> = ({
 
         {/* Right Control & Concept Deck (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
+          {/* Real-time Precision & Adjustment Breakdown */}
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 text-white space-y-4 shadow-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-teal-400" />
+                <span className="text-xs font-mono font-bold text-teal-300">ANÁLISIS DE PRECISIÓN EN TIEMPO REAL</span>
+              </div>
+              <div className="text-xs font-mono tabular-nums text-emerald-400 font-bold">
+                Coincidencia: {Math.round((holdSeconds / selectedChallenge.holdSecondsRequired) * 100)}%
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              {/* Eyebrows evaluation */}
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                <span className="text-slate-300">Cejas y Arcos Supraciliares</span>
+                <span className={`font-mono font-bold px-2 py-0.5 rounded text-[11px] ${
+                  selectedChallenge.thresholds.minEyebrowArch !== undefined && metrics.eyebrowArch < selectedChallenge.thresholds.minEyebrowArch
+                    ? 'bg-amber-950 text-amber-300 border border-amber-600'
+                    : 'bg-emerald-950 text-emerald-300 border border-emerald-600'
+                }`}>
+                  {selectedChallenge.thresholds.minEyebrowArch !== undefined && metrics.eyebrowArch < selectedChallenge.thresholds.minEyebrowArch
+                    ? '↑ Sube más las cejas'
+                    : '✓ Nivel correcto'}
+                </span>
+              </div>
+
+              {/* Smile / Mouth evaluation */}
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                <span className="text-slate-300">Sonrisa y Tensión Labial</span>
+                <span className={`font-mono font-bold px-2 py-0.5 rounded text-[11px] ${
+                  selectedChallenge.thresholds.minMouthSmile !== undefined && metrics.mouthSmile < selectedChallenge.thresholds.minMouthSmile
+                    ? 'bg-amber-950 text-amber-300 border border-amber-600'
+                    : 'bg-emerald-950 text-emerald-300 border border-emerald-600'
+                }`}>
+                  {selectedChallenge.thresholds.minMouthSmile !== undefined && metrics.mouthSmile < selectedChallenge.thresholds.minMouthSmile
+                    ? '↑ Aumenta la sonrisa'
+                    : '✓ Expresión óptima'}
+                </span>
+              </div>
+
+              {/* Head tilt evaluation */}
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                <span className="text-slate-300">Inclinación Facial / Hombros</span>
+                <span className="font-mono font-bold px-2 py-0.5 rounded text-[11px] bg-emerald-950 text-emerald-300 border border-emerald-600">
+                  ✓ Postura estable
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Challenge Selector List */}
           <div className="bg-white border border-slate-200 rounded-xl p-5">
             <h2 className="text-base font-bold text-slate-900 mb-1">
